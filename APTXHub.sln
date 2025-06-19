@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APTXHub", "APTXHub\APTXHub.csproj", "{CFB52072-1AEC-4516-83EC-0F19F19834E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircleApp", "..\CircleApp\CircleApp\CircleApp.csproj", "{79CB0EF6-7A29-430D-8C16-0DEECFF37230}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{CFB52072-1AEC-4516-83EC-0F19F19834E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFB52072-1AEC-4516-83EC-0F19F19834E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFB52072-1AEC-4516-83EC-0F19F19834E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
