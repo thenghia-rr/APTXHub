@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APTXHub", "APTXHub\APTXHub.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircleApp", "..\CircleApp\CircleApp\CircleApp.csproj", "{79CB0EF6-7A29-430D-8C16-0DEECFF37230}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APTXHub.Infrastructure", "APTXHub.Infrastructure\APTXHub.Infrastructure.csproj", "{C1E0C07C-80B1-4450-9BD0-017F1B765C08}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79CB0EF6-7A29-430D-8C16-0DEECFF37230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1E0C07C-80B1-4450-9BD0-017F1B765C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1E0C07C-80B1-4450-9BD0-017F1B765C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1E0C07C-80B1-4450-9BD0-017F1B765C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1E0C07C-80B1-4450-9BD0-017F1B765C08}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

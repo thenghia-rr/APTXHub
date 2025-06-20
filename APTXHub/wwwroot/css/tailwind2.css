@@ -3125,7 +3125,9 @@ h1, h2, h3, h4, h5, h6 {
 .w-10 {
   width: 2.5rem;
 }
-
+.w-11 {
+    width: 2.8rem;
+}
 .w-12 {
   width: 3rem;
 }

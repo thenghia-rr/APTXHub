@@ -1,4 +1,6 @@
-﻿<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+﻿@model List<Post>
+
+<main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
     <div class="lg:flex 2xl:gap-16 gap-12 max-w-[1170px] mx-auto" id="js-oversized">
         @* Main content *@
         <div class="max-w-[680px] mx-auto flex-1">
@@ -33,8 +35,8 @@
                                     </div>
                                 </a>
                                 <p class="text-xs leading-6 truncate max-w-60 overflow-hidden whitespace-nowrap " title="Cristiano Rolnado">Cristiano Rolnado</p>
-                            </li>  
-                           
+                            </li>
+
                             <li class="md:pr-3 pr-2">
                                 <div class="md:w-16 md:h-16 w-12 h-12 bg-slate-200/60 rounded-full animate-pulse"></div>
                             </li>
@@ -64,113 +66,129 @@
                     </div>
                 </div>
 
-                @* <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;"> *@
-                @*     Currently, there are no posts available. Would you like to create the first one? *@
-                @* </div> *@
+                @if (Model.Count == 0)
+                {
+                    <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
+                        Currently, there are no posts available. Would you like to create the first one? 
+                    </div>
+                }
 
-                <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+                @foreach (var post in Model)
+                {
+                    <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
-                    @* Post heading *@
-                    <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-                        <a>
-                            <img src="~/images/avatar/user.png" class="w-9 h-9 rounded-full" />
-                        </a>
-                        <div class="flex-1">
+                        @* Post heading *@
+                        <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
                             <a>
-                                <h4 class="text-black">Thế Nghĩa</h4>
-                                <div class="text-xs text-gray-500/80">1 day ago</div>
+                                <img src="@(post.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-11 h-11 rounded-full" />
                             </a>
-                        </div>
+                            <div class="flex-1">
+                                <a>
+                                    <h4 class="text-black text-14">@post.User.FullName</h4>
+                                    <div class="text-13 font-normal text-gray-500/80 mt-1">@post.DateCreated.ToString("dd/MM/yyyy HH:mm")</div>
+                                </a>
+                            </div>
 
-                        <div class="-mr-1">
-                            <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
-                            <div class="w-[245px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
-                                <form>
-                                    <input type="hidden" name="postId" />
-                                    <button type="submit" class="hover:!bg-red-50 icon-link">
-                                        <ion-icon name="lock-closed-outline"></ion-icon>  Set as private
-                                    </button>
-                                </form>
+                            <div class="-mr-1">
+                                <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
+                                <div class="w-[245px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
+                                    <form>
+                                        <input type="hidden" name="postId" />
+                                        <button type="submit" class="hover:!bg-red-50 icon-link">
+                                            <ion-icon name="lock-closed-outline"></ion-icon>  Set as private
+                                        </button>
+                                    </form>
 
-                                <hr>
-                                <form asp-controller="Home" asp-action="Delete">
-                                    <input type="hidden" name="postId" />
-                                    <button type="submit" class="text-red-400 hover:!bg-red-50 icon-link">
-                                        <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
-                                    </button>
-                                </form>
-                                <form asp-controller="Home" asp-action="Report">
-                                    <input type="hidden" name="postId" />
-                                    <button type="submit" class="hover:!bg-red-50 icon-link">
-                                        <ion-icon class="text-xl shrink-0" name="flag-outline"></ion-icon>  Report
-                                    </button>
-                                </form>
+                                    <hr>
+                                    <form asp-controller="Home" asp-action="Delete">
+                                        <input type="hidden" name="postId" />
+                                        <button type="submit" class="text-red-400 hover:!bg-red-50 icon-link">
+                                            <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
+                                        </button>
+                                    </form>
+                                    <form asp-controller="Home" asp-action="Report">
+                                        <input type="hidden" name="postId" />
+                                        <button type="submit" class="hover:!bg-red-50 icon-link">
+                                            <ion-icon class="text-xl shrink-0" name="flag-outline"></ion-icon>  Report
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    @* Post content *@
-                    <a>
-                        <div class="sm:px-4 p-2.5 pt-0 w-full">
-                            <p class="font-normal">
-                                This is our first status from the #circleapp where you can share text or pictures with your friends and family...
-                            </p>
-                        </div>
-                    </a>
+                        @* Post content *@
+                        <a>
+                            <div class="sm:px-4 p-2.5 pt-0 w-full">
+                                <p class="font-medium text-14">
+                                    @post.Content
+                                </p>
+                            </div>
+                        </a>
 
-                    <a>
-                        <div class="relative w-full lg:h-[600px] h-full sm:px-4">
-                            @* <img src="~/images/placeholders/post-placeholder.jpg" class="sm:rounded-lg w-full h-full object-cover" /> *@
-                            <img src="https://i.pinimg.com/736x/15/37/a9/1537a9375bc7a9d72ee817610ad18d86.jpg" class="sm:rounded-lg w-full h-full object-cover" />
-                        </div>
-                    </a>
-
-                    @* Icons *@
-                    <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
-
-                        <div class="flex items-center gap-2.5">
-                            <a class="button-icon text-red-500 bg-red-100">
-                                <ion-icon class="text-lg" name="heart"></ion-icon>
+                         @if (!string.IsNullOrEmpty(post.ImageUrl)) 
+                         {
+                            <a>
+                                <div class="relative w-full lg:h-[600px] h-full sm:px-4">
+                                    <img src="@post.ImageUrl" class="sm:rounded-lg w-full h-full object-cover" />
+                                </div>
                             </a>
-                            <a href="#">24</a>
+                         } 
+
+                        @* <a> *@
+                        @*     <div class="relative w-full lg:h-[600px] h-full sm:px-4"> *@
+                        @*         <img src="@(!string.IsNullOrEmpty(post.ImageUrl) ? post.ImageUrl : Url.Content("~/images/placeholders/post-placeholder.jpg"))" class="sm:rounded-lg w-full h-full object-cover" /> *@
+                        @*     </div> *@
+                        @* </a> *@
+
+                        @* Icons *@
+                        <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
+
+                            <div class="flex items-center gap-2.5">
+                                <a class="button-icon text-red-500 bg-red-100">
+                                    <ion-icon class="text-lg" name="heart"></ion-icon>
+                                </a>
+                                <a href="#">24</a>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <a class="button-icon">
+                                    <ion-icon class="text-lg" name="chatbubble-ellipses-outline"></ion-icon>
+                                </a>
+                                <a href="#">5</a>
+                            </div>
+
+                            <div class="ml-auto"></div>
+
+                            <div>
+                                <a class="button-icon ml-auto">
+                                    <ion-icon class="text-lg" name="bookmark-outline"></ion-icon>
+                                </a>
+                            </div>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <a class="button-icon">
-                                <ion-icon class="text-lg" name="chatbubble-ellipses-outline"></ion-icon>
-                            </a>
-                            <a href="#">5</a>
-                        </div>
-
-                        <div class="ml-auto"></div>
-
+                        @* Add comment section *@
                         <div>
-                            <a class="button-icon ml-auto">
-                                <ion-icon class="text-lg" name="bookmark-outline"></ion-icon>
-                            </a>
-                        </div>
-                    </div>
+                            <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
+                                <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
 
-                    @* Add comment section *@
-                    <div>
-                        <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-                            <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
+                                <div class="flex-1 relative overflow-hidden h-10">
+                                    <textarea placeholder="Add Comment...." rows="1" class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
+                                </div>
 
-                            <div class="flex-1 relative overflow-hidden h-10">
-                                <textarea placeholder="Add Comment...." rows="1" class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
+                                <button class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
+
                             </div>
-
-                            <button class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
-
                         </div>
-                    </div>
 
-                </div>
+                    </div>
+                }
+
+                
 
             </div>
 
         </div>
-        <div class="w-[360px]" >
+        <div class="w-[360px]">
             <div class="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6">
                 <div class="box p-5 px-6">
                     <partial name="Sidebar/_SuggestedFriends"></partial>
@@ -179,7 +197,7 @@
                     <partial name="Sidebar/_TrendsForYou"></partial>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </main>

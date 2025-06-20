@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\APTXHub.Infrastructure\APTXHub.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Update="wwwroot\images\avatar\user.png">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

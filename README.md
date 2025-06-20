@@ -21,5 +21,6 @@ It simulates the core features of modern social platforms, offering a space wher
 
 1. Clone the repo  
 2. Configure `appsettings.json` with your DB connection  
-3. Run migrations and start the server  
+3. Run migrations and start the server 
+- dotnet ef database update --project APTXHub.Infrastructure --startup-project APTXHub
 4. Open `https://localhost:5001` in your browser
