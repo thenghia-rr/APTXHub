@@ -1,4 +1,6 @@
-﻿<div class="hidden lg:p-20" id="create-status" uk-modal="">
+﻿@model PostVM
+
+<div class="hidden lg:p-20" id="create-status" uk-modal="">
 
     <div class="uk-modal-dialog tt relative overflow-hidden mx-auto bg-white shadow-xl rounded-lg md:w-[520px] w-full">
         <div class="text-center py-4 border-b mb-0">
@@ -10,19 +12,22 @@
             </button>
         </div>
 
-        <form>
+        <form method="post" asp-controller="home" asp-action="CreatePost" enctype="multipart/form-data">
             <div class="space-y-5 mt-3 p-2">
                 <textarea class="w-full !text-black placeholder:!text-black !bg-white !border-transparent focus:!border-transparent focus:!ring-transparent !font-normal !text-xl"
                           name="content"
+                          asp-for="@Model.Content"
+                          id="content"
                           rows="2"
-                          placeholder="What do you have in mind?"></textarea>
+                          placeholder="What do you have in mind?">
+                 </textarea>
             </div>
 
             <div class="flex items-center gap-2 text-sm py-2 px-4 font-medium flex-wrap">
-                <input id="imageUpload" type="file" class="hidden" name="uploadedContent" accept="image/png, image/jpeg" />
+                <input id="imageUpload" type="file" class="hidden" name="image" accept="image/png, image/jpeg, image/jpg" />
 
-                <div id="imagePreviewContainer" class="hidden">
-                    <img id="imagePreview" src="#" class="w-full h-auto rounded" />
+                <div id="imagePreviewContainer" class="hidden max-h-330 overflow-y-auto border border-gray-200 rounded-md">
+                    <img id="imagePreview" src="#" class="w-full h-full rounded object-cover" />
                 </div>
 
                 <button type="button" id="imageUploadBtn" class="flex items-center gap-1.5 bg-sky-50 text-sky-600 rounded-full py-1 px-2 border-2 border-sky-100">
@@ -30,14 +35,88 @@
                 </button>
             </div>
 
-            <div class="p-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <button type="submit" class="button bg-blue-500 text-white py-2 px-12 text-[14px]"> Create </button>
-                </div>
+            <div class="flex gap-2 flex-wrap px-4 py-2">
+                <button type="button" class="emoji-btn text-2xl">😀</button>
+                <button type="button" class="emoji-btn text-2xl">🔥</button>
+                <button type="button" class="emoji-btn text-2xl">❤️</button>
+                <button type="button" class="emoji-btn text-2xl">😉</button>
+                <button type="button" class="emoji-btn text-2xl">😘</button>
+                <button type="button" class="emoji-btn text-2xl">💩</button>
+                <!-- add more emojis -->
             </div>
+            <div class="p-5 flex justify-end">
+                <button id="createBtn" type="submit" class="button bg-blue-500 text-white py-2 px-12 text-14 opacity-50 cursor-not-allowed" disabled> Post </button>
+            </div>
+
 
         </form>
 
     </div>
 
 </div>
+
+<script>
+    // -- Handle when choose image
+    document.getElementById('imageUploadBtn').addEventListener('click', () => {
+        document.getElementById('imageUpload').click();
+    });
+
+    document.getElementById('imageUpload').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        const imagePreview = document.getElementById('imagePreview');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+        if (file) {
+            const reader = new FileReader();
+            imagePreviewContainer.classList.remove('hidden');
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        } else {
+            imagePreviewContainer.classList.add('hidden');
+        }
+    });
+
+
+    //----- Validate content empty and handle when click icon
+    const textarea = document.getElementById('content');
+    const imageInput = document.getElementById('imageUpload');
+    const createBtn = document.getElementById('createBtn');
+
+    function updateButtonState() {
+        const hasText = textarea.value.trim().length > 0;
+        const hasImage = imageInput.files.length > 0;
+
+        if (hasText || hasImage) {
+            createBtn.disabled = false;
+            createBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            createBtn.disabled = true;
+            createBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    // Lắng nghe các sự kiện
+    textarea.addEventListener('input', updateButtonState);
+    imageInput.addEventListener('change', updateButtonState);
+
+    // Emoji click cũng cần gọi update
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const emoji = btn.textContent;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+
+            textarea.value = text.slice(0, start) + emoji + text.slice(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + emoji.length;
+
+            updateButtonState(); // Cập nhật lại trạng thái nút
+        });
+    });
+
+    // Gọi khi load lần đầu
+    updateButtonState();
+</script>

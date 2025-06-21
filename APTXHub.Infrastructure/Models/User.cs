@@ -11,7 +11,7 @@ namespace APTXHub.Infrastructure.Models
     {
         [Key]
         public int Id { get; set; }
-        public required string FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
         public string? ProfilePictureUrl { get; set; }
 
         // Navigation properties

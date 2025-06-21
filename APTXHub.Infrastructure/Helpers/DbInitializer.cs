@@ -26,8 +26,8 @@ namespace APTXHub.Infrastructure.Helpers
                     Content = "Today was such a wonderful day because I got to meet someone who inspired me so much during my high school years – Khánh Vy. She’s truly lovely and super friendly in real life!",
                     ImageUrl = "https://res.cloudinary.com/dh5zl1bel/image/upload/v1750432233/cloudinary_demo/me_kv_2_pycpik.jpg",
                     NrOfReports = 0,
-                    DateCreated = DateTime.UtcNow.AddHours(7),
-                    DateUpdated = DateTime.UtcNow.AddHours(7),
+                    DateCreated = DateTime.UtcNow,
+                    DateUpdated = DateTime.UtcNow,
 
                     UserId = newUser.Id
                 };
@@ -37,8 +37,8 @@ namespace APTXHub.Infrastructure.Helpers
                     Content = "This is is my idol, his name is Cristiano Ronaldo. Siuuuuuu...",
                     ImageUrl = "",
                     NrOfReports = 0,
-                    DateCreated = DateTime.UtcNow.AddHours(7),
-                    DateUpdated = DateTime.UtcNow.AddHours(7),
+                    DateCreated = DateTime.UtcNow,
+                    DateUpdated = DateTime.UtcNow,
 
                     UserId = newUser.Id
                 };

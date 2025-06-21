@@ -12,6 +12,7 @@ builder.Services.AddControllersWithViews();
 string stringConnection = builder.Configuration.GetConnectionString("Default")!;
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(stringConnection));
 
+
 var app = builder.Build();
 
 // Init data in database
