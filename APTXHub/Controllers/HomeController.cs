@@ -22,6 +22,7 @@ namespace APTXHub.Controllers
         {
             var allPosts = await _context.Posts
                 .Include(p => p.User)
+                .Include(p => p.Likes)
                 .OrderByDescending(p => p.DateCreated)
                 .ToListAsync();
             return View(allPosts);
@@ -32,7 +33,7 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> CreatePost(PostVM post)
         {
             //Get the logged in user
-            int loggedInUser = 1;
+            int loggedInUserId = 1;
 
             var newPost = new Post
             {
@@ -41,7 +42,7 @@ namespace APTXHub.Controllers
                 NrOfReports = 0,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
-                UserId = loggedInUser
+                UserId = loggedInUserId
             };
 
             //Check and save the image
@@ -69,5 +70,42 @@ namespace APTXHub.Controllers
 
             return RedirectToAction("Index");
         }
+
+        // [POST] : Like and dislike Post
+        [HttpPost]
+        public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
+        {
+            int loggedInUserId = 1;
+
+            var existingLike = await _context.Likes
+                 .Where(l => l.PostId == postLike.PostId && l.UserId == loggedInUserId)
+                .FirstOrDefaultAsync();
+
+            bool liked;
+
+            if (existingLike != null)
+            {
+                _context.Likes.Remove(existingLike);
+                liked = false;
+            }
+            else
+            {
+                var newLike = new Like
+                {
+                    PostId = postLike.PostId,
+                    UserId = loggedInUserId
+                };
+                await _context.Likes.AddAsync(newLike);
+                liked = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            var totalLikes = await _context.Likes
+                .CountAsync(l => l.PostId == postLike.PostId);
+
+            return Json(new { liked, totalLikes });
+        }
+
     }
 }

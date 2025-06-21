@@ -75,10 +75,13 @@
     <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
 
         <div class="flex items-center gap-2.5">
-            <a class="button-icon text-red-500 bg-red-100">
-                <ion-icon class="text-lg" name="heart"></ion-icon>
-            </a>
-            <a href="#">24</a>
+            <button type="button"
+                    class="button-icon like-btn @(Model.Likes.Any(n => n.UserId == 1) ? "text-red-500 bg-red-100" : "")"
+                    data-post-id="@Model.Id">
+                <ion-icon class="text-lg"
+                          name="@(Model.Likes.Any(n => n.UserId == 1) ? "heart" : "heart-outline")"></ion-icon>
+            </button>
+            <span class="like-count">@Model.Likes.Count</span>
         </div>
 
         <div class="flex items-center gap-3">
@@ -112,3 +115,38 @@
     </div>
 
 </div>
+
+<script>
+    // Handle when like will not reload the page
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const postId = button.dataset.postId;
+
+            const response = await fetch('/Home/TogglePostLike', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ postId: parseInt(postId) })
+            });
+
+            if (response.ok) {
+                // Option 1: Reload just the part (via AJAX or Live Update)
+                // Option 2: Update icon and count manually
+                const json = await response.json();
+                const icon = button.querySelector('ion-icon');
+                const countSpan = button.parentElement.querySelector('.like-count');
+
+                if (json.liked) {
+                    icon.name = "heart";
+                    button.classList.add("text-red-500", "bg-red-100");
+                } else {
+                    icon.name = "heart-outline";
+                    button.classList.remove("text-red-500", "bg-red-100");
+                }
+
+                countSpan.textContent = json.totalLikes;
+            }
+        });
+    });
+</script>

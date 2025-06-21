@@ -20,6 +20,9 @@
         <partial name="Navigation/_SideBar" />
 
         @RenderBody()
+
+        @* Button sroll top  *@
+        <partial name="Navigation/_ScrollTop" />
     </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -34,6 +37,28 @@
     @* Ion Icon *@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script>
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+        // Show/hide nút khi scroll
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove("hidden");
+            } else {
+                scrollTopBtn.classList.add("hidden");
+            }
+        });
+
+        // Scroll lên đầu trang
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
