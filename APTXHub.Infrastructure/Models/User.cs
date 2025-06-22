@@ -12,6 +12,7 @@ namespace APTXHub.Infrastructure.Models
         public int Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string? ProfilePictureUrl { get; set; }
+        public bool IsDeleted { get; set; }
 
         // Navigation properties
         public ICollection<Post> Posts { get; set; } = new List<Post>();

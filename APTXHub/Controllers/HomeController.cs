@@ -24,7 +24,9 @@ namespace APTXHub.Controllers
         {
             int loggedInUserId = 1;
             var allPosts = await _context.Posts
-                .Where(n => !n.IsPrivate || n.UserId == loggedInUserId)
+                .Where(n => (!n.IsPrivate || n.UserId == loggedInUserId) 
+                    && n.Reports.Count < 5 
+                    && n.IsDeleted == false)
                 .Include(p => p.User)
                 .Include(p => p.Likes)
                 .Include(p => p.Favorites)
@@ -229,6 +231,25 @@ namespace APTXHub.Controllers
                     DateCreated = DateTime.UtcNow
                 };
                 await _context.Reports.AddAsync(newReport);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // [POST]: Delete Post
+        [HttpPost]
+        public async Task<IActionResult> PostRemoveSoft(PostRemoveVM postRemoveVM)
+        {
+            int loggedInUserId = 1;
+            // Get the post by id and logged in user id
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(p => p.Id == postRemoveVM.PostId && p.UserId == loggedInUserId);
+
+            if (post != null)
+            {
+                post.IsDeleted = true; 
+                post.DeletedAt = DateTime.UtcNow;
+                _context.Posts.Update(post);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");

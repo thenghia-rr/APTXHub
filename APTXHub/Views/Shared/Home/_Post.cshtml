@@ -34,7 +34,7 @@
 
         <div class="-mr-1">
             <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
-            <div class="w-[245px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
+            <div class="w-[245px] post-options-dropdown" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
     
                 @if (Model.UserId == 1) 
                 {
@@ -46,12 +46,12 @@
                     </form>
                     <hr>
 
-                    <form asp-controller="Home" asp-action="Delete">
-                        <input type="hidden" name="postId" />
-                        <button type="submit" class="text-red-400 hover:!bg-red-50 icon-link">
-                            <ion-icon name="trash-bin-outline"></ion-icon>  Delete Post
-                        </button>
-                    </form>
+                    <button type="button"
+                            onclick="openPostDeleteConfirmation('@Model.Id', this)"
+                            class="text-red-400 hover:!bg-red-50 delete-post-btn">
+                        <ion-icon name="trash-bin-outline"></ion-icon> Delete Post
+                    </button>
+                    <partial name="Home/_PostDeleteConfirm" />
                     <hr />
                 }
 
@@ -63,33 +63,9 @@
                             onclick="openReportModal(@Model.Id)">
                         <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> Report
                     </button>
+                    <partial name="Home/_PostReportConfirm" model="Model" />
 
-                    <!-- Popup modal -->
-                    <div id="report-modal-@Model.Id" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center z-50">
-                        <div class="bg-white p-5 rounded shadow-md w-full max-w-md relative">
-                            <h2 class="text-lg font-semibold mb-3">Report Post</h2>
-                            <form method="post" action="/Home/AddPostReport" onsubmit="return handleReportSubmit(this)">
-                                <input type="hidden" name="postId" value="@Model.Id" />
-                                <label for="reason" class="block mb-1 font-medium">Reason</label>
-                                <textarea name="reason" rows="4" class="w-full border rounded p-2 mb-4" required></textarea>
-                                <div class="flex justify-end gap-2">
-                                    <button type="button"
-                                            class="bg-gray-300 px-4 py-1 rounded hover:bg-gray-400"
-                                            onclick="closeReportModal(@Model.Id)">
-                                        Cancel
-                                    </button>
-                                    <button type="submit"
-                                            class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-100">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 }
-                
-
-
             
             </div>
         </div>
@@ -205,9 +181,23 @@
  
      </div> 
 
-</div>
 
+</div>
 <script>
+    // Handle when delete post - comfirm dialog
+    function openPostDeleteConfirmation(postId, button) {
+        // Lấy dropdown gần nhất với nút vừa click
+        const dropdown = button.closest('.uk-dropdown');
+        if (dropdown) {
+            UIkit.dropdown(dropdown).hide();
+        }
+
+        // Gán postId vào form modal
+        document.getElementById('deleteConfirmationPostId').value = postId;
+
+        // Hiện modal xác nhận xóa
+        UIkit.modal('#postDeleteDialog').show();
+    }
 
          
     // Handle comment submission without reloading the page
