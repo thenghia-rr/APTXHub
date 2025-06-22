@@ -1,4 +1,4 @@
- // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+﻿ // On page load or when changing themes, best to add inline in `head` to avoid FOUC
 if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
     document.documentElement.classList.add('light') // Doi nguoc lai de TEST
 } else {
@@ -16,7 +16,7 @@ localStorage.removeItem('theme')
 
 
 
-//// add post upload image 
+//// add post upload image
 //document.getElementById('addPostUrl').addEventListener('change', function () {
 //    if (this.files[0]) {
 //        var picture = new FileReader();
@@ -29,7 +29,7 @@ localStorage.removeItem('theme')
 //});
 
 
-//// Create Status upload image 
+//// Create Status upload image
 //document.getElementById('createStatusUrl').addEventListener('change', function () {
 //    if (this.files[0]) {
 //        var picture = new FileReader();
@@ -53,3 +53,4 @@ localStorage.removeItem('theme')
 //        });
 //    }
 //});
+

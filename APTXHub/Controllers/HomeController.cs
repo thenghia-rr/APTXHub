@@ -1,4 +1,5 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using APTXHub.Extentions;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Models;
 using APTXHub.ViewModels.Home;
@@ -18,18 +19,23 @@ namespace APTXHub.Controllers
             _context = context;
         }
 
+        // [GET]: Home Page - Show all Posts
         public async Task<IActionResult> Index()
         {
+            int loggedInUserId = 1;
             var allPosts = await _context.Posts
+                .Where(n => !n.IsPrivate || n.UserId == loggedInUserId)
                 .Include(p => p.User)
                 .Include(p => p.Likes)
+                .Include(p => p.Favorites)
+                .Include(p => p.Comments).ThenInclude(c => c.User)
                 .OrderByDescending(p => p.DateCreated)
                 .ToListAsync();
             return View(allPosts);
         }
 
         //[POST]: Create Post
-       [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> CreatePost(PostVM post)
         {
             //Get the logged in user
@@ -71,7 +77,7 @@ namespace APTXHub.Controllers
             return RedirectToAction("Index");
         }
 
-        // [POST] : Like and dislike Post
+        // [POST]: Like and dislike Post
         [HttpPost]
         public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
         {
@@ -107,5 +113,100 @@ namespace APTXHub.Controllers
             return Json(new { liked, totalLikes });
         }
 
+        // [POST]: Favorite and unfavorite Post
+        [HttpPost]
+        public async Task<IActionResult> TogglePostFavorite([FromBody] PostFavoriteVM postFavoriteVM)
+        {
+
+            int loggedInUserId = 1;
+
+            var existingFavorited = await _context.Favorites
+                .AsNoTracking()
+                 .FirstOrDefaultAsync(l => l.PostId == postFavoriteVM.PostId && l.UserId == loggedInUserId);
+
+            bool favorited;
+
+            if (existingFavorited != null)
+            {
+                _context.Favorites.Remove(existingFavorited);
+                favorited = false;
+            }
+            else
+            {
+                var newFavorite = new Favorite
+                {
+                    PostId = postFavoriteVM.PostId,
+                    UserId = loggedInUserId,
+                    DateCreated = DateTime.UtcNow
+                };
+                await _context.Favorites.AddAsync(newFavorite);
+                favorited = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            var totalFavorited = await _context.Favorites
+               .CountAsync(l => l.PostId == postFavoriteVM.PostId);
+
+            return Json(new { favorited, totalFavorited });
+
+        }
+
+        // [POST]: Comment on Post
+        [HttpPost]
+        public async Task<IActionResult> AddPostComment(PostCommentVM postComment)
+        {
+            int loggedInUserId = 1;
+
+            //Creat a post object
+            var newComment = new Comment()
+            {
+                UserId = loggedInUserId,
+                PostId = postComment.PostId,
+                Content = postComment.Content,
+                DateCreated = DateTime.UtcNow,
+                DateUpdated = DateTime.UtcNow
+            };
+            await _context.Comments.AddAsync(newComment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+
+
+        // [POST]: Remove comment
+        [HttpPost]
+        public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeComment)
+        {
+            var comment = await _context.Comments
+                .FirstOrDefaultAsync(c => c.Id == removeComment.CommentId);
+
+            if (comment != null)
+            {
+                _context.Comments.Remove(comment);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        // [POST]: Update visibility of Post
+        [HttpPost]
+        public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
+        {
+            int loggedInUserId = 1;
+
+            //get post by id and loggedin user id
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(l => l.Id == postVisibilityVM.PostId && l.UserId == loggedInUserId);
+
+            if (post != null)
+            {
+                post.IsPrivate = !post.IsPrivate;
+                _context.Posts.Update(post);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }

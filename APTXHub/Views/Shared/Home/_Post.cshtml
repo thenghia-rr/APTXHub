@@ -1,16 +1,12 @@
-﻿@model Post
+﻿@using APTXHub.Extentions
+@model Post
 
 @{
-    TimeSpan timeSpanSincePosted = DateTime.UtcNow.Subtract(Model.DateCreated);
-
-    string displayTime = timeSpanSincePosted switch
-    {
-        var t when t.TotalDays >= 1 => $"{(int)t.TotalDays}d ago",
-        var t when t.TotalHours >= 1 => $"{(int)t.TotalHours}h ago",
-        var t when t.TotalMinutes >= 1 => $"{(int)t.TotalMinutes}m ago",
-        _ => "Just now"
-    };
+    bool isFavorited = Model.Favorites.Any(n => n.UserId == 1);
+    bool isLiked = Model.Likes.Any(n => n.UserId == 1);
+    bool isPrivate = Model.IsPrivate == true && Model.UserId == 1;
 }
+
 
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
@@ -22,19 +18,30 @@
         <div class="flex-1">
             <a>
                 <h4 class="text-black text-14">@Model.User.FullName</h4>
-                <div class="text-13 font-normal text-gray-500/80 mt-1" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@displayTime</div>
+                <div class="text-13 font-normal text-gray-500/80 mt-1" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@Model.DateCreated.ToTimeAgo()</div>
             </a>
         </div>
 
         <div class="-mr-1">
             <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
             <div class="w-[245px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
-                <form>
-                    <input type="hidden" name="postId" />
-                    <button type="submit" class="hover:!bg-red-50 icon-link">
-                        <ion-icon name="lock-closed-outline"></ion-icon>  Set as private
-                    </button>
-                </form>
+                @* <form> *@
+                @*     <input type="hidden" name="postId" /> *@
+                @*     <button type="submit" class="hover:!bg-red-50 icon-link"> *@
+                @*         <ion-icon name="lock-closed-outline"></ion-icon>  Set as private *@
+                @*     </button> *@
+                @* </form> *@
+
+                @if (Model.UserId == 1) 
+                {
+                    <form asp-controller="Home" asp-action="TogglePostVisibility">
+                        <input type="hidden" name="postId" value="@Model.Id" />
+                        <button type="submit" class="hover:!bg-red-50 icon-link">
+                            <ion-icon name="@(isPrivate ? "lock-open-outline" : "lock-closed-outline")"></ion-icon>  Set as @(isPrivate ? "public" : "private")
+                        </button>
+                    </form>
+                    <hr>
+                }
 
                 <hr>
                 <form asp-controller="Home" asp-action="Delete">
@@ -74,12 +81,13 @@
     @* Icons *@
     <div class="sm:p-4 p-2.5 flex items-center gap-4 text-xs font-semibold">
 
+        @* Like *@
         <div class="flex items-center gap-2.5">
             <button type="button"
-                    class="button-icon like-btn @(Model.Likes.Any(n => n.UserId == 1) ? "text-red-500 bg-red-100" : "")"
+                    class="button-icon like-btn @(isLiked ? "text-red-500 bg-red-100" : "")"
                     data-post-id="@Model.Id">
-                <ion-icon class="text-lg"
-                          name="@(Model.Likes.Any(n => n.UserId == 1) ? "heart" : "heart-outline")"></ion-icon>
+                <ion-icon class="text-lg icon-like"
+                          name="@(isLiked ? "heart" : "heart-outline")"></ion-icon>
             </button>
             <span class="like-count">@Model.Likes.Count</span>
         </div>
@@ -88,35 +96,87 @@
             <a class="button-icon">
                 <ion-icon class="text-lg" name="chatbubble-ellipses-outline"></ion-icon>
             </a>
-            <a href="#">5</a>
+            <a id="commentCount" href="#">@Model.Comments.Count</a>
         </div>
 
         <div class="ml-auto"></div>
 
-        <div>
-            <a class="button-icon ml-auto">
-                <ion-icon class="text-lg" name="bookmark-outline"></ion-icon>
-            </a>
+        @* Favorite *@
+        <div class="flex items-center gap-2">
+
+            <button type="button"
+                    class="button-icon fav-btn @(isFavorited ? "text-orange-500 bg-orange-100":"")"
+                    data-postfav-id="@Model.Id">
+                <ion-icon class="text-lg icon-bookmark"
+                          name="@(isFavorited ? "bookmark" : "bookmark-outline")"></ion-icon>
+            </button>
+            <span class="fav-count">@Model.Favorites.Count</span>
         </div>
     </div>
 
     @* Add comment section *@
-    <div>
-        <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-            <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
+     <div>
+          <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative"> 
+              @foreach (var comment in Model.Comments.OrderByDescending(n => n.DateCreated).Take(3)) 
+              { 
+                  <div id="commentRow-@comment.Id" class="flex items-start gap-3 relative"> 
+                      <a> 
+                          <img src="@(comment.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-6 h-6 mt-1 rounded-full" /> 
+                      </a> 
+                      <div class="flex-1"> 
+                          <div class="flex justify-content-between"> 
+                              <a class="text-black font-medium inline-block flex-grow"> 
+                                  @comment.User.FullName 
+                              </a> 
+                              <small title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small> 
+                          </div>
+                        <div class="flex items-center justify-between">
+                            <p class="mt-0.5">
+                                @comment.Content
+                            </p>
+                            <form asp-controller="Home" asp-action="RemovePostComment"> 
+                                <input type="hidden" name="commentId" value="@comment.Id" /> 
+                                <button type="submit" class="text-red-500 text-xs ml-2" title="Remove comment"> 
+                                    <ion-icon name="trash-outline"></ion-icon> 
+                                </button> 
+                            </form> 
 
-            <div class="flex-1 relative overflow-hidden h-10">
-                <textarea placeholder="Add Comment...." rows="1" class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
-            </div>
-
-            <button class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
-
-        </div>
-    </div>
+                        </div>
+                      </div> 
+                  </div> 
+              } 
+              @if (Model.Comments.Count >= 3) 
+              { 
+                  <div class="p-1.5"> 
+                      <a> 
+                          Show all comments 
+                      </a> 
+                  </div> 
+              } 
+          </div> 
+          <form asp-controller="Home" asp-action="AddPostComment"> 
+              <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1"> 
+                  <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" /> 
+                  <input type="hidden" name="postId" value="@Model.Id" /> 
+                  <div class="flex-1 relative overflow-hidden h-10"> 
+                      <textarea id="commentContent"
+                          name="content" placeholder="Add Comment...." 
+                                rows="1" 
+                                class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea> 
+                  </div> 
+                  <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button> 
+              </div> 
+          </form> 
+ 
+     </div> 
 
 </div>
 
 <script>
+
+         
+    // Handle comment submission without reloading the page
+       
     // Handle when like will not reload the page
     document.querySelectorAll('.like-btn').forEach(button => {
         button.addEventListener('click', async () => {
@@ -134,7 +194,7 @@
                 // Option 1: Reload just the part (via AJAX or Live Update)
                 // Option 2: Update icon and count manually
                 const json = await response.json();
-                const icon = button.querySelector('ion-icon');
+                const icon = button.querySelector('.icon-like');
                 const countSpan = button.parentElement.querySelector('.like-count');
 
                 if (json.liked) {
@@ -149,4 +209,41 @@
             }
         });
     });
+
+    // Handle when toggle favorite post will not reload the page
+         document.querySelectorAll('.fav-btn').forEach(button => {
+        button.addEventListener('click', async () => {
+            const postId = button.dataset.postfavId;
+
+            try {
+                    const response = await fetch('/Home/TogglePostFavorite', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ postId: parseInt(postId) })
+                    });
+
+                    let json = await response.json();;
+
+                    if (json.favorited !== undefined) {
+                        const icon = button.querySelector('.icon-bookmark');
+                        const totalFav = button.parentElement.querySelector('.fav-count');
+                        if (json.favorited) {
+                            icon.name = "bookmark";
+                            button.classList.add("text-orange-500", "bg-orange-100");
+                        } else {
+                            icon.name = "bookmark-outline";
+                            button.classList.remove("text-orange-500", "bg-orange-100");
+                        }
+                        totalFav.textContent = json.totalFavorited;
+                    }
+
+            } catch (error) {
+                console.error('TogglePostFavorite failed:', error);
+            }
+        });
+    });
+
+
 </script>

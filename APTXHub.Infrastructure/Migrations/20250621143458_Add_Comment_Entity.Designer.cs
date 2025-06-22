@@ -4,6 +4,7 @@ using APTXHub.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APTXHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250621143458_Add_Comment_Entity")]
+    partial class Add_Comment_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,27 +63,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.Favorite", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Favorites");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Like", b =>
                 {
                     b.Property<int>("PostId")
@@ -118,12 +100,6 @@ namespace APTXHub.Infrastructure.Migrations
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPrivate")
-                        .HasColumnType("bit");
 
                     b.Property<int>("NrOfReports")
                         .HasColumnType("int");
@@ -183,25 +159,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.Favorite", b =>
-                {
-                    b.HasOne("APTXHub.Infrastructure.Models.Post", "Post")
-                        .WithMany("Favorites")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("APTXHub.Infrastructure.Models.User", "User")
-                        .WithMany("Favorites")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Like", b =>
                 {
                     b.HasOne("APTXHub.Infrastructure.Models.Post", "Post")
@@ -241,16 +198,12 @@ namespace APTXHub.Infrastructure.Migrations
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Favorites");
-
                     b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("APTXHub.Infrastructure.Models.User", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Favorites");
 
                     b.Navigation("Likes");
 
