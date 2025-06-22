@@ -29,6 +29,7 @@ namespace APTXHub.Controllers
                 .Include(p => p.Likes)
                 .Include(p => p.Favorites)
                 .Include(p => p.Comments).ThenInclude(c => c.User)
+                .Include(p => p.Reports)
                 .OrderByDescending(p => p.DateCreated)
                 .ToListAsync();
             return View(allPosts);
@@ -206,6 +207,30 @@ namespace APTXHub.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            return RedirectToAction("Index");
+        }
+
+        // [POST]: Report Post
+        [HttpPost]
+        public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
+        {
+            int loggedInUserId = 1;
+            // Check if the user has already reported this post
+            var existingReport = await _context.Reports
+                .FirstOrDefaultAsync(r => r.PostId == postReportVM.PostId && r.UserId == loggedInUserId);
+            if (existingReport == null)
+            {
+                // Create a new report
+                var newReport = new Report
+                {
+                    PostId = postReportVM.PostId,
+                    UserId = loggedInUserId,
+                    Reason = postReportVM.Reason,
+                    DateCreated = DateTime.UtcNow
+                };
+                await _context.Reports.AddAsync(newReport);
+                await _context.SaveChangesAsync();
+            }
             return RedirectToAction("Index");
         }
     }

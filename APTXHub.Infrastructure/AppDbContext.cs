@@ -14,6 +14,7 @@ namespace APTXHub.Infrastructure
         public DbSet<Like> Likes { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
+        public DbSet<Report> Reports { get; set; }
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,6 +68,22 @@ namespace APTXHub.Infrastructure
             modelBuilder.Entity<Favorite>()
                 .HasOne(f => f.User)
                 .WithMany(u => u.Favorites)
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Report entity configuration
+            modelBuilder.Entity<Report>()
+                .HasKey(r => new { r.PostId, r.UserId });
+
+            modelBuilder.Entity<Report>()
+               .HasOne(f => f.Post)
+               .WithMany(p => p.Reports)
+               .HasForeignKey(f => f.PostId)
+               .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(f => f.User)
+                .WithMany(u => u.Reports)
                 .HasForeignKey(f => f.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
