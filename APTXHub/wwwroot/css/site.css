@@ -50,3 +50,9 @@ form > button.icon-link, button.delete-post-btn {
     scrollbar-width: thin;
     scrollbar-color: #888 #f0f0f0;
 }
+
+
+/*Custom view story of uk-lightbox*/
+.uk-lightbox-button {
+    display: none !important;
+}

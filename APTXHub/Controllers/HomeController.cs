@@ -3,6 +3,7 @@ using APTXHub.Data.Helpers;
 using APTXHub.Extentions;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Models;
+using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Home;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,28 +14,20 @@ namespace APTXHub.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
+        private readonly IPostService _postService;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context)
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, IPostService postService)
         {
             _logger = logger;
             _context = context;
+            _postService = postService;
         }
 
         // [GET]: Home Page - Show all Posts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index()    
         {
             int loggedInUserId = 1;
-            var allPosts = await _context.Posts
-                .Where(n => (!n.IsPrivate || n.UserId == loggedInUserId) 
-                    && n.Reports.Count < 5 
-                    && n.IsDeleted == false)
-                .Include(p => p.User)
-                .Include(p => p.Likes)
-                .Include(p => p.Favorites)
-                .Include(p => p.Comments).ThenInclude(c => c.User)
-                .Include(p => p.Reports)
-                .OrderByDescending(p => p.DateCreated)
-                .ToListAsync();
+            var allPosts = await _postService.GetAllPostsAsync(loggedInUserId);
             return View(allPosts);
         }
 
@@ -55,28 +48,7 @@ namespace APTXHub.Controllers
                 UserId = loggedInUserId
             };
 
-            //Check and save the image
-            if (post.Image != null && post.Image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                if (post.Image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/uploaded");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(post.Image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        await post.Image.CopyToAsync(stream);
-
-                    //Set the URL to the newPost object
-                    newPost.ImageUrl = "/images/uploaded/" + fileName;
-                }
-            }
-
-            await _context.Posts.AddAsync(newPost);
-            await _context.SaveChangesAsync();
+            await _postService.CreatePostAsync(newPost, post.Image);
 
             //Find and save hashtags
             var postHashtags = HashtagHelper.GetHashtags(post.Content);
@@ -118,79 +90,39 @@ namespace APTXHub.Controllers
             return RedirectToAction("Index");
         }
 
-        // [POST]: Like and dislike Post
+        // [POST]: Like and dislike Post ---- NOTICE
         [HttpPost]
         public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
         {
             int loggedInUserId = 1;
 
-            var existingLike = await _context.Likes
-                 .Where(l => l.PostId == postLike.PostId && l.UserId == loggedInUserId)
-                .FirstOrDefaultAsync();
+            var result = await _postService.TogglePostLikeAsync(postLike.PostId, loggedInUserId);
 
-            bool liked;
-
-            if (existingLike != null)
-            {
-                _context.Likes.Remove(existingLike);
-                liked = false;
-            }
-            else
-            {
-                var newLike = new Like
-                {
-                    PostId = postLike.PostId,
-                    UserId = loggedInUserId
-                };
-                await _context.Likes.AddAsync(newLike);
-                liked = true;
-            }
-
-            await _context.SaveChangesAsync();
-
-            var totalLikes = await _context.Likes
-                .CountAsync(l => l.PostId == postLike.PostId);
-
-            return Json(new { liked, totalLikes });
+            return Json(new { liked = result.Liked, totalLikes = result.TotalLikes });
         }
 
-        // [POST]: Favorite and unfavorite Post
+        // [POST]: Favorite and unfavorite Post ---- NOTICE
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite([FromBody] PostFavoriteVM postFavoriteVM)
         {
 
             int loggedInUserId = 1;
 
-            var existingFavorited = await _context.Favorites
-                .AsNoTracking()
-                 .FirstOrDefaultAsync(l => l.PostId == postFavoriteVM.PostId && l.UserId == loggedInUserId);
+            var res = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId);
 
-            bool favorited;
+            return Json(new { favorited = res.Favorited, totalFavorited = res.TotalFavorites });
 
-            if (existingFavorited != null)
-            {
-                _context.Favorites.Remove(existingFavorited);
-                favorited = false;
-            }
-            else
-            {
-                var newFavorite = new Favorite
-                {
-                    PostId = postFavoriteVM.PostId,
-                    UserId = loggedInUserId,
-                    DateCreated = DateTime.UtcNow
-                };
-                await _context.Favorites.AddAsync(newFavorite);
-                favorited = true;
-            }
+        }
 
-            await _context.SaveChangesAsync();
+        // [POST]: Update visibility of Post
+        [HttpPost]
+        public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
+        {
+            int loggedInUserId = 1;
 
-            var totalFavorited = await _context.Favorites
-               .CountAsync(l => l.PostId == postFavoriteVM.PostId);
+            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId);
 
-            return Json(new { favorited, totalFavorited });
-
+            return RedirectToAction("Index");
         }
 
         // [POST]: Comment on Post
@@ -208,8 +140,8 @@ namespace APTXHub.Controllers
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow
             };
-            await _context.Comments.AddAsync(newComment);
-            await _context.SaveChangesAsync();
+
+            await _postService.AddPostCommentAsync(newComment);
 
             return RedirectToAction("Index");
         }
@@ -219,58 +151,18 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeComment)
         {
-            var comment = await _context.Comments
-                .FirstOrDefaultAsync(c => c.Id == removeComment.CommentId);
-
-            if (comment != null)
-            {
-                _context.Comments.Remove(comment);
-                await _context.SaveChangesAsync();
-            }
+            await _postService.RemovePostCommentAsync(removeComment.CommentId);
             return RedirectToAction("Index");
         }
 
-        // [POST]: Update visibility of Post
-        [HttpPost]
-        public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
-        {
-            int loggedInUserId = 1;
-
-            //get post by id and loggedin user id
-            var post = await _context.Posts
-                .FirstOrDefaultAsync(l => l.Id == postVisibilityVM.PostId && l.UserId == loggedInUserId);
-
-            if (post != null)
-            {
-                post.IsPrivate = !post.IsPrivate;
-                _context.Posts.Update(post);
-                await _context.SaveChangesAsync();
-            }
-
-            return RedirectToAction("Index");
-        }
-
+        
         // [POST]: Report Post
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
         {
             int loggedInUserId = 1;
-            // Check if the user has already reported this post
-            var existingReport = await _context.Reports
-                .FirstOrDefaultAsync(r => r.PostId == postReportVM.PostId && r.UserId == loggedInUserId);
-            if (existingReport == null)
-            {
-                // Create a new report
-                var newReport = new Report
-                {
-                    PostId = postReportVM.PostId,
-                    UserId = loggedInUserId,
-                    Reason = postReportVM.Reason,
-                    DateCreated = DateTime.UtcNow
-                };
-                await _context.Reports.AddAsync(newReport);
-                await _context.SaveChangesAsync();
-            }
+           
+            await _postService.ReportPostAsync(postReportVM.PostId, loggedInUserId, postReportVM.Reason);
             return RedirectToAction("Index");
         }
 
@@ -279,34 +171,8 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> PostRemoveSoft(PostRemoveVM postRemoveVM)
         {
             int loggedInUserId = 1;
-            // Get the post by id and logged in user id
-            var post = await _context.Posts
-                 .Include(p => p.PostHashtags)
-                 .ThenInclude(ph => ph.Hashtag)
-                 .FirstOrDefaultAsync(p => p.Id == postRemoveVM.PostId && p.UserId == loggedInUserId);
 
-            if (post != null)
-            {
-                post.IsDeleted = true; 
-                post.DeletedAt = DateTime.UtcNow;
-
-                // Cập nhật lại Hashtag: giảm count, xóa PostHashtag
-                foreach (var ph in post.PostHashtags.ToList())
-                {
-                    ph.Hashtag.Count--;
-
-                    // Nếu count về 0 thì xóa hashtag luôn (nếu muốn)
-                    if (ph.Hashtag.Count <= 0)
-                    {
-                        _context.Hashtags.Remove(ph.Hashtag);
-                    }
-
-                    _context.Set<PostHashtag>().Remove(ph); // Xoá liên kết
-                }
-
-                _context.Posts.Update(post);
-                await _context.SaveChangesAsync();
-            }
+            await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId);
             return RedirectToAction("Index");
         }
     }

@@ -18,6 +18,7 @@ namespace APTXHub.ViewComponents
                 await _context.Stories
                     .Include(s => s.User)
                     .Where(n => n.DateCreated >= DateTime.UtcNow.AddHours(-24)) // Gioi han 24h
+                    .OrderByDescending(n => n.DateCreated)
                     .ToListAsync();
 
             return View(allStories);

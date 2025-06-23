@@ -1,5 +1,6 @@
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
+using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 // Gioi han upload video
 builder.Services.Configure<FormOptions>(o =>
 {
@@ -19,6 +21,8 @@ builder.Services.Configure<FormOptions>(o =>
 string stringConnection = builder.Configuration.GetConnectionString("Default")!;
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(stringConnection));
 
+// DI: Add services
+builder.Services.AddScoped<IPostService, PostService>();
 
 var app = builder.Build();
 
