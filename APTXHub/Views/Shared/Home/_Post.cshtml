@@ -1,4 +1,5 @@
 ﻿@using APTXHub.Extentions
+@using static APTXHub.Data.Helpers.HashtagHelper
 @model Post
 
 @{
@@ -18,7 +19,7 @@
         </a>
         <div class="flex-1">
             <a>
-                <h4 class="text-black text-14">@Model.User.FullName</h4>
+                <h4 class="text-black text-15">@Model.User.FullName</h4>
                 <div class="text-13 font-normal text-gray-500/80 mt-1 flex items-center" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">
                     <span class="mr-2">@Model.DateCreated.ToTimeAgo()</span>
                    @if(isPrivate){
@@ -74,11 +75,12 @@
     @* Post content *@
     <a>
         <div class="sm:px-4 p-2.5 pt-0 w-full">
-            <p class="font-medium text-14">
-                @Model.Content
+            <p class="font-normal text-15 mb-1">
+                @Html.Raw(ContentFormatter.FormatHashtags(string.IsNullOrEmpty(Model.Content) ? "" : Model.Content))
             </p>
         </div>
     </a>
+
 
     @if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
@@ -132,17 +134,17 @@
               { 
                   <div id="commentRow-@comment.Id" class="flex items-start gap-3 relative"> 
                       <a> 
-                          <img src="@(comment.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-6 h-6 mt-1 rounded-full" /> 
+                          <img src="@(comment.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="w-10 h-10 mr-1 object-cover rounded-full" /> 
                       </a> 
                       <div class="flex-1"> 
                           <div class="flex justify-content-between"> 
-                              <a class="text-black font-medium inline-block flex-grow"> 
+                              <a class="text-black font-medium inline-block flex-grow text-14"> 
                                   @comment.User.FullName 
                               </a> 
-                              <small title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small> 
+                              <small class="text-13" title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small> 
                           </div>
                         <div class="flex items-center justify-between">
-                            <p class="mt-0.5">
+                            <p class="mt-0.5 text-14">
                                 @comment.Content
                             </p>
                             <form asp-controller="Home" asp-action="RemovePostComment"> 

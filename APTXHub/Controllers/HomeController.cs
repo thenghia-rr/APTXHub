@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using APTXHub.Data.Helpers;
 using APTXHub.Extentions;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Models;
@@ -75,6 +76,43 @@ namespace APTXHub.Controllers
             }
 
             await _context.Posts.AddAsync(newPost);
+            await _context.SaveChangesAsync();
+
+            //Find and save hashtags
+            var postHashtags = HashtagHelper.GetHashtags(post.Content);
+            // Tạo liên kết PostHashtag
+            foreach (var hashTag in postHashtags)
+            {
+                var hashtagDb = await _context.Hashtags.FirstOrDefaultAsync(n => n.Name == hashTag);
+
+                if (hashtagDb != null)
+                {
+                    hashtagDb.Count += 1;
+                    hashtagDb.DateUpdated = DateTime.UtcNow;
+                    _context.Hashtags.Update(hashtagDb);
+                }
+                else
+                {
+                    hashtagDb = new Hashtag()
+                    {
+                        Name = hashTag,
+                        Count = 1,
+                        DateCreated = DateTime.UtcNow,
+                        DateUpdated = DateTime.UtcNow
+                    };
+                    await _context.Hashtags.AddAsync(hashtagDb);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Tạo PostHashtag
+                var postHashtag = new PostHashtag
+                {
+                    PostId = newPost.Id,
+                    HashtagId = hashtagDb.Id
+                };
+                await _context.Set<PostHashtag>().AddAsync(postHashtag);
+            }
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -243,12 +281,29 @@ namespace APTXHub.Controllers
             int loggedInUserId = 1;
             // Get the post by id and logged in user id
             var post = await _context.Posts
-                .FirstOrDefaultAsync(p => p.Id == postRemoveVM.PostId && p.UserId == loggedInUserId);
+                 .Include(p => p.PostHashtags)
+                 .ThenInclude(ph => ph.Hashtag)
+                 .FirstOrDefaultAsync(p => p.Id == postRemoveVM.PostId && p.UserId == loggedInUserId);
 
             if (post != null)
             {
                 post.IsDeleted = true; 
                 post.DeletedAt = DateTime.UtcNow;
+
+                // Cập nhật lại Hashtag: giảm count, xóa PostHashtag
+                foreach (var ph in post.PostHashtags.ToList())
+                {
+                    ph.Hashtag.Count--;
+
+                    // Nếu count về 0 thì xóa hashtag luôn (nếu muốn)
+                    if (ph.Hashtag.Count <= 0)
+                    {
+                        _context.Hashtags.Remove(ph.Hashtag);
+                    }
+
+                    _context.Set<PostHashtag>().Remove(ph); // Xoá liên kết
+                }
+
                 _context.Posts.Update(post);
                 await _context.SaveChangesAsync();
             }

@@ -4,6 +4,7 @@ using APTXHub.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APTXHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250623060921_Add_Hashtag_Entity")]
+    partial class Add_Hashtag_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,21 +170,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.PostHashtag", b =>
-                {
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HashtagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PostId", "HashtagId");
-
-                    b.HasIndex("HashtagId");
-
-                    b.ToTable("PostHashtags");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Report", b =>
                 {
                     b.Property<int>("PostId")
@@ -331,25 +319,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.PostHashtag", b =>
-                {
-                    b.HasOne("APTXHub.Infrastructure.Models.Hashtag", "Hashtag")
-                        .WithMany("PostHashtags")
-                        .HasForeignKey("HashtagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APTXHub.Infrastructure.Models.Post", "Post")
-                        .WithMany("PostHashtags")
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Hashtag");
-
-                    b.Navigation("Post");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Report", b =>
                 {
                     b.HasOne("APTXHub.Infrastructure.Models.Post", "Post")
@@ -385,11 +354,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("Replies");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.Hashtag", b =>
-                {
-                    b.Navigation("PostHashtags");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -397,8 +361,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("PostHashtags");
 
                     b.Navigation("Reports");
                 });

@@ -8378,6 +8378,9 @@ h1, h2, h3, h4, h5, h6 {
 .truncate {
     text-overflow: ellipsis;
 }
+.text-15 {
+    font-size: 15px;
+}
 .text-14 {
     font-size: 14px;
 }

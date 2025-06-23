@@ -16,6 +16,8 @@ namespace APTXHub.Infrastructure
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<Story> Stories { get; set; }
+        public DbSet<Hashtag> Hashtags { get; set; }
+        public DbSet<PostHashtag> PostHashtags { get; set; }
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -93,9 +95,21 @@ namespace APTXHub.Infrastructure
                 .HasForeignKey(f => f.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // PostHashtag entity configuration
+            modelBuilder.Entity<PostHashtag>()
+                .HasKey(ph => new { ph.PostId, ph.HashtagId });
+
+            modelBuilder.Entity<PostHashtag>()
+                .HasOne(ph => ph.Post)
+                .WithMany(p => p.PostHashtags)
+                .HasForeignKey(ph => ph.PostId);
+
+            modelBuilder.Entity<PostHashtag>()
+                .HasOne(ph => ph.Hashtag)
+                .WithMany(h => h.PostHashtags)
+                .HasForeignKey(ph => ph.HashtagId);
+
             base.OnModelCreating(modelBuilder);
         }
-
-       
     }
 }

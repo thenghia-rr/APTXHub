@@ -11,9 +11,11 @@ It simulates the core features of modern social platforms, offering a space wher
 - **Authentication**: Identity + Google OAuth
 - **Features**:
   - User registration & login
-  - Post creation and editing
+  - Post creation and delete soft/hard
   - Commenting system
-  - Save & like posts
+  - Save(favorite) & like posts
+  - Hashtags by post
+  - Create story (image/video)
   - Dark mode toggle
   - Responsive UI
 
