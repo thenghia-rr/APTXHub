@@ -1,4 +1,4 @@
-/*
+﻿/*
 ! tailwindcss v3.3.0 | MIT License | https://tailwindcss.com
 */
 
@@ -8396,6 +8396,13 @@ h1, h2, h3, h4, h5, h6 {
 .max-h-330 {
     max-height: 330px;
 }
+.max-h-420 {
+    max-height: 420px;
+}
+.h-500 {
+    height: 500px;
+}
 .bg-opacity-50 {
     --tw-bg-opacity: 0.5;
 }
+

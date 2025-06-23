@@ -1,5 +1,6 @@
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -7,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Gioi han upload video
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = 52428800; // 50MB
+});
 
 
 // DB configuration
@@ -23,6 +29,7 @@ var app = builder.Build();
 //    await dbContext.Database.MigrateAsync();
 //    await DbInitializer.SeedAsync(dbContext);
 //}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

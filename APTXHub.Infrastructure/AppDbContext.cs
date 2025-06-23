@@ -15,16 +15,22 @@ namespace APTXHub.Infrastructure
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Story> Stories { get; set; }
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure entity properties and relationships here
-            // User entity configuration
+            // User entity configuration (Post, Story)
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Posts)
                 .WithOne(p => p.User)
                 .HasForeignKey(p => p.UserId);
+
+            modelBuilder.Entity<User>()
+                .HasMany(s => s.Stories)
+                .WithOne(u => u.User)
+                .HasForeignKey(u => u.UserId);
 
             // Like entity configuration
             modelBuilder.Entity<Like>()

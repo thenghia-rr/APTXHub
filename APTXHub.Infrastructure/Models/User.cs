@@ -20,5 +20,6 @@ namespace APTXHub.Infrastructure.Models
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
         public ICollection<Report> Reports { get; set; } = new List<Report>();
+        public ICollection<Story> Stories { get; set; } = new List<Story>();
     }
 }

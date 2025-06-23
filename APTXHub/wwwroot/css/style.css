@@ -337,6 +337,8 @@ input:checked + .switch-button:before {
   position: absolute;
   bottom: 0;
   width: 100%;
+  font-size: 15px;
+  font-weight: 600;
 }
 .uk-lightbox-caption:empty {
   display: none;
