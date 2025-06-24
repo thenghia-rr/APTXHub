@@ -2,6 +2,7 @@
 using APTXHub.Data.Helpers;
 using APTXHub.Extentions;
 using APTXHub.Infrastructure;
+using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Home;
@@ -15,12 +16,20 @@ namespace APTXHub.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
         private readonly IPostService _postService;
+        private readonly IHashtagService _hashtagService;
+        private readonly IFilesService _filesService;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context, IPostService postService)
+        public HomeController(ILogger<HomeController> logger,
+            AppDbContext context,
+            IPostService postService,
+            IHashtagService hashtagService,
+            IFilesService filesService)
         {
             _logger = logger;
             _context = context;
             _postService = postService;
+            _hashtagService = hashtagService;
+            _filesService = filesService;
         }
 
         // [GET]: Home Page - Show all Posts
@@ -37,60 +46,25 @@ namespace APTXHub.Controllers
         {
             //Get the logged in user
             int loggedInUserId = 1;
+            var imageUploadUrl = await _filesService.UploadMediaAsync(post.Image, MediaFileType.PostImage);
 
             var newPost = new Post
             {
                 Content = post.Content,
-                ImageUrl = null, // Assuming no image URL for simplicity
+                ImageUrl = imageUploadUrl,
                 NrOfReports = 0,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
                 UserId = loggedInUserId
             };
 
-            await _postService.CreatePostAsync(newPost, post.Image);
-
-            //Find and save hashtags
-            var postHashtags = HashtagHelper.GetHashtags(post.Content);
-            // Tạo liên kết PostHashtag
-            foreach (var hashTag in postHashtags)
-            {
-                var hashtagDb = await _context.Hashtags.FirstOrDefaultAsync(n => n.Name == hashTag);
-
-                if (hashtagDb != null)
-                {
-                    hashtagDb.Count += 1;
-                    hashtagDb.DateUpdated = DateTime.UtcNow;
-                    _context.Hashtags.Update(hashtagDb);
-                }
-                else
-                {
-                    hashtagDb = new Hashtag()
-                    {
-                        Name = hashTag,
-                        Count = 1,
-                        DateCreated = DateTime.UtcNow,
-                        DateUpdated = DateTime.UtcNow
-                    };
-                    await _context.Hashtags.AddAsync(hashtagDb);
-                    await _context.SaveChangesAsync();
-                }
-
-                // Tạo PostHashtag
-                var postHashtag = new PostHashtag
-                {
-                    PostId = newPost.Id,
-                    HashtagId = hashtagDb.Id
-                };
-                await _context.Set<PostHashtag>().AddAsync(postHashtag);
-            }
-
-            await _context.SaveChangesAsync();
+            await _postService.CreatePostAsync(newPost);
+            await _hashtagService.ProcessHashtagsForNewPostAsync(post.Content, newPost.Id);
 
             return RedirectToAction("Index");
         }
 
-        // [POST]: Like and dislike Post ---- NOTICE
+        // [POST]: Like and dislike Post 
         [HttpPost]
         public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
         {
@@ -101,7 +75,7 @@ namespace APTXHub.Controllers
             return Json(new { liked = result.Liked, totalLikes = result.TotalLikes });
         }
 
-        // [POST]: Favorite and unfavorite Post ---- NOTICE
+        // [POST]: Favorite and unfavorite Post 
         [HttpPost]
         public async Task<IActionResult> TogglePostFavorite([FromBody] PostFavoriteVM postFavoriteVM)
         {
@@ -130,7 +104,7 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> AddPostComment(PostCommentVM postComment)
         {
             int loggedInUserId = 1;
-
+                
             //Creat a post object
             var newComment = new Comment()
             {
@@ -172,7 +146,12 @@ namespace APTXHub.Controllers
         {
             int loggedInUserId = 1;
 
-            await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId);
+            var post = await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId);
+
+            if(post != null)
+            {
+                await _hashtagService.ProcessHashtagsForRemovedPostAsync(post);
+            }
             return RedirectToAction("Index");
         }
     }

@@ -1,4 +1,5 @@
 ﻿using APTXHub.Infrastructure;
+using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,19 +8,17 @@ namespace APTXHub.ViewComponents
     public class StoriesViewComponent : ViewComponent
     {
         private readonly AppDbContext _context;
-        public StoriesViewComponent(AppDbContext context)
+        private readonly IStoriesService _storiesService;
+
+        public StoriesViewComponent(AppDbContext context, IStoriesService storiesService)
         {
             _context = context;
+            _storiesService = storiesService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var allStories = 
-                await _context.Stories
-                    .Include(s => s.User)
-                    .Where(n => n.DateCreated >= DateTime.UtcNow.AddHours(-24)) // Gioi han 24h
-                    .OrderByDescending(n => n.DateCreated)
-                    .ToListAsync();
+            var allStories = await _storiesService.GetAllStoriesAsync();
 
             return View(allStories);
         }

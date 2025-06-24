@@ -13,8 +13,8 @@ namespace APTXHub.Infrastructure.Services
     public interface IPostService
     {
         Task<List<Post>> GetAllPostsAsync(int loggedInUserId); 
-        Task<Post> CreatePostAsync(Post post, IFormFile image);
-        Task RemovePostSoftAsync(int postId, int loggedInUserId);
+        Task<Post> CreatePostAsync(Post post);
+        Task<Post?> RemovePostSoftAsync(int postId, int loggedInUserId);
 
         Task AddPostCommentAsync(Comment comment);
         Task RemovePostCommentAsync(int commentId);

@@ -42,62 +42,31 @@ namespace APTXHub.Infrastructure.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Post> CreatePostAsync(Post post, IFormFile image)
+        public async Task<Post> CreatePostAsync(Post post)
         {
-            //Check and save the image
-            if (image != null && image.Length > 0)
-            {
-                string rootFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
-                if (image.ContentType.Contains("image"))
-                {
-                    string rootFolderPathImages = Path.Combine(rootFolderPath, "images/posts");
-                    Directory.CreateDirectory(rootFolderPathImages);
-
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
-                    string filePath = Path.Combine(rootFolderPathImages, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                        await image.CopyToAsync(stream);
-
-                    //Set the URL to the newPost object
-                    post.ImageUrl = "/images/posts/" + fileName;
-                }
-            }
-
+           
             await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
 
             return post;
         }
 
-        public async Task RemovePostSoftAsync(int postId, int loggedInUserId)
+        public async Task<Post?> RemovePostSoftAsync(int postId, int loggedInUserId)
         {
             var post = await _context.Posts
                 .Include(p => p.PostHashtags)
                 .ThenInclude(ph => ph.Hashtag)
                 .FirstOrDefaultAsync(p => p.Id == postId && p.UserId == loggedInUserId);
 
-            if (post != null)
-            {
-                post.IsDeleted = true;
-                post.DeletedAt = DateTime.UtcNow;
+            if (post == null) return null;
 
-                // Cập nhật Hashtags nếu post đó có hashtag
-                foreach (var ph in post.PostHashtags.ToList())
-                {
-                    ph.Hashtag.Count--;
+            post.IsDeleted = true;
+            post.DeletedAt = DateTime.UtcNow;
 
-                    if (ph.Hashtag.Count <= 0)
-                    {
-                        _context.Hashtags.Remove(ph.Hashtag);
-                    }
+            _context.Posts.Update(post);
+            await _context.SaveChangesAsync();
 
-                    _context.PostHashtags.Remove(ph); // hoặc _context.Set<PostHashtag>().Remove(ph);
-                }
-
-                _context.Posts.Update(post);
-                await _context.SaveChangesAsync();
-            }
+            return post;
         }
 
         public async Task RemovePostCommentAsync(int commentId)
