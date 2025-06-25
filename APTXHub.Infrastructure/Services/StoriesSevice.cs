@@ -22,7 +22,7 @@ namespace APTXHub.Infrastructure.Services
             var allStories =
                await _context.Stories
                    .Include(s => s.User)
-                   .Where(n => n.DateCreated >= DateTime.UtcNow.AddHours(-24) || n.Id == 5 || n.Id == 3) // Gioi han 24h
+                   .Where(n => n.DateCreated >= DateTime.UtcNow.AddHours(-24) || n.Id == 9 || n.Id == 3) // Gioi han 24h
                    .OrderByDescending(n => n.DateCreated)
                    .ToListAsync();
 

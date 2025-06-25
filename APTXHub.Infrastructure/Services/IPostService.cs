@@ -13,6 +13,8 @@ namespace APTXHub.Infrastructure.Services
     public interface IPostService
     {
         Task<List<Post>> GetAllPostsAsync(int loggedInUserId); 
+        Task<List<Post>> GetAllFavoritePostsAsync(int loggedInUserId); 
+
         Task<Post> CreatePostAsync(Post post);
         Task<Post?> RemovePostSoftAsync(int postId, int loggedInUserId);
 

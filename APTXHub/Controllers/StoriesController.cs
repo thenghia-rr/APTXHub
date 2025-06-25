@@ -10,15 +10,13 @@ namespace APTXHub.Controllers
 {
     public class StoriesController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IStoriesService _storiesService;
         private readonly IFilesService _filesService;
 
-        public StoriesController(AppDbContext context
-            , IStoriesService storiesService
-            , IFilesService filesService)
+        public StoriesController(
+            IStoriesService storiesService
+           ,IFilesService filesService)
         {
-            _context = context;
             _storiesService = storiesService;
             _filesService = filesService;
         }
