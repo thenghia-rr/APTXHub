@@ -8054,6 +8054,9 @@ h1, h2, h3, h4, h5, h6 {
   .lg\:w-\[350px\] {
     width: 350px;
   }
+  .lg\:w-\[360px\] {
+    width: 360px;
+  }
 
   .lg\:w-\[400px\] {
     width: 400px;

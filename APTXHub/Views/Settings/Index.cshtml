@@ -1,0 +1,106 @@
+﻿
+<main id="site__main" class="2xl:ml-64 xl:ml-56 p-4 h-[calc(100vh-4rem)] mt-16 bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <div class="max-w-3xl mx-auto">
+        <div class="social-profile-container p-6">
+            @* Profile picture section *@
+            <div class="flex items-center justify-between pb-4">
+                <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full">
+                    <div class="profile-picture-wrapper w-12 h-12 shrink-0">
+                        <label class="cursor-pointer">
+                            <img id="imagePreview" src="@(Model.ProfilePictureUrl ?? "~/images/avatar/user.png")" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                            <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
+                            <label for="imageUpload" class="profile-picture-upload absolute -bottom-2 -right-2 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3 fill-white">
+                                    <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                                    <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                                </svg>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-base font-semibold text-gray-900 dark:text-white">@Model.FullName</h3>
+                        <p class="text-sm text-blue-600 dark:text-blue-400 mt-1 font-normal">@@thenghia_rr</p>
+                    </div>
+                    <button type="submit" id="saveButton" class="hidden form-button submit ml-auto">Save</button>
+                </form>
+            </div>
+
+            @* Tabs *@
+            <div class="tab-nav">
+                <nav class="nav__underline">
+                    <ul class="uk-slider-items w-[calc(100%+10px)] !overflow-hidden"
+                        uk-switcher="connect: #setting_tab; animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
+                        <li class="w-auto pr-2.5">
+                            <a href="#">Update profile</a>
+                        </li>
+                        <li class="w-auto pr-2.5">
+                            <a href="#">Update password</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            @* Tab content *@
+            <div id="setting_tab" class="uk-switcher py-12 px-6 lg:px-20 text-sm tab-content">
+                <div>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Full name</label>
+                            <div class="flex-1">
+                                <input type="text" name="fullName" placeholder="Enter your full name" value="@Model.FullName" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Username</label>
+                            <div class="flex-1">
+                                <input type="text" name="username" placeholder="Enter your username" value="@@thenghia_rr" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Email</label>
+                            <div class="flex-1">
+                                <input type="email" name="emailAddress" placeholder="Enter your email address" value="" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Bio</label>
+                            <div class="flex-1">
+                                <textarea class="form-textarea w-full" name="bio" rows="5" placeholder="Enter your bio"></textarea>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 mt-12 pl-32">
+                            <button class="form-button cancel">Cancel</button>
+                            <button type="submit" class="form-button submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="space-y-6">
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Current password</label>
+                            <div class="flex-1">
+                                <input type="password" name="currentPassword" placeholder="Enter your current password" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">New password</label>
+                            <div class="flex-1">
+                                <input type="password" name="newPassword" placeholder="Enter your new password" value="" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 lg:gap-10">
+                            <label class="w-32 text-right font-medium text-gray-700 dark:text-gray-300">Confirm password</label>
+                            <div class="flex-1">
+                                <input type="password" name="confirmPassword" placeholder="Confirm your new password" value="" class="form-input w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 mt-12 pl-32">
+                            <button class="form-button cancel">Cancel</button>
+                            <button type="submit" class="form-button submit">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
