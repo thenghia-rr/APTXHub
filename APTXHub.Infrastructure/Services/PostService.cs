@@ -57,6 +57,18 @@ namespace APTXHub.Infrastructure.Services
             return allFavoritedPosts;
         }
 
+
+        public async Task<Post?> GetPostByIdAsync(int postId)
+        {
+            var post = await _context.Posts
+               .Include(n => n.User)
+               .Include(n => n.Likes)
+               .Include(n => n.Favorites)
+               .Include(n => n.Comments).ThenInclude(n => n.User)
+               .FirstOrDefaultAsync(n => n.Id == postId);
+
+            return post; // POST MAYBE NULL HERE
+        }
         public async Task AddPostCommentAsync(Comment comment)
         {
             await _context.Comments.AddAsync(comment);
@@ -209,7 +221,6 @@ namespace APTXHub.Infrastructure.Services
             };
 
         }
-
 
     }
 }

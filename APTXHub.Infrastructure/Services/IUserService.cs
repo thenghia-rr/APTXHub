@@ -10,5 +10,6 @@ namespace APTXHub.Infrastructure.Services
     public interface IUserService
     {
         Task<User> GetUser(int loggedInUserId);
+        Task UpdateUserProfilePicture(int loggedInUserId, string profilePictureUrl);
     }
 }

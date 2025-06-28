@@ -22,5 +22,17 @@ namespace APTXHub.Infrastructure.Services
             return await _context.Users
                 .FirstOrDefaultAsync(n => n.Id == loggedInUserId) ?? new User();
         }
+
+        public async Task UpdateUserProfilePicture(int loggedInUserId, string profilePictureUrl)
+        {
+            var user = _context.Users.FirstOrDefault(x => x.Id == loggedInUserId);
+
+            if(user != null)
+            {
+                user.ProfilePictureUrl = profilePictureUrl;
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

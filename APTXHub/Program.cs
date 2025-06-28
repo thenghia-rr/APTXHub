@@ -54,6 +54,13 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+// Custom url post detail: /post/id
+app.MapControllerRoute(
+    name: "post_detail",
+    pattern: "post/{postid}",
+    defaults: new { controller = "Home", action = "Details" });
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

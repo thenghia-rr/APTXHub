@@ -40,6 +40,20 @@ namespace APTXHub.Controllers
             return View(allPosts);
         }
 
+
+        // [GET]: Post detail Page
+        // Da duoc custom route pattern: /post/{id}
+        public async Task<IActionResult> Details(int postid)
+        {
+            var post = await _postService.GetPostByIdAsync(postid);
+
+            if (post == null)
+            {
+                return NotFound(); // trả về 404 nếu không có post
+            }
+
+            return View(post);
+        }
         //[POST]: Create Post
         [HttpPost]
         public async Task<IActionResult> CreatePost(PostVM post)
