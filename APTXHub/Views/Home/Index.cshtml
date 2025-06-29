@@ -37,7 +37,9 @@
                 else {
                     @foreach (var post in Model)
                     {
-                        <partial name="Home/_Post" model="post"></partial>
+                        <partial name="Home/_Post"
+                                 model="post"
+                                 view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
 
                     }
                 }

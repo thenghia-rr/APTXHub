@@ -9,6 +9,7 @@
     bool isReported = Model.Reports.Any(n => n.UserId == 1);
 
     string defaultUserPicture = "~/images/avatar/user.png";
+    bool showAllComments = ViewData["ShowAllComment"] as bool? ?? false;
 }
 
 
@@ -140,7 +141,9 @@
     @* Add comment section *@
     <div>
         <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
-            @foreach (var comment in Model.Comments.OrderByDescending(n => n.DateCreated).Take(3))
+            @foreach (var comment in showAllComments
+                ? Model.Comments.OrderByDescending(n => n.DateCreated)
+                : Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
             {
                 <div id="commentRow-@comment.Id" class="flex items-start gap-3 relative">
                     <a>
@@ -172,7 +175,7 @@
                     </div>
                 </div>
             }
-            @if (Model.Comments.Count >= 3)
+            @if (Model.Comments.Count >= 3 && !showAllComments)
             {
                 <div class="p-1.5">
                     <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id">

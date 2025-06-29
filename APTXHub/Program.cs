@@ -2,6 +2,7 @@ using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
 using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -28,6 +29,14 @@ builder.Services.AddScoped<IStoriesService, StoriesSevice>();
 builder.Services.AddScoped<IFilesService, FilesSevice>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+// Identity configuration
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Init data in database
@@ -52,6 +61,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 // Custom url post detail: /post/id
