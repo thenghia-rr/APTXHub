@@ -1,5 +1,6 @@
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
+using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +31,7 @@ builder.Services.AddScoped<IFilesService, FilesSevice>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Identity configuration
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole<int>>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
@@ -40,12 +41,16 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Init data in database
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//    await dbContext.Database.MigrateAsync();
-//    await DbInitializer.SeedAsync(dbContext);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    //var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //await dbContext.Database.MigrateAsync();
+    //await DbInitializer.SeedAsync(dbContext);
+
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+    await DbInitializer.SeedUsersAndRolesAsync(userManager, roleManager);
+}
 
 
 // Configure the HTTP request pipeline.

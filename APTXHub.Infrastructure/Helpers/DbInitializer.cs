@@ -1,4 +1,6 @@
-﻿using APTXHub.Infrastructure.Models;
+﻿using APTXHub.Infrastructure.Helpers.Constants;
+using APTXHub.Infrastructure.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +11,58 @@ namespace APTXHub.Infrastructure.Helpers
 {
     public static class DbInitializer
     {
+        // [2]. Init users and roles of Identity
+        public static async Task SeedUsersAndRolesAsync(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
+        {
+            //Roles
+            if (!roleManager.Roles.Any())
+            {
+                foreach (var roleName in AppRoles.All)
+                {
+                    if (!await roleManager.RoleExistsAsync(roleName))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole<int>(roleName));
+                    }
+                }
+            }
+
+            //Users with Roles
+            if (!userManager.Users.Any(n => !string.IsNullOrEmpty(n.Email)))
+            {
+                var userPassword = "Susu@123";
+                var newUser = new User()
+                {
+                    UserName = "thenghia",
+                    Email = "nghiadang085@gmail.com",
+                    FullName = "Đặng Thế Nghĩa",
+                    ProfilePictureUrl = "https://i.pinimg.com/736x/68/2f/6c/682f6c9e79d3d9b93759216780a86b63.jpg",
+                    EmailConfirmed = true
+                };
+
+                var result = await userManager.CreateAsync(newUser, userPassword);
+                if (result.Succeeded)
+                    await userManager.AddToRoleAsync(newUser, AppRoles.User);
+
+
+                var newAdmin = new User()
+                {
+                    UserName = "admin123",
+                    Email = "admin@gmail.com",
+                    FullName = "Admin APTX",
+                    ProfilePictureUrl = "https://i.pinimg.com/736x/2d/80/d9/2d80d94507435eaeb15171c441bcb7f4.jpg",
+                    EmailConfirmed = true
+                };
+
+                var resultNewAdmin = await userManager.CreateAsync(newAdmin, userPassword);
+                if (resultNewAdmin.Succeeded)
+                    await userManager.AddToRoleAsync(newAdmin, AppRoles.Admin);
+            }
+        }
+
+        // [1]. Mock user and post data for development purposes
         public static async Task SeedAsync(AppDbContext appDbContext)
         {
-            if(!appDbContext.Users.Any() && !appDbContext.Posts.Any())
+            if (!appDbContext.Users.Any() && !appDbContext.Posts.Any())
             {
                 var newUser = new User()
                 {

@@ -1,0 +1,71 @@
+﻿<div class="relative h-screen overflow-hidden bg-primary">
+
+    @* Image slider background *@
+    <div class="absolute inset-0 z-0">
+        <div class="w-full h-full" tabindex="-1" uk-slideshow="animation: slide; autoplay: true">
+            <ul class="uk-slideshow-items w-full h-full">
+                <li>
+                    <img src="~/images/welcome/welcome-07.jpeg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
+                    <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
+                </li>
+                <li>
+                    <img src="~/images/welcome/welcome-06.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
+                    <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
+                </li>
+                <li>
+                    <img src="~/images/welcome/welcome-05.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
+                    <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
+                </li>
+            </ul>
+
+            @* <div class="flex justify-center"> *@
+            @*     <ul class="inline-flex flex-wrap justify-center absolute bottom-8 gap-1.5 uk-dotnav uk-slideshow-nav"></ul> *@
+            @* </div> *@
+        </div>
+    </div>
+
+    @* Blur background *@
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-2px z-10"></div>
+
+    @* Centered Login Form *@
+    <div class="absolute inset-0 z-20 flex items-center justify-center px-4">
+        <div class="bg-white shadow-xl p-8 w-full max-w-md rounded-lg space-y-6">
+            <div>
+                <h2 class="text-3xl font-semibold mb-4 text-center">Sign in </h2>
+                <p class="text-base text-gray-700 font-normal">If you have not signed up yet. <a asp-controller="Authentication" asp-action="Register" class="text-blue-700">Register here!</a></p>
+            </div>
+
+            <form method="post" class="space-y-5 text-sm text-black font-medium">
+                <div>
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" placeholder="Email" required class="mt-2.5 w-full" />
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" placeholder="***" required class="mt-2.5 w-full" />
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5">
+                        <input id="rememberme" name="rememberme" type="checkbox">
+                        <label for="rememberme" class="font-normal">Remember me</label>
+                    </div>
+                    <a href="#" class="text-blue-700">Forget password</a>
+                </div>
+
+                <button type="submit" class="button bg-primary text-white w-full">Sign in</button>
+
+                <div class="text-center flex items-center gap-6">
+                    <hr class="flex-1 border-slate-200">
+                    Or continue with
+                    <hr class="flex-1 border-slate-200">
+                </div>
+
+                <div class="flex gap-2">
+                    <a href="#" class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm"><ion-icon name="logo-google" class="text-lg"></ion-icon> google</a>
+                    <a href="#" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
