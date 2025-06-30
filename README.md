@@ -1,6 +1,6 @@
 # APTX Hub - Mini Social Network
 
-**APTX Hub** is a mini social network web application built with **ASP.NET Core MVC**.  
+**APTX Hub** is a mini social network web application built with **ASP.NET Core**.  
 It simulates the core features of modern social platforms, offering a space where users can connect, post, and interact.
 
 ## Tech Stack
@@ -10,7 +10,8 @@ It simulates the core features of modern social platforms, offering a space wher
 - **Database**: SQL Server
 - **Authentication**: Identity + Google OAuth
 - **Real-time**: SignalR
-- **Features**:
+- **Architecture**: Service-Oriented Architecture (SOA) 
+- **Features**: 
   - User registration & login
   - Post creation and delete soft/hard
   - Commenting system

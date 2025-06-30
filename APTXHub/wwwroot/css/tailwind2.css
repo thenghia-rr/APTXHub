@@ -8423,3 +8423,6 @@ h1, h2, h3, h4, h5, h6 {
     --tw-bg-opacity: 0.5;
 }
 
+.top-60-percent {
+    top: 60%;
+}

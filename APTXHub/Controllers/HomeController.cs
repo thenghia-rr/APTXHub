@@ -6,11 +6,13 @@ using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Home;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -36,6 +38,7 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> Index()    
         {
             int loggedInUserId = 1;
+
             var allPosts = await _postService.GetAllPostsAsync(loggedInUserId);
             return View(allPosts);
         }

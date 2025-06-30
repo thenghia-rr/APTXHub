@@ -2,10 +2,12 @@
 using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Setttings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class SettingsController : Controller
     {
         private readonly IUserService _userService;
@@ -20,7 +22,7 @@ namespace APTXHub.Controllers
         //[GET]: show information of user
         public async Task<IActionResult> Index()
         {
-            var loggedInUserId = 1;
+            var loggedInUserId = 8;
             var userDb = await _userService.GetUser(loggedInUserId);
 
             return View(userDb);

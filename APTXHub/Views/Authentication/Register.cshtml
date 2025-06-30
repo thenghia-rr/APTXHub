@@ -4,15 +4,13 @@
      
     @*form section*@
     <div class="relative lg:w-[580px] md:w-96 w-full p-10 min-h-screen bg-white shadow-xl flex items-center pt-10 z-10">
-        <div class="absolute top-16 w-full z-30 text-center">
-            <h1 id="animatedTitle" class="login_title text-5xl font-extrabold">APTXHub</h1>
-        </div>
+        
 
         <div class="w-full lg:max-w-sm mx-auto space-y-10">
 
             <div>
-                <h2 class="text-2xl font-semibold mb-1.5">Sign up</h2>
-                <p class="text-sm text-gray-700 font-normal">If you already have an account, <a asp-controller="Authentication" asp-action="Login" class="text-blue-700">Login here!</a></p>
+                <h2 class="text-3xl font-semibold mb-1.5">Sign up</h2>
+                <p class="text-base text-gray-700 font-normal">If you already have an account, <a asp-controller="Authentication" asp-action="Login" class="text-blue-700">Login here!</a></p>
             </div>
 
             <form asp-controller="Authentication" asp-action="Register" method="post" class="space-y-7 text-sm text-black font-medium">
@@ -42,17 +40,37 @@
                         </div>
                     </div>
                     <div>
-                        <label for="password">Password</label>
                         <div class="mt-2.5">
-                            <input asp-for="Password" type="password" placeholder="***" required="" class="!w-full" />
+                            @* <input asp-for="Password" type="password" placeholder="***" required="" class="!w-full" /> *@
+                            <div>
+                                <label asp-for="Password">Password</label>
+                                <div class="mt-2.5 relative">
+                                    <input asp-for="Password" id="password" type="password" placeholder="***" required class="!w-full pr-10" />
+                                    <button type="button" id="togglePassword" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
+                                        <ion-icon name="eye-outline" id="togglePasswordIcon"></ion-icon>
+                                    </button>
+                                    <span asp-validation-for="Password" class="text-red-500 text-xs mt-1 absolute -bottom-5"></span>
+                                </div>
+                            </div>
+
                             <span asp-validation-for="Password" class="text-red-500 text-xs mt-1"></span>
                         </div>
                     </div>
 
                     <div>
-                        <label for="confirmPassword">Confirm password</label>
                         <div class="mt-2.5">
-                            <input asp-for="ConfirmPassword" type="password" placeholder="***" required="" class="!w-full" />
+                            @* <input asp-for="ConfirmPassword" type="password" placeholder="***" required="" class="!w-full" /> *@
+                            <div>
+                                <label asp-for="ConfirmPassword">Confirm password</label>
+                                <div class="mt-2.5 relative">
+                                    <input asp-for="ConfirmPassword" id="confirmPassword" type="password" placeholder="***" required class="!w-full pr-10" />
+                                    <button type="button" id="toggleConfirmPassword" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
+                                        <ion-icon name="eye-outline" id="toggleConfirmIcon"></ion-icon>
+                                    </button>
+                                    <span asp-validation-for="ConfirmPassword" class="text-red-500 text-xs mt-1 absolute -bottom-5"></span>
+                                </div>
+                            </div>
+
                             <span asp-validation-for="ConfirmPassword" class="text-red-500 text-xs mt-1"></span>
                         </div>
                     </div>
@@ -113,3 +131,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Toggle show password and cfPassword
+    function setupPasswordToggle(inputId, buttonId, iconId) {
+        const input = document.getElementById(inputId);
+        const toggleBtn = document.getElementById(buttonId);
+        const icon = document.getElementById(iconId);
+
+        toggleBtn.addEventListener("click", () => {
+            const isVisible = input.type === "text";
+            input.type = isVisible ? "password" : "text";
+            icon.name = isVisible ? "eye-outline" : "eye-off-outline";
+        });
+    }
+
+    setupPasswordToggle("password", "togglePassword", "togglePasswordIcon");
+    setupPasswordToggle("confirmPassword", "toggleConfirmPassword", "toggleConfirmIcon");
+</script>

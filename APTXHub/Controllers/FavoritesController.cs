@@ -1,8 +1,10 @@
 ﻿using APTXHub.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class FavoritesController : Controller
     {
         private readonly IPostService _postService;

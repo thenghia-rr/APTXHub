@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>APTX Hub</title>
     <link href="~/images/favicon.png" rel="icon" type="image/png" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/tailwind2.css" asp-append-version="true" />
 </head>
@@ -13,11 +13,16 @@
 
     <div id="wrapper">
 
-        @* Topbar *@
-        @* <partial name="Navigation/_TopBar" /> *@
+        @if (User?.Identity?.IsAuthenticated == true)
+        {
+            @* * Topbar *@
+            <partial name="Navigation/_TopBar" />
 
-        @* Side bar (left) *@
-        @* <partial name="Navigation/_SideBar" /> *@
+            @* Side bar (left) *@
+            <partial name="Navigation/_SideBar" />
+        
+        }
+
 
         @RenderBody()
 

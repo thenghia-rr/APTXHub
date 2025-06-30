@@ -3,11 +3,13 @@ using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Stories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class StoriesController : Controller
     {
         private readonly IStoriesService _storiesService;
