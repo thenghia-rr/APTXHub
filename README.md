@@ -9,6 +9,7 @@ It simulates the core features of modern social platforms, offering a space wher
 - **Frontend**: Razor Views + Tailwind CSS
 - **Database**: SQL Server
 - **Authentication**: Identity + Google OAuth
+- **Real-time**: SignalR
 - **Features**:
   - User registration & login
   - Post creation and delete soft/hard

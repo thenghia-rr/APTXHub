@@ -1,11 +1,13 @@
-﻿<div class="relative h-screen overflow-hidden bg-primary">
+﻿
+
+<div class="relative h-screen overflow-hidden bg-primary">
 
     @* Image slider background *@
     <div class="absolute inset-0 z-0">
         <div class="w-full h-full" tabindex="-1" uk-slideshow="animation: slide; autoplay: true">
             <ul class="uk-slideshow-items w-full h-full">
                 <li>
-                    <img src="~/images/welcome/welcome-07.jpeg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
+                    <img src="~/images/welcome/welcome-10.jpg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
                     <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
                 </li>
                 <li>
@@ -13,7 +15,7 @@
                     <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
                 </li>
                 <li>
-                    <img src="~/images/welcome/welcome-05.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
+                    <img src="~/images/welcome/welcome-08.jpeg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left" />
                     <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
                 </li>
             </ul>
@@ -26,6 +28,11 @@
 
     @* Blur background *@
     <div class="absolute inset-0 bg-black/40 backdrop-blur-2px z-10"></div>
+
+    @* Title trên form *@
+    <div class="absolute top-16 w-full z-30 text-center">
+        <h1 id="animatedTitle" class="login_title text-5xl font-extrabold">APTXHub</h1>
+    </div>
 
     @* Centered Login Form *@
     <div class="absolute inset-0 z-20 flex items-center justify-center px-4">
@@ -69,3 +76,16 @@
         </div>
     </div>
 </div>
+
+<script>
+    const title = document.getElementById("animatedTitle");
+    const text = title.innerText;
+    title.innerText = ""; // Clear text
+
+    [...text].forEach((char, index) => {
+        const span = document.createElement("span");
+        span.textContent = char;
+        span.style.animationDelay = `${index * 0.2}s`;
+        title.appendChild(span);
+    });
+</script>

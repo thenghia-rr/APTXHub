@@ -274,3 +274,19 @@ form > button.icon-link, button.delete-post-btn {
         transform: translateY(0);
     }
 }
+
+.login_title span {
+    display: inline-block;
+    animation: colorCycle 3s infinite;
+}
+
+@keyframes colorCycle {
+    0%, 100% {
+        color: #ffffff;
+    }
+
+    50% {
+         color: #93c5fd;
+    }
+    /* blue-300 */
+}
