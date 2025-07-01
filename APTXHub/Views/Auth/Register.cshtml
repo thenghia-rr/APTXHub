@@ -1,10 +1,10 @@
 ﻿@model RegisterVM;
 
 <div class="sm:flex">
-     
+
     @*form section*@
     <div class="relative lg:w-[580px] md:w-96 w-full p-10 min-h-screen bg-white shadow-xl flex items-center pt-10 z-10">
-        
+
 
         <div class="w-full lg:max-w-sm mx-auto space-y-10">
 
@@ -28,7 +28,7 @@
                     <div>
                         <label for="lastName">Last name</label>
                         <div class="mt-2.5">
-                            <input asp-for="LastName"  type="text" placeholder="Last name" required="" class="!w-full" />
+                            <input asp-for="LastName" type="text" placeholder="Last name" required="" class="!w-full" />
                             <span asp-validation-for="LastName" class="text-red-500 text-xs mt-1"></span>
                         </div>
                     </div>
@@ -88,7 +88,11 @@
                 </div>
 
                 <div class="flex gap-2">
-                    <a href="#" class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm"> <ion-icon name="logo-google" class="text-lg"></ion-icon> google </a>
+                    <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google"
+                       class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm">
+                        <ion-icon name="logo-google" class="text-lg"></ion-icon>
+                        google
+                    </a>
                     <a href="#" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github </a>
                 </div>
             </form>

@@ -2,6 +2,7 @@ using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -49,7 +50,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Auth/AccessDenied";
 });
 
-builder.Services.AddAuthentication();
+// External authentication providers
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Auth:Google:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"] ?? "";
+        options.CallbackPath = "/signin-google";
+        options.Scope.Add("profile");
+    });
+   
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

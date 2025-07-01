@@ -2,6 +2,7 @@
 using APTXHub.Infrastructure.Models;
 using APTXHub.ViewModels.Auth;
 using APTXHub.ViewModels.Setttings;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -128,7 +129,7 @@ namespace APTXHub.Controllers
                 return RedirectToAction("Index", "Settings");
             }
 
-            var result = await _userManager.ChangePasswordAsync(loggedInUser!, updatePasswordVM.CurrentPassword, updatePasswordVM.NewPassword); 
+            var result = await _userManager.ChangePasswordAsync(loggedInUser!, updatePasswordVM.CurrentPassword, updatePasswordVM.NewPassword);
 
             if (result.Succeeded)
             {
@@ -143,14 +144,14 @@ namespace APTXHub.Controllers
         // [POST]: update profile of user
         public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 TempData["UserProfileError"] = "Please enter full information to input!";
                 TempData["ActiveTab"] = "Profile";
                 return RedirectToAction("Index", "Settings");
             }
 
-            var loggedInUser = await _userManager.GetUserAsync(User); 
+            var loggedInUser = await _userManager.GetUserAsync(User);
             if (loggedInUser == null)
                 return RedirectToAction("Login");
 
@@ -173,6 +174,55 @@ namespace APTXHub.Controllers
             await _signInManager.RefreshSignInAsync(loggedInUser);
             return RedirectToAction("Index", "Settings");
         }
+
+        // [GET]: External login (Google, etc.)
+        public IActionResult ExternalLogin(string provider)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Auth");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        // [GET]: Callback for external login
+        public async Task<IActionResult> ExternalLoginCallback()
+        {
+            var info = await HttpContext.AuthenticateAsync(IdentityConstants.ExternalScheme);
+            if (info == null)
+                return RedirectToAction("Login");
+
+            var email = info?.Principal?.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+            {
+                ModelState.AddModelError(string.Empty, "Email is required for external login.");
+                return RedirectToAction("Login");
+            }
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                var newUser = new User()
+                {
+                    Email = email,
+                    UserName = email,
+                    FullName = info?.Principal?.FindFirstValue(ClaimTypes.Name) ?? "Anonymous",
+                    EmailConfirmed = true
+                };
+                var result = await _userManager.CreateAsync(newUser);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(newUser, AppRoles.User);
+                    await _userManager.AddClaimAsync(newUser, new Claim(CustomClaim.FullName, newUser.FullName));
+                    await _signInManager.SignInAsync(newUser, isPersistent: false);
+
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+
+            await _signInManager.SignInAsync(user!, isPersistent: false);
+            return RedirectToAction("Index", "Home");
+        }
+
+
 
         // [POST]: Logout
         [Authorize]

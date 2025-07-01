@@ -53,7 +53,7 @@
 
             <div id="setting_tab" class="uk-switcher py-12 px-20 overflow-hidden text-black text-sm">
                 <div>
-                    <form asp-controller="Authentication" asp-action="UpdateProfile">
+                    <form asp-controller="Auth" asp-action="UpdateProfile">
                         <div class="space-y-6">
                             @if (TempData["UserProfileError"] != null)
                             {
@@ -82,14 +82,14 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
-                                <button class="text-14 button px-6 bg-secondery">Cancel</button>
+                                @* <button class="text-14 button px-6 bg-secondery">Cancel</button> *@
                                 <button type="submit" class="text-14 button px-10 bg-blue-500 text-white">Save</button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div>
-                    <form asp-controller="Authentication" asp-action="UpdatePassword">
+                    <form asp-controller="Auth" asp-action="UpdatePassword">
                         <div class="space-y-6">
                             @if (TempData["PasswordError"] != null)
                             {
@@ -141,7 +141,7 @@
 
                             </div>
                             <div class="flex items-center gap-4 mt-16 pl-[10.5rem]">
-                                <button class="text-14 button px-6 bg-red-400 ">Cancel</button>
+                                @* <button class="text-14 button px-6 bg-red-400 ">Cancel</button> *@
                                 <button type="submit" class="text-14 button px-10 bg-blue-500 text-white ">Save</button>
                             </div>
                         </div>
