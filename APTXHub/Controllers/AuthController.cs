@@ -1,22 +1,20 @@
 ﻿using APTXHub.Infrastructure.Helpers.Constants;
 using APTXHub.Infrastructure.Models;
-using APTXHub.ViewModels.Authentication;
+using APTXHub.ViewModels.Auth;
 using APTXHub.ViewModels.Setttings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace APTXHub.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public AuthenticationController(
+        public AuthController(
             UserManager<User> userManager,
             SignInManager<User> signInManager)
         {
@@ -90,7 +88,7 @@ namespace APTXHub.Controllers
                 await _userManager.AddToRoleAsync(newUser, AppRoles.User);
                 await _userManager.AddClaimAsync(newUser, new Claim(CustomClaim.FullName, newUser.FullName));
                 await _signInManager.SignInAsync(newUser, isPersistent: false);
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
 
             foreach (var error in result.Errors)

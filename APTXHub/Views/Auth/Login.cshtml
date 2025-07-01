@@ -36,10 +36,10 @@
         <div class="bg-white shadow-xl p-8 w-full max-w-md rounded-lg space-y-6">
             <div>
                 <h2 class="text-3xl font-semibold mb-4 text-center">Sign in </h2>
-                <p class="text-base text-gray-700 font-normal">If you have not signed up yet. <a asp-controller="Authentication" asp-action="Register" class="text-blue-700">Register here!</a></p>
+                <p class="text-base text-gray-700 font-normal">If you have not signed up yet. <a asp-controller="Auth" asp-action="Register" class="text-blue-700">Register here!</a></p>
             </div>
 
-            <form asp-action="Login" asp-controller="Authentication" method="post" class="space-y-5 text-sm text-black font-medium">
+            <form asp-action="Login" asp-controller="Auth" method="post" class="space-y-5 text-sm text-black font-medium">
                 <div class="col-span-2 text-red-500" asp-validation-summary="ModelOnly"></div>
                 <div>
                     <label asp-for="Email" >Email address</label>

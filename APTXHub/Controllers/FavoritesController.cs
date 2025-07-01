@@ -1,6 +1,7 @@
 ﻿using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace APTXHub.Controllers
 {
@@ -16,10 +17,10 @@ namespace APTXHub.Controllers
 
         public async Task<IActionResult> Index()
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var allFavoritesPosts = await _postService
-                .GetAllFavoritePostsAsync(loggedInUserId);
+                .GetAllFavoritePostsAsync(int.Parse(loggedInUserId!));
 
             return View(allFavoritesPosts);
         }

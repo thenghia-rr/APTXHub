@@ -1,46 +1,55 @@
-﻿using APTXHub.Infrastructure;
+﻿using APTXHub.Controllers.Base;
+using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers.Enums;
+using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Setttings;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace APTXHub.Controllers
 {
     [Authorize]
-    public class SettingsController : Controller
+    public class SettingsController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IFilesService _filesService;
+        private readonly UserManager<User> _userManager;
 
-        public SettingsController(IUserService userService, IFilesService filesService)
+        public SettingsController(
+            IUserService userService, 
+            IFilesService filesService,
+            UserManager<User> userManager)
         {
             _userService = userService;
             _filesService = filesService;
+            _userManager = userManager;
         }
 
         //[GET]: show information of user
         public async Task<IActionResult> Index()
         {
-            var loggedInUserId = 8;
-            var userDb = await _userService.GetUser(loggedInUserId);
-
-            return View(userDb);
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            return View(loggedInUser);
         }
 
         // [POST]: update profile picture
         [HttpPost]
         public async Task<IActionResult> UpdateProfilePicture(UpdateProfilePictureVM profilePictureVM)
         {
-            var loggedInUser = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             var uploadedProfilePictureUrl = await _filesService.UploadMediaAsync(
                     profilePictureVM.ProfilePictureImage, 
                     MediaFileType.ProfilePicture);
 
-            await _userService.UpdateUserProfilePicture(loggedInUser, uploadedProfilePictureUrl!);
+            await _userService.UpdateUserProfilePicture(loggedInUserId.Value, uploadedProfilePictureUrl!);
 
             return RedirectToAction("Index");
-        }
+        }   
       
     }
 }

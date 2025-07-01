@@ -1,4 +1,5 @@
-﻿using APTXHub.Infrastructure;
+﻿using APTXHub.Controllers.Base;
+using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APTXHub.Controllers
 {
     [Authorize]
-    public class StoriesController : Controller
+    public class StoriesController : BaseController
     {
         private readonly IStoriesService _storiesService;
         private readonly IFilesService _filesService;
@@ -28,7 +29,9 @@ namespace APTXHub.Controllers
         // [POST]: Create Story
         public async Task<IActionResult> CreateStory(StoryVM storyVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             var mediaUploadUrl = await _filesService.UploadMediaAsync(storyVM.Image, MediaFileType.StoryMedia);
 
             var newStory = new Story
@@ -36,7 +39,7 @@ namespace APTXHub.Controllers
                 ImageUrl = mediaUploadUrl, // image/video
                 DateCreated = DateTime.UtcNow,
                 IsDeleted = false,
-                UserId = loggedInUserId
+                UserId = loggedInUserId.Value
             };
 
           

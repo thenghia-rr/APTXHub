@@ -10,10 +10,10 @@
 
             <div>
                 <h2 class="text-3xl font-semibold mb-1.5">Sign up</h2>
-                <p class="text-base text-gray-700 font-normal">If you already have an account, <a asp-controller="Authentication" asp-action="Login" class="text-blue-700">Login here!</a></p>
+                <p class="text-base text-gray-700 font-normal">If you already have an account, <a asp-controller="Auth" asp-action="Login" class="text-blue-700">Login here!</a></p>
             </div>
 
-            <form asp-controller="Authentication" asp-action="Register" method="post" class="space-y-7 text-sm text-black font-medium">
+            <form asp-controller="Auth" asp-action="Register" method="post" class="space-y-7 text-sm text-black font-medium">
 
                 <div class="grid grid-cols-2 gap-4 gap-y-7">
                     <div class="col-span-2 text-red-500" asp-validation-summary="ModelOnly"></div>
@@ -102,7 +102,6 @@
             <ul class="uk-slideshow-items w-full h-full">
                 <li class="w-full">
                     <img src="~/images/welcome/welcome-07.jpeg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
-
                     <div class="absolute bottom-0 w-full uk-transition-slide-bottom-small z-10">
                         <div class="max-w-xl w-full mx-auto pb-32 px-5 z-30 relative">
                             <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 600,0,0">Connect with Friends</h4>

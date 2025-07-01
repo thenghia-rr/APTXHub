@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using APTXHub.Controllers.Base;
 using APTXHub.Data.Helpers;
 using APTXHub.Extentions;
 using APTXHub.Infrastructure;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace APTXHub.Controllers
 {
     [Authorize]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
@@ -37,9 +38,11 @@ namespace APTXHub.Controllers
         // [GET]: Home Page - Show all Posts
         public async Task<IActionResult> Index()    
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if(loggedInUserId == null)
+                return RedirectToLogin();
 
-            var allPosts = await _postService.GetAllPostsAsync(loggedInUserId);
+            var allPosts = await _postService.GetAllPostsAsync(loggedInUserId.Value);
             return View(allPosts);
         }
 
@@ -62,7 +65,11 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> CreatePost(PostVM post)
         {
             //Get the logged in user
-            int loggedInUserId = 1;
+            var  loggedInUserId = GetUserId();
+            if (loggedInUserId == null)
+                return RedirectToLogin();
+
+
             var imageUploadUrl = await _filesService.UploadMediaAsync(post.Image, MediaFileType.PostImage);
 
             var newPost = new Post
@@ -72,7 +79,7 @@ namespace APTXHub.Controllers
                 NrOfReports = 0,
                 DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow,
-                UserId = loggedInUserId
+                UserId = loggedInUserId.Value
             };
 
             await _postService.CreatePostAsync(newPost);
@@ -85,9 +92,10 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            var result = await _postService.TogglePostLikeAsync(postLike.PostId, loggedInUserId);
+            var result = await _postService.TogglePostLikeAsync(postLike.PostId, loggedInUserId.Value);
 
             return Json(new { liked = result.Liked, totalLikes = result.TotalLikes });
         }
@@ -97,9 +105,10 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> TogglePostFavorite([FromBody] PostFavoriteVM postFavoriteVM)
         {
 
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            var res = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId);
+            var res = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
 
             return Json(new { favorited = res.Favorited, totalFavorited = res.TotalFavorites });
 
@@ -109,9 +118,10 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId);
+            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId.Value);
 
             return RedirectToAction("Index");
         }
@@ -120,12 +130,13 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPostComment(PostCommentVM postComment)
         {
-            int loggedInUserId = 1;
-                
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
             //Creat a post object
             var newComment = new Comment()
             {
-                UserId = loggedInUserId,
+                UserId = loggedInUserId.Value,
                 PostId = postComment.PostId,
                 Content = postComment.Content,
                 DateCreated = DateTime.UtcNow,
@@ -151,9 +162,10 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
         {
-            int loggedInUserId = 1;
-           
-            await _postService.ReportPostAsync(postReportVM.PostId, loggedInUserId, postReportVM.Reason);
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            await _postService.ReportPostAsync(postReportVM.PostId, loggedInUserId.Value, postReportVM.Reason);
             return RedirectToAction("Index");
         }
 
@@ -161,9 +173,10 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> PostRemoveSoft(PostRemoveVM postRemoveVM)
         {
-            int loggedInUserId = 1;
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
 
-            var post = await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId);
+            var post = await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId.Value);
 
             if(post != null)
             {

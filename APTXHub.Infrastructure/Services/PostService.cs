@@ -24,7 +24,7 @@ namespace APTXHub.Infrastructure.Services
         public async Task<List<Post>> GetAllPostsAsync(int loggedInUserId)
         {
             var allPosts = await _context.Posts
-                .Where(n => (!n.IsPrivate || n.UserId == loggedInUserId)
+                .Where(n => (!n.IsPrivate || n.UserId == loggedInUserId) // Không phải private hoặc là private nhưng thuộc về user hiện tại.
                     && n.Reports.Count < 5
                     && n.IsDeleted == false)
                 .Include(p => p.User)

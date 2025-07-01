@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace APTXHub.ViewModels.Authentication
+namespace APTXHub.ViewModels.Auth
 {
     public class RegisterVM
     {
