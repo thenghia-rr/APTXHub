@@ -81,7 +81,11 @@
                         <ion-icon name="logo-google" class="text-lg"></ion-icon>
                         google
                     </a>
-                    <a href="#" class="button flex-1 flex items-center gap-2 bg-black text-white text-sm"><ion-icon name="logo-github" class="text-lg"></ion-icon> github</a>
+                    <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="GitHub"
+                    class="button flex-1 flex items-center gap-2 bg-black text-white text-sm">
+                        <ion-icon name="logo-github" class="text-lg"></ion-icon>
+                        github
+                    </a>
                 </div>
             </form>
         </div>
@@ -89,26 +93,26 @@
 </div>
 
 <script>
-       // wave animation && color typing effect
-        const title = document.getElementById("animatedTitle");
-        const text = title.innerText;
-        title.innerText = ""; // Clear text
+    // wave animation && color typing effect
+     const title = document.getElementById("animatedTitle");
+     const text = title.innerText;
+     title.innerText = ""; // Clear text
 
-        [...text].forEach((char, index) => {
-            const span = document.createElement("span");
-            span.textContent = char;
-            span.style.animationDelay = `${index * 0.2}s`;
-            title.appendChild(span);
-        });
+     [...text].forEach((char, index) => {
+         const span = document.createElement("span");
+         span.textContent = char;
+         span.style.animationDelay = `${index * 0.2}s`;
+         title.appendChild(span);
+     });
 
-         // 👁 Toggle password visibility
-        const toggleBtn = document.getElementById("togglePassword");
-        const passwordInput = document.getElementById("password");
-        const toggleIcon = document.getElementById("toggleIcon");
+      // 👁 Toggle password visibility
+     const toggleBtn = document.getElementById("togglePassword");
+     const passwordInput = document.getElementById("password");
+     const toggleIcon = document.getElementById("toggleIcon");
 
-        toggleBtn.addEventListener("click", () => {
-            const isVisible = passwordInput.type === "text";
-            passwordInput.type = isVisible ? "password" : "text";
-            toggleIcon.name = isVisible ? "eye-outline" : "eye-off-outline";
-        });
+     toggleBtn.addEventListener("click", () => {
+         const isVisible = passwordInput.type === "text";
+         passwordInput.type = isVisible ? "password" : "text";
+         toggleIcon.name = isVisible ? "eye-outline" : "eye-off-outline";
+     });
 </script>

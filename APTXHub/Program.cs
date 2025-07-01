@@ -2,10 +2,12 @@ using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,9 +59,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ClientId = builder.Configuration["Auth:Google:ClientId"] ?? "";
         options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"] ?? "";
         options.CallbackPath = "/signin-google";
-        options.Scope.Add("profile");
+    })
+    .AddGitHub(options =>
+    {
+        options.ClientId = builder.Configuration["Auth:GitHub:ClientId"] ?? "";
+        options.ClientSecret = builder.Configuration["Auth:GitHub:ClientSecret"] ?? "";
+        options.CallbackPath = "/signin-github";
+        options.Scope.Add("user:email");
+        options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
     });
-   
+
 
 builder.Services.AddAuthorization();
 

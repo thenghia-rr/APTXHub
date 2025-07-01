@@ -191,12 +191,8 @@ namespace APTXHub.Controllers
                 return RedirectToAction("Login");
 
             var email = info?.Principal?.FindFirstValue(ClaimTypes.Email);
-            if (string.IsNullOrEmpty(email))
-            {
-                ModelState.AddModelError(string.Empty, "Email is required for external login.");
-                return RedirectToAction("Login");
-            }
-            var user = await _userManager.FindByEmailAsync(email);
+           
+            var user = await _userManager.FindByEmailAsync(email!);
 
             if (user == null)
             {
