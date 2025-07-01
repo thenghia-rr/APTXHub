@@ -23,7 +23,9 @@
                            data-type="@(string.IsNullOrEmpty(story.ImageUrl) ? "image" : story.ImageUrl.EndsWith(".mp4") ? "video" : "image")"
                         @(string.IsNullOrEmpty(story.ImageUrl) || !story.ImageUrl.EndsWith(".mp4") ? "" : "data-autoplay='true'")>
                             <div class="md:w-16 md:h-16 w-12 h-12 relative md:border-4 border-2 shadow border-white rounded-full overflow-hidden">
-                                <img src="@(story.User.ProfilePictureUrl ?? "~/images/avatar/user.png")" alt="@story.User.FullName" />
+                                <img class="w-full h-full object-cover"
+                                     src="@(story.User.ProfilePictureUrl ?? "/images/avatar/user.png")"
+                                     alt="@story.User.FullName" />
                             </div>
                         </a>
                         <p class="text-xs text-center leading-6 truncate max-w-60 overflow-hidden whitespace-nowrap"

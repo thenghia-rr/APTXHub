@@ -12,12 +12,13 @@ It simulates the core features of modern social platforms, offering a space wher
 - **Real-time**: SignalR
 - **Architecture**: Service-Oriented Architecture (SOA) 
 - **Features**: 
-  - User registration & login
+  - User registration & login & update password/profile
   - Post creation and delete soft/hard
   - Commenting system
   - Save(favorite) & like posts
   - Hashtags by post
   - Create story (image/video)
+  - Search post smart
   - Notification
   - Dark mode toggle
   - Responsive UI

@@ -16,10 +16,11 @@ namespace APTXHub.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            var oneWeekAgoNow = DateTime.UtcNow.AddDays(-7); 
+            //var oneWeekAgoNow = DateTime.UtcNow.AddDays(-7); 
 
             var top3Hashtags = await _context.Hashtags
-                .Where(h => h.DateCreated >= oneWeekAgoNow && h.Count > 0)
+                //.Where(h => h.DateCreated >= oneWeekAgoNow && h.Count > 0)
+                .Where(h => h.Count > 0)
                 .OrderByDescending(n => n.Count)
                 .Take(3)
                 .ToListAsync();

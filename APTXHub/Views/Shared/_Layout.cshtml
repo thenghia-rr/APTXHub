@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/tailwind2.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tailwind3.css" asp-append-version="true" />
 </head>
 <body>
 
@@ -68,3 +69,24 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@* <script> *@
+@*     const cssPath = "/css/tailwind2.css"; *@
+@*     const interval = 1000; // Kiểm tra mỗi 1 giây *@
+@*     let lastHref = ""; *@
+
+@*     setInterval(() => { *@
+@*         const links = [...document.querySelectorAll('link[rel="stylesheet"]')]; *@
+@*         const cssLink = links.find(l => l.href.includes(cssPath)); *@
+@*         if (!cssLink) return; *@
+
+@*         const newHref = `${cssPath}?v=${new Date().getTime()}`; *@
+@*         if (newHref !== lastHref) { *@
+@*             const clone = cssLink.cloneNode(); *@
+@*             clone.href = newHref; *@
+@*             clone.onload = () => cssLink.remove(); // Khi file mới load xong thì xóa file cũ *@
+@*             cssLink.parentNode.insertBefore(clone, cssLink.nextSibling); *@
+@*             lastHref = newHref; *@
+@*         } *@
+@*     }, interval); *@
+@* </script> *@

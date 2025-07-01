@@ -41,19 +41,6 @@ namespace APTXHub.Controllers
 
             return RedirectToAction("Index");
         }
-
-        // [POST]: update profile of user
-        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
-        {
-            return RedirectToAction("Index");
-        }
-
-
-        // [POST]: update password of user
-        [HttpPost]
-        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
-        {
-            return RedirectToAction("Index"); 
-        }
+      
     }
 }

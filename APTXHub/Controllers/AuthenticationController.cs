@@ -1,9 +1,11 @@
 ﻿using APTXHub.Infrastructure.Helpers.Constants;
 using APTXHub.Infrastructure.Models;
 using APTXHub.ViewModels.Authentication;
+using APTXHub.ViewModels.Setttings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -21,7 +23,7 @@ namespace APTXHub.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
-         
+
         public IActionResult Login()
         {
             return View();
@@ -45,7 +47,7 @@ namespace APTXHub.Controllers
             if (!existingUserClaims.Any(c => c.Type == CustomClaim.FullName))
                 await _userManager.AddClaimAsync(user, new Claim(CustomClaim.FullName, user.FullName));
 
-            var result = await _signInManager.PasswordSignInAsync(user, loginVM.Password, isPersistent: false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(user.UserName!, loginVM.Password, isPersistent: false, lockoutOnFailure: false);
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
@@ -91,11 +93,87 @@ namespace APTXHub.Controllers
                 return RedirectToAction("Login");
             }
 
-            foreach (var error in result.Errors) 
+            foreach (var error in result.Errors)
             {
                 ModelState.AddModelError("", error.Description);
             }
             return View(registerVM);
+        }
+
+        // [POST]: update password of user
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordVM updatePasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["PasswordError"] = "Please enter full information to input!";
+                TempData["ActiveTab"] = "Password";
+
+                return RedirectToAction("Index", "Settings");
+            }
+
+            if (updatePasswordVM.NewPassword != updatePasswordVM.ConfirmPassword)
+            {
+                TempData["PasswordError"] = "Passwords do not match";
+                TempData["ActiveTab"] = "Password";
+
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            var isCurrentPasswordValid = await _userManager.CheckPasswordAsync(loggedInUser!, updatePasswordVM.CurrentPassword);
+
+            if (!isCurrentPasswordValid)
+            {
+                TempData["PasswordError"] = "Current password is invalid";
+                TempData["ActiveTab"] = "Password";
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var result = await _userManager.ChangePasswordAsync(loggedInUser!, updatePasswordVM.CurrentPassword, updatePasswordVM.NewPassword); 
+
+            if (result.Succeeded)
+            {
+                TempData["PasswordSuccess"] = "Password updated successfully";
+                TempData["ActiveTab"] = "Password";
+                await _signInManager.RefreshSignInAsync(loggedInUser!);
+            }
+
+            return RedirectToAction("Index", "Settings");
+        }
+
+        // [POST]: update profile of user
+        public async Task<IActionResult> UpdateProfile(UpdateProfileVM profileVM)
+        {
+            if(!ModelState.IsValid)
+            {
+                TempData["UserProfileError"] = "Please enter full information to input!";
+                TempData["ActiveTab"] = "Profile";
+                return RedirectToAction("Index", "Settings");
+            }
+
+            var loggedInUser = await _userManager.GetUserAsync(User); 
+            if (loggedInUser == null)
+                return RedirectToAction("Login");
+
+            loggedInUser.FullName = profileVM.FullName;
+            loggedInUser.UserName = profileVM.UserName;
+            loggedInUser.Bio = profileVM.Bio;
+
+            var result = await _userManager.UpdateAsync(loggedInUser);
+            if (!result.Succeeded)
+            {
+                TempData["UserProfileError"] = "User profile could not be updated";
+                TempData["ActiveTab"] = "Profile";
+            }
+            else
+            {
+                TempData["UserProfileSuccess"] = "User profile updated successfully";
+                TempData["ActiveTab"] = "Profile";
+            }
+
+            await _signInManager.RefreshSignInAsync(loggedInUser);
+            return RedirectToAction("Index", "Settings");
         }
 
         // [POST]: Logout
@@ -105,5 +183,6 @@ namespace APTXHub.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
+
     }
 }
