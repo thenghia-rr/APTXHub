@@ -20,5 +20,7 @@ namespace APTXHub.Infrastructure.Services
         Task<List<FriendRequest>> GetSentFriendRequestAsync(int userId);
         // Nhan loi moi kb
         Task<List<FriendRequest>> GetReceivedFriendRequestAsync(int userId);
+
+        Task<List<Friendship>> GetFriendsAsync(int userId);
     }
 }

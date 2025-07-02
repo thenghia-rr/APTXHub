@@ -1,6 +1,8 @@
 ﻿using APTXHub.Controllers.Base;
+using APTXHub.Infrastructure.Helpers.Constants;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Friends;
+using Azure.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
@@ -16,11 +18,12 @@ namespace APTXHub.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = GetUserId(); 
+            var userId = GetUserId();
             if (!userId.HasValue) RedirectToLogin();
 
             var friendsData = new FriendshipVM()
             {
+                Friends = await _friendsService.GetFriendsAsync(userId.Value),
                 FriendRequestSent = await _friendsService.GetSentFriendRequestAsync(userId.Value),
                 FriendRequestsReceived = await _friendsService.GetReceivedFriendRequestAsync(userId.Value)
             };
@@ -37,6 +40,22 @@ namespace APTXHub.Controllers
 
             await _friendsService.SendRequestAsync(userId.Value, receiverId);
             return RedirectToAction("Index", "Home");
+        }
+
+        // [POST]: Cancel - Accept - Reject
+        [HttpPost]
+        public async Task<IActionResult> UpdateFriendRequest(int requestId, string status)
+        {
+            await _friendsService.UpdateRequestAsync(requestId, status);
+            return RedirectToAction("Index");
+        }
+
+        // [POST]: Remove fr
+        [HttpPost]  
+        public async Task<IActionResult> RemoveFriend(int friendshipId)
+        {
+            await _friendsService.RemoveFriendAsync(friendshipId);  
+            return RedirectToAction("Index");
         }
     }
 }

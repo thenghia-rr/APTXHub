@@ -3,6 +3,7 @@
 @{
     var defaultCoverPicture = "/images/placeholders/post-placeholder.jpg";
     var defaultUserPicture = "/images/avatar/user.png";
+    var loggedInUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }
 
 <main id="site__main" class="2xl:ml-[--w-side]  xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
@@ -23,8 +24,8 @@
             <div class="relative overflow-hidden w-full lg:h-3 h-3"></div>
             <div class="p-3 flex flex-row items-center">
                 <div class="flex-shrink-0 mr-4">
-                    <div class="relative lg:h-28 lg:w-28 w-28 h-28">
-                        <div class="relative overflow-hidden rounded-full md:border-[6px] border-gray-100 shrink-0 w-28 h-28">
+                    <div class="relative lg:h-40 lg:w-40 w-40 h-40">
+                        <div class="relative overflow-hidden rounded-full md:border-[6px] border-gray-100 shrink-0 w-40 h-40">
                             <img src="@Url.Content(string.IsNullOrEmpty(Model.User.ProfilePictureUrl)
                                 ? defaultUserPicture
                                 : Model.User.ProfilePictureUrl)"
@@ -33,10 +34,48 @@
                     </div>
                 </div>
                 <div class="ml-4">
-                    <h3 class="md:text-3xl text-base font-bold text-black">@Model.User.FullName</h3>
+                    <h3 class="md:text-4xl text-base font-bold text-black">@Model.User.FullName</h3>
                     <p class="mt-2 text-gray-500">@Model.User.UserName</p>
                 </div>
+
+                <!-- 2 button addfr và message -->
+                @if(Model.User.Id != loggedInUserId){
+                    <form class="ml-auto flex gap-2" asp-action="SendFriendRequest" asp-controller="Friends" method="post">
+                        <input type="hidden" name="receiverId" value="@Model.User.Id" />
+
+                        @if (Model.FriendshipStatus == "Accepted")
+                        {
+                            <button type="button" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 font-semibold text-white text-base cursor-default">
+                                <ion-icon name="checkmark-outline" class="text-lg"></ion-icon>
+                                Friends
+                            </button>
+                        }
+                        else if (Model.FriendshipStatus == "Pending")
+                        {
+                            <button type="button" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 font-semibold text-white text-base cursor-default">
+                                <ion-icon name="hourglass-outline" class="text-lg"></ion-icon>
+                                Request Sent
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 font-semibold text-white text-base hover:bg-blue-700 transition">
+                                <ion-icon name="person-add-outline" class="text-lg"></ion-icon>
+                                Add Friend
+                            </button>
+                        }
+
+                        <!-- Message button -->
+                        @* <a onclick="alert('This feature are developing! Have a nice day.')" asp-controller="Messages" asp-action="StartChat" asp-route-userId="@Model.User.Id" *@
+                        <a onclick="return alert('This feature are developing! Have a nice day.')"
+                           class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 font-semibold text-black text-base hover:bg-gray-300 transition">
+                            <ion-icon name="chatbubble-ellipses-outline" class="text-lg"></ion-icon>
+                            Message
+                        </a>
+                    </form>
+                }
             </div>
+
         </div>
         <div class="flex 2xl:gap-12 gap-10 mt-8 max-lg:flex-col" id="js-oversized">
             <div class="flex-1 xl:space-y-6 space-y-3">

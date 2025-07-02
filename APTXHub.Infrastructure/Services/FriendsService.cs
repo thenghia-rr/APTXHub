@@ -73,6 +73,18 @@ namespace APTXHub.Infrastructure.Services
             {
                 _context.Friendships.Remove(friendship);
                 await _context.SaveChangesAsync();
+
+                //find requests 
+                var requests = await _context.FriendRequests
+                    .Where(r => (r.SenderId == friendship.SenderId && r.ReceiverId == friendship.ReceiverId) ||
+                    (r.SenderId == friendship.ReceiverId && r.ReceiverId == friendship.SenderId))
+                    .ToListAsync();
+
+                if (requests.Any())
+                {
+                    _context.FriendRequests.RemoveRange(requests);  
+                    await _context.SaveChangesAsync();
+                }
             }
         }
 
@@ -128,6 +140,17 @@ namespace APTXHub.Infrastructure.Services
                 .ToListAsync();
 
             return friendRequestsSent;
+        }
+
+        public async Task<List<Friendship>> GetFriendsAsync(int userId)
+        {
+            var friends = await _context.Friendships
+                .Include(n => n.Sender)
+                .Include(n => n.Receiver)
+                .Where(n => n.SenderId == userId || n.ReceiverId == userId)
+                .ToListAsync();
+
+            return friends;
         }
     }
 }
