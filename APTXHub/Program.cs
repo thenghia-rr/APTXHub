@@ -32,6 +32,7 @@ builder.Services.AddScoped<IHashtagService, HashtagService>();
 builder.Services.AddScoped<IStoriesService, StoriesSevice>();
 builder.Services.AddScoped<IFilesService, FilesSevice>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IFriendsService, FriendsService>();
 
 // Identity configuration
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>

@@ -20,6 +20,9 @@ namespace APTXHub.Infrastructure
         public DbSet<Story> Stories { get; set; }
         public DbSet<Hashtag> Hashtags { get; set; }
         public DbSet<PostHashtag> PostHashtags { get; set; }
+        public DbSet<FriendRequest> FriendRequests { get; set; }
+        public DbSet<Friendship> Friendships { get; set; }
+
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -110,6 +113,31 @@ namespace APTXHub.Infrastructure
                 .HasOne(ph => ph.Hashtag)
                 .WithMany(h => h.PostHashtags)
                 .HasForeignKey(ph => ph.HashtagId);
+
+            //Friendship configurationsAdd commentMore actions
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Sender)
+                .WithMany()
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FriendRequest>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany()
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Friendship>()
+                .HasOne(fr => fr.Sender)
+                .WithMany()
+                .HasForeignKey(fr => fr.SenderId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Friendship>()
+                .HasOne(fr => fr.Receiver)
+                .WithMany()
+                .HasForeignKey(fr => fr.ReceiverId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
 

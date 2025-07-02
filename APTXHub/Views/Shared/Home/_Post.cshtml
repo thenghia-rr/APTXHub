@@ -17,9 +17,6 @@
 
 
 <div class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
-    @* <button onclick="location.href='/post/@Model.Id'" class="btn"> *@
-    @*     Xem chi tiết *@
-    @* </button> *@
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
@@ -191,10 +188,8 @@
             </div>
             <form asp-controller="Home" asp-action="AddPostComment" onsubmit="return validateComment()">
                 <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-                    <a asp-controller="Users" asp-action="Detalis" asp-route-userId="@Model.UserId">
-                        <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl)
-                        ? Url.Content(defaultUserPicture)
-                        : Url.Content(Model.User.ProfilePictureUrl))" class="w-6 h-6 rounded-full" />
+                    <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
+                        <img src="@Url.Content(defaultUserPicture)" class="w-6 h-6 rounded-full" />
                     </a>
                     <input type="hidden" name="postId" value="@Model.Id" />
                     <div class="flex-1 relative overflow-hidden h-10">
@@ -212,6 +207,7 @@
 
 
 </div>
+
 <script>
     function validateComment() {
         const content = document.getElementById("commentContent").value.trim();
