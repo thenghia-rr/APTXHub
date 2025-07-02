@@ -103,12 +103,17 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Custom url post detail: /post/id
+// Custom url post detail: /post/{id}
 app.MapControllerRoute(
     name: "post_detail",
     pattern: "post/{postid}",
     defaults: new { controller = "Home", action = "Details" });
 
+// Custom url post detail: /user/{id}
+app.MapControllerRoute(
+    name: "user_detail",
+    pattern: "user/{userId}",
+    defaults: new { controller = "Users", action = "Details" });
 
 app.MapControllerRoute(
     name: "default",

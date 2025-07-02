@@ -37,19 +37,35 @@ namespace APTXHub.Controllers
 
         // [POST]: update profile picture
         [HttpPost]
-        public async Task<IActionResult> UpdateProfilePicture(UpdateProfilePictureVM profilePictureVM)
+        public async Task<IActionResult> UpdateProfilePicture(UpdateUserPictureVM updateUserPictureVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
             var uploadedProfilePictureUrl = await _filesService.UploadMediaAsync(
-                    profilePictureVM.ProfilePictureImage, 
+                    updateUserPictureVM.ProfilePictureImage, 
                     MediaFileType.ProfilePicture);
 
             await _userService.UpdateUserProfilePicture(loggedInUserId.Value, uploadedProfilePictureUrl!);
 
             return RedirectToAction("Index");
-        }   
-      
+        }
+
+        // [POST]: update cover picture
+        [HttpPost]
+        public async Task<IActionResult> UpdateCoverPicture(UpdateUserPictureVM updateUserPictureVM)
+        {
+            var loggedInUserId = GetUserId();
+            if (loggedInUserId == null) return RedirectToLogin();
+
+            var uploadedCoverPictureUrl = await _filesService.UploadMediaAsync(
+                    updateUserPictureVM.CoverImage,
+                    MediaFileType.CoverImage);
+
+            await _userService.UpdateUserCoverPicture(loggedInUserId.Value, uploadedCoverPictureUrl!);
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

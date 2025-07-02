@@ -2086,7 +2086,9 @@ h1, h2, h3, h4, h5, h6 {
 .-bottom-2 {
   bottom: -0.5rem;
 }
-
+.bottom-2 {
+    bottom: 0.5rem;
+}
 .-bottom-3 {
   bottom: -0.75rem;
 }

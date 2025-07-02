@@ -8,8 +8,37 @@
 
     <div class="max-w-3xl mx-auto">
         <div class="box relative rounded-lg shadow-md social-profile-container">
+            <!-- Cover image section -->
+            <form id="updateCoverForm" class="relative w-full h-64 rounded-t-lg overflow-hidden"
+                  asp-controller="Settings" asp-action="UpdateCoverPicture" enctype="multipart/form-data">
+                <label for="coverUpload" class="cursor-pointer block w-full h-full relative group">
+                    <img id="coverPreview" src="@(string.IsNullOrEmpty(Model.CoverPictureUrl)
+                        ? "/images/placeholders/post-placeholder.jpg"
+                        : Model.CoverPictureUrl)"
+                         class="object-cover w-full h-96" alt="Cover Image" />
 
-            @* profile picture section *@
+                    <!-- Overlay on hover -->
+                    <div class="absolute inset-0  bg-opacity-30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <label for="" class="p-0.5 rounded-full bg-slate-600 border-white absolute bottom-2 right-2 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 fill-white">
+                                <path d="M12 9a3.75 3.75 0 100 7.5A3.75 3.75 0 0012 9z" />
+                                <path fill-rule="evenodd" d="M9.344 3.071a49.52 49.52 0 015.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 01-3 3h-15a3 3 0 01-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 001.11-.71l.822-1.315a2.942 2.942 0 012.332-1.39zM6.75 12.75a5.25 5.25 0 1110.5 0 5.25 5.25 0 01-10.5 0zm12-1.5a.75.75 0 100-1.5.75.75 0 000 1.5z" clip-rule="evenodd" />
+                            </svg>
+                        </label>
+                    </div> 
+
+
+                    <input type="file" id="coverUpload" name="CoverImage" class="hidden" accept="image/png, image/jpeg" />
+                </label>
+
+                <!-- Optional: Submit button -->
+                <div class="absolute top-4 right-4 z-10">
+                    <button type="submit" id="saveCoverButton" class="hidden px-4 py-1 text-sm bg-blue-500 text-white rounded shadow">Save</button>
+                </div>
+            </form>
+
+
+            @* profile picture section (avatar) *@
             <div class="flex items-center justify-between p-6 pb-4">
 
                 <form id="updateProfilePictureForm" class="flex items-center gap-4 w-full" asp-controller="Settings" asp-action="UpdateProfilePicture" enctype="multipart/form-data">
@@ -154,7 +183,7 @@
 
 <script>
 
-    // JavaScript to handle image upload and preview
+    // JavaScript to handle image upload Profile picture(avatar) and preview
     const imageUpload = document.getElementById('imageUpload');
     const imagePreview = document.getElementById('imagePreview');
     const saveButton = document.getElementById('saveButton');
@@ -173,6 +202,27 @@
             saveButton.classList.add('hidden');
         }
     });
+
+    // Cover picture
+    const coverUpload = document.getElementById('coverUpload');
+    const coverPreview = document.getElementById('coverPreview');
+    const saveCoverButton = document.getElementById('saveCoverButton');
+
+    coverUpload.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                coverPreview.src = e.target.result;
+                saveCoverButton.classList.remove('hidden');
+            }
+            reader.readAsDataURL(file);
+        } else {
+            saveCoverButton.classList.add('hidden');
+        }
+    });
+
 
      // Initialize the switcher based on TempData
      document.addEventListener('DOMContentLoaded', () => {

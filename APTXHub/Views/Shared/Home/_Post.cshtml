@@ -12,6 +12,7 @@
 
     string defaultUserPicture = "~/images/avatar/user.png";
     bool showAllComments = ViewData["ShowAllComment"] as bool? ?? false;
+    bool showDetails = ViewData["ShowDetails"] as bool? ?? true;
 }
 
 
@@ -19,17 +20,17 @@
     @* <button onclick="location.href='/post/@Model.Id'" class="btn"> *@
     @*     Xem chi tiết *@
     @* </button> *@
-      
+
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
-        <a>
+        <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
             <img src="@Url.Content(string.IsNullOrEmpty(Model.User.ProfilePictureUrl)
                 ? defaultUserPicture
                 : Model.User.ProfilePictureUrl)"
                  class="w-11 h-11 object-cover rounded-full" />
         </a>
         <div class="flex-1">
-            <a>
+            <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
                 <h4 class="text-black text-15">@Model.User.FullName</h4>
                 <div class="text-13 font-normal text-gray-500/80 mt-1 flex items-center" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">
                     <span class="mr-2">@Model.DateCreated.ToTimeAgo()</span>
@@ -141,66 +142,73 @@
     </div>
 
     @* Add comment section *@
-    <div>
-        <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
-            @foreach (var comment in showAllComments
-                ? Model.Comments.OrderByDescending(n => n.DateCreated)
-                : Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
-            {
-                <div id="commentRow-@comment.Id" class="flex items-start gap-3 relative">
-                    <a>
+   @if(showDetails){
+        <div>
+            <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
+                @foreach (var comment in showAllComments
+               ? Model.Comments.OrderByDescending(n => n.DateCreated)
+               : Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
+                {
+                    <div class="flex items-start gap-3 relative">
+                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@comment.UserId">
 
-                        <img src="@Url.Content(string.IsNullOrEmpty(comment.User.ProfilePictureUrl)
+                            <img src="@Url.Content(string.IsNullOrEmpty(comment.User.ProfilePictureUrl)
                             ? defaultUserPicture
                             : comment.User.ProfilePictureUrl)"
-                             class="w-10 h-10 object-cover rounded-full" />
-                    </a>
-                    <div class="flex-1">
-                        <div class="flex justify-content-between">
-                            <a class="text-black font-medium inline-block flex-grow text-14">
-                                @comment.User.FullName
-                            </a>
-                            <small class="text-13" title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <p class="mt-0.5 text-14">
-                                @comment.Content
-                            </p>
-                            <form asp-controller="Home" asp-action="RemovePostComment" onsubmit="return confirm('Are you sure you want to delete this comment?');">
-                                <input type="hidden" name="commentId" value="@comment.Id" />
-                                <button type="submit" class="text-red-500 text-xs ml-2" title="Remove comment">
-                                    <ion-icon name="trash-outline"></ion-icon>
-                                </button>
-                            </form>
+                                 class="w-10 h-10 object-cover rounded-full" />
+                        </a>
+                        <div class="flex-1">
+                            <div class="flex justify-content-between">
+                                <a asp-controller="Users" asp-action="Details" asp-route-userId="@comment.UserId"
+                                   class="text-black font-medium inline-block flex-grow text-14">
+                                    @comment.User.FullName
+                                </a>
+                                <small class="text-13" title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <p class="mt-0.5 text-14">
+                                    @comment.Content
+                                </p>
+                                <form asp-controller="Home" asp-action="RemovePostComment" onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                    <input type="hidden" name="commentId" value="@comment.Id" />
+                                    <button type="submit" class="text-red-500 text-xs ml-2" title="Remove comment">
+                                        <ion-icon name="trash-outline"></ion-icon>
+                                    </button>
+                                </form>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
-            @if (Model.Comments.Count >= 3 && !showAllComments)
-            {
-                <div class="p-1.5">
-                    <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id">
-                        Show all comments
-                    </a>
-                </div>
-            }
-        </div>
-        <form asp-controller="Home" asp-action="AddPostComment" onsubmit="return validateComment()">
-            <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
-                <img src="~/images/avatar/user.png" class="w-6 h-6 rounded-full" />
-                <input type="hidden" name="postId" value="@Model.Id" />
-                <div class="flex-1 relative overflow-hidden h-10">
-                    <textarea id="commentContent"
-                              name="content" placeholder="Add Comment...."
-                              rows="1"
-                              class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
-                </div>
-                <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
+                }
+                @if (Model.Comments.Count >= 3 && !showAllComments)
+                {
+                    <div class="p-1.5">
+                        <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id">
+                            Show all comments
+                        </a>
+                    </div>
+                }
             </div>
-        </form>
+            <form asp-controller="Home" asp-action="AddPostComment" onsubmit="return validateComment()">
+                <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
+                    <a asp-controller="Users" asp-action="Detalis" asp-route-userId="@Model.UserId">
+                        <img src="@(string.IsNullOrEmpty(Model.User.ProfilePictureUrl)
+                        ? Url.Content(defaultUserPicture)
+                        : Url.Content(Model.User.ProfilePictureUrl))" class="w-6 h-6 rounded-full" />
+                    </a>
+                    <input type="hidden" name="postId" value="@Model.Id" />
+                    <div class="flex-1 relative overflow-hidden h-10">
+                        <textarea id="commentContent"
+                                  name="content" placeholder="Add Comment...."
+                                  rows="1"
+                                  class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
+                    </div>
+                    <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
+                </div>
+            </form>
 
-    </div>
+        </div>
+   }
 
 
 </div>
