@@ -110,7 +110,7 @@ namespace APTXHub.Controllers
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
 
             // Notification
-            if (res.SendNotification)
+            if (res.SendNotification && userId != post.UserId)
             {
                 await _notificationService
                     .AddNewNotificationAsync(post.UserId, userId.Value, NotificationType.Like, userName!, postLikeVM.PostId);
@@ -134,7 +134,7 @@ namespace APTXHub.Controllers
             var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
 
             // Notification
-            if (res.SendNotification)
+            if (res.SendNotification && userId != post.UserId)
             {
                 await _notificationService
                     .AddNewNotificationAsync(post.UserId, userId.Value, NotificationType.Favorite, userName!, postFavoriteVM.PostId);
@@ -148,10 +148,10 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> TogglePostVisibility(PostVisibilityVM postVisibilityVM)
         {
-            var loggedInUserId = GetUserId();
-            if (loggedInUserId == null) return RedirectToLogin();
+            var userId = GetUserId();
+            if (userId == null) return RedirectToLogin();
 
-            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, loggedInUserId.Value);
+            await _postService.TogglePostVisibilityAsync(postVisibilityVM.PostId, userId.Value);
 
             return RedirectToAction("Index");
         }
@@ -161,14 +161,14 @@ namespace APTXHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
-            var loggedInUserId = GetUserId();
+            var userId = GetUserId();
             var userName = GetUserName();
-            if (loggedInUserId == null) return RedirectToLogin();
+            if (userId == null) return RedirectToLogin();
 
             //Creat a post object
             var newComment = new Comment()
             {
-                UserId = loggedInUserId.Value,
+                UserId = userId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
                 DateCreated = DateTime.UtcNow,
@@ -179,8 +179,12 @@ namespace APTXHub.Controllers
             var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
 
             // Notification
-            await _notificationService
-                .AddNewNotificationAsync(post.UserId, loggedInUserId.Value, NotificationType.Comment, userName!, postCommentVM.PostId);
+            if (userId != post.UserId)
+            {
+                await _notificationService
+                    .AddNewNotificationAsync(post.UserId, userId.Value, NotificationType.Comment, userName!, postCommentVM.PostId);
+
+            }
 
             return PartialView("Home/_Post", post);
         }

@@ -35,7 +35,7 @@ namespace APTXHub.Infrastructure.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateRequestAsync(int requestId, string newStatus)
+        public async Task<FriendRequest> UpdateRequestAsync(int requestId, string newStatus)
         {
             var requestDb = await _context.FriendRequests
                                     .FirstOrDefaultAsync(n => n.Id == requestId);
@@ -63,6 +63,7 @@ namespace APTXHub.Infrastructure.Services
                 await _context.Friendships.AddAsync(friendship);
                 await _context.SaveChangesAsync();
             }
+            return requestDb;
         }
 
         public async Task RemoveFriendAsync(int frienshipId)

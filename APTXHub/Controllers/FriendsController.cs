@@ -10,10 +10,13 @@ namespace APTXHub.Controllers
     public class FriendsController : BaseController
     {
         private readonly IFriendsService _friendsService;
+        private readonly INotificationService _notificationService;
 
-        public FriendsController(IFriendsService friendsService)
+        public FriendsController(IFriendsService friendsService,
+            INotificationService notificationService)
         {
             _friendsService = friendsService;
+            _notificationService = notificationService;
         }
 
         public async Task<IActionResult> Index()
@@ -36,9 +39,13 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> SendFriendRequest(int receiverId)
         {
             var userId = GetUserId();
+            var userName = GetUserName();
             if (!userId.HasValue) RedirectToLogin();
 
             await _friendsService.SendRequestAsync(userId.Value, receiverId);
+
+            await _notificationService.AddNewNotificationAsync(receiverId, userId.Value, NotificationType.FriendRequest, userName!, null);
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -46,7 +53,16 @@ namespace APTXHub.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateFriendRequest(int requestId, string status)
         {
-            await _friendsService.UpdateRequestAsync(requestId, status);
+
+            var userId = GetUserId();
+            var userName = GetUserName();
+            if (!userId.HasValue) RedirectToLogin();
+
+            var request = await _friendsService.UpdateRequestAsync(requestId, status);
+
+            if (status == FriendshipStatus.Accepted)
+                await _notificationService.AddNewNotificationAsync(request.SenderId, userId.Value, NotificationType.FriendRequestApproved, userName!, null);
+
             return RedirectToAction("Index");
         }
 
