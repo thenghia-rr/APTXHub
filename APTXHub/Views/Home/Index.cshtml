@@ -28,22 +28,24 @@
                     </div>
                 </div>
 
-                @if (Model.Count == 0)
-                {
-                    <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
-                        Currently, there are no posts available. Would you like to create the first one? 
-                    </div>
-                }
-                else {
-                    @foreach (var post in Model)
+                <div id="posts-container" class="space-y-4">
+
+                    @if (Model.Count == 0)
                     {
-                        <partial name="Home/_Post"
-                                 model="post"
-                                 view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
-
+                        <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
+                            Currently, there are no posts available. Would you like to create the first one?
+                        </div>
                     }
-                }
-
+                    else
+                    {
+                        @foreach (var post in Model)
+                        {
+                            <partial name="Home/_Post"
+                                     model="post"
+                                     view-data='new ViewDataDictionary(ViewData) { { "ShowAllComment", false } }' />
+                        }
+                    }
+                </div>
 
             </div>
 
@@ -54,7 +56,6 @@
                     @await Component.InvokeAsync("SuggestedFriends")
                 </div>
                 <div class="box p-5 px-6 border1">
-                    @* <partial name="Sidebar/_TrendsForYou"></partial> *@
                     @await Component.InvokeAsync("Hashtags")
                 </div>
             </div>
@@ -65,3 +66,102 @@
 
 <partial name="Modals/_CreateStory" model="new StoryVM()"></partial>
 <partial name="Modals/_CreateStatus" model="new PostVM()"></partial>
+<partial name="Home/_PostDeleteConfirm" />
+
+
+
+<script>
+      // Handle when delete post - comfirm dialog
+    function openPostDeleteConfirmation(postId, button) {
+        // Lấy dropdown gần nhất với nút vừa click
+        const dropdown = button.closest('.uk-dropdown');
+        if (dropdown) {
+            UIkit.dropdown(dropdown).hide();
+        }
+        // Gán postId vào form modal
+        document.getElementById('deleteConfirmationPostId').value = postId;
+
+        // Hiện modal xác nhận xóa
+        UIkit.modal('#postDeleteDialog').show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Handle when like and favorite post
+        document.getElementById('posts-container').addEventListener('click', function (event) {
+
+            const button = event.target.closest('.like-button, .favorite-button');
+            if (button) {
+                event.preventDefault();
+
+                var form = button.closest('form');
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {}
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error: ', error));
+            }
+        })
+
+        // Handle when add and remove comment
+        document.getElementById('posts-container').addEventListener('submit', function (event) {
+        var form = event.target;
+
+        // Add comment
+        if (form.classList.contains('add-comment-form')) {
+            event.preventDefault();
+
+            var postId = form.querySelector('input[name="postId"]').value;
+            var textarea = document.getElementById('commentContent-' + postId);
+            var content = textarea.value.trim();
+            if (!content) {
+                alert('Bạn chưa nhập nội dung bình luận!');
+                textarea.focus();
+                return;
+            }
+
+            var postContainer = document.getElementById('post-' + postId);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+            })
+                .then(response => response.text())
+                .then(html => {
+                    postContainer.innerHTML = html;
+                })
+                .catch(error => console.error('Error: ', error));
+        }
+
+        // Remove comment
+        if (form.classList.contains('remove-comment-form')) {
+            event.preventDefault();
+
+            var postId = form.querySelector('input[name="postId"]').value;
+            var postContainer = document.getElementById('post-' + postId);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+            })
+                .then(response => response.text())
+                .then(html => {
+                    postContainer.innerHTML = html;
+                })
+                .catch(error => console.error('Error: ', error));
+        }
+    });
+
+
+
+    })
+
+</script>

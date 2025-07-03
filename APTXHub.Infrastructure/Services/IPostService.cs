@@ -22,8 +22,8 @@ namespace APTXHub.Infrastructure.Services
         Task AddPostCommentAsync(Comment comment);
         Task RemovePostCommentAsync(int commentId);
 
-        Task<ToggleLikeResult> TogglePostLikeAsync(int postId, int userId);
-        Task<ToggleFavoriteResult> TogglePostFavoriteAsync(int postId, int userId);
+        Task TogglePostLikeAsync(int postId, int userId);
+        Task TogglePostFavoriteAsync(int postId, int userId);
         Task TogglePostVisibilityAsync(int postId, int userId);
         Task ReportPostAsync(int postId, int userId, string reason);
     }

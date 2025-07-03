@@ -148,78 +148,51 @@ namespace APTXHub.Infrastructure.Services
         }
 
         // NOTICE
-        public async Task<ToggleLikeResult> TogglePostLikeAsync(int postId, int userId)
+        public async Task TogglePostLikeAsync(int postId, int userId)
         {
-            var existingLike = await _context.Likes
-                .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+            var like = await _context.Likes
+                .Where(l => l.PostId == postId && l.UserId == userId)
+                .FirstOrDefaultAsync();
 
-            bool liked;
-
-            if (existingLike != null)
+            if (like != null)
             {
-                _context.Likes.Remove(existingLike);
-                liked = false;
+                _context.Likes.Remove(like);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                var newLike = new Like
+                var newLike = new Like()
                 {
                     PostId = postId,
                     UserId = userId
                 };
                 await _context.Likes.AddAsync(newLike);
-                liked = true;
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
-
-            int totalLikes = await _context.Likes
-                .CountAsync(l => l.PostId == postId);
-
-            return new ToggleLikeResult
-            {
-                Liked = liked,
-                TotalLikes = totalLikes
-            };
         }
 
         // NOTICE
-        public async Task<ToggleFavoriteResult> TogglePostFavoriteAsync(int postId, int userId)
+        public async Task TogglePostFavoriteAsync(int postId, int userId)
         {
-            var existingFavorited = await _context.Favorites
-                .AsNoTracking()
-                 .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+            var favorite = await _context.Favorites
+                .Where(l => l.PostId == postId && l.UserId == userId)
+                .FirstOrDefaultAsync();
 
-            bool favorited;
-
-            if (existingFavorited != null)
+            if (favorite != null)
             {
-                _context.Favorites.Remove(existingFavorited);
-                favorited = false;
+                _context.Favorites.Remove(favorite);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                var newFavorite = new Favorite
+                var newFavorite = new Favorite()
                 {
                     PostId = postId,
-                    UserId = userId,
-                    DateCreated = DateTime.UtcNow
+                    UserId = userId
                 };
                 await _context.Favorites.AddAsync(newFavorite);
-                favorited = true;
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
-
-            var totalFavorited = await _context.Favorites
-               .CountAsync(l => l.PostId == postId);
-
-            return new ToggleFavoriteResult
-            {
-                Favorited = favorited,
-                TotalFavorites = totalFavorited
-            };
-
         }
 
     }

@@ -90,27 +90,31 @@ namespace APTXHub.Controllers
 
         // [POST]: Like and dislike Post 
         [HttpPost]
-        public async Task<IActionResult> TogglePostLike([FromBody] PostLikeVM postLike)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            var result = await _postService.TogglePostLikeAsync(postLike.PostId, loggedInUserId.Value);
+            await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
 
-            return Json(new { liked = result.Liked, totalLikes = result.TotalLikes });
+            var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+
+            return PartialView("Home/_Post", post);
         }
 
         // [POST]: Favorite and unfavorite Post 
         [HttpPost]
-        public async Task<IActionResult> TogglePostFavorite([FromBody] PostFavoriteVM postFavoriteVM)
+        public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
 
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
 
-            var res = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+            await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+            var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
 
-            return Json(new { favorited = res.Favorited, totalFavorited = res.TotalFavorites });
+            return PartialView("Home/_Post", post);
 
         }
 
@@ -128,7 +132,8 @@ namespace APTXHub.Controllers
 
         // [POST]: Comment on Post
         [HttpPost]
-        public async Task<IActionResult> AddPostComment(PostCommentVM postComment)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
             if (loggedInUserId == null) return RedirectToLogin();
@@ -137,24 +142,27 @@ namespace APTXHub.Controllers
             var newComment = new Comment()
             {
                 UserId = loggedInUserId.Value,
-                PostId = postComment.PostId,
-                Content = postComment.Content,
-                DateCreated = DateTime.UtcNow,
+                PostId = postCommentVM.PostId,
+                Content = postCommentVM.Content,
+                DateCreated = DateTime.UtcNow,      
                 DateUpdated = DateTime.UtcNow
             };
 
             await _postService.AddPostCommentAsync(newComment);
+            var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
 
-            return RedirectToAction("Index");
+            return PartialView("Home/_Post", post);
         }
 
 
         // [POST]: Remove comment
         [HttpPost]
-        public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeComment)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemovePostComment(RemoveCommentVM removeCommentVM)
         {
-            await _postService.RemovePostCommentAsync(removeComment.CommentId);
-            return RedirectToAction("Index");
+            await _postService.RemovePostCommentAsync(removeCommentVM.CommentId);
+            var post = await _postService.GetPostByIdAsync(removeCommentVM.PostId);
+            return PartialView("Home/_Post", post);
         }
 
         
