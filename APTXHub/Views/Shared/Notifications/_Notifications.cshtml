@@ -1,0 +1,68 @@
+﻿@model List<Notification>
+@using System.Security.Claims
+
+@{
+    var currentUserId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var id) ? id : 0;
+    var userNotifications = Model?.Where(n => n.UserId == currentUserId).ToList() ?? new List<Notification>();
+
+}
+
+@if (!userNotifications.Any())
+{
+    <div class="text-lg text-center text-gray-500 py-4">
+        @* Hiện tại bạn không có thông báo nào. *@
+        There is no notice to display
+    </div>
+}
+else
+{
+    @foreach (var notification in userNotifications)
+    {
+        string iconName = notification.Type switch
+        {
+            NotificationType.Favorite => "bookmark-outline",
+            NotificationType.Like => "heart-outline",
+            NotificationType.Comment => "chatbubbles-outline",
+            NotificationType.FriendRequest => "person-add-outline",
+            NotificationType.FriendRequestApproved => "person-outline",
+            _ => "notifications-outline"
+        };
+
+        <div class="relative flex gap-3 p-3 rounded-xl hover:bg-secondery duration-200 @(notification.IsRead ? "" : "bg-teal-500/5")">
+
+            <!-- Avatar + Icon -->
+            <div class="relative min-w-[48px]">
+                <img src="@notification.FromUser.ProfilePictureUrl"
+                     class="w-14 h-14 rounded-full object-cover" alt="avatar" />
+                <ion-icon name="@iconName"
+                          class="absolute bottom-0 right-0 text-white bg-teal-600 rounded-full p-1 text-[16px]"></ion-icon>
+            </div>
+
+            <!-- Nội dung thông báo -->
+            <div class="flex-1">
+                <p class="text-14 leading-snug">
+                    @if (notification.IsRead)
+                    {
+                        @notification.Message
+                    }
+                    else
+                    {
+                        <span class="font-semibold">@notification.Message</span>
+                    }
+                </p>
+                <div class="text-sm text-gray-500 mt-1.5">@notification.DateCreated.ToTimeAgo()</div>
+            </div>
+
+            <!-- Icon đánh dấu đã đọc -->
+            @if (!notification.IsRead)
+            {
+                <button onclick="setNotificationAsRead(@notification.Id)"
+                        title="Mark as read"
+                        class="absolute right-3 top-3 text-gray-400 hover:text-teal-600">
+                    <ion-icon name="checkmark-done-outline" class="text-xl"></ion-icon>
+                </button>
+            }
+        </div>
+    }
+
+}

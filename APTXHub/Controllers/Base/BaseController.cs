@@ -12,6 +12,11 @@ namespace APTXHub.Controllers.Base
                 return null;
             return int.Parse(loggedInUserId);
         }
+        protected string? GetUserName() // Username (nghiadt@gmail.com)
+        {
+            var loggedInUserFullName = User.FindFirstValue("FullName"); // ClaimTypes.Name
+            return loggedInUserFullName;
+        }
         protected IActionResult RedirectToLogin()
         {
             return RedirectToAction("Login", "Authentication");

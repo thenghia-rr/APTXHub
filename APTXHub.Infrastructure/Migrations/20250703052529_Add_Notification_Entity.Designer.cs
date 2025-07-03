@@ -4,6 +4,7 @@ using APTXHub.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APTXHub.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250703052529_Add_Notification_Entity")]
+    partial class Add_Notification_Entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,18 +201,12 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Property<DateTime>("DateUpdated")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("FromUserId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PostId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -219,10 +216,6 @@ namespace APTXHub.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FromUserId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
                 });
@@ -654,25 +647,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("APTXHub.Infrastructure.Models.Notification", b =>
-                {
-                    b.HasOne("APTXHub.Infrastructure.Models.User", "FromUser")
-                        .WithMany()
-                        .HasForeignKey("FromUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("APTXHub.Infrastructure.Models.User", "User")
-                        .WithMany("Notifications")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("FromUser");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("APTXHub.Infrastructure.Models.Post", b =>
                 {
                     b.HasOne("APTXHub.Infrastructure.Models.User", "User")
@@ -814,8 +788,6 @@ namespace APTXHub.Infrastructure.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Likes");
-
-                    b.Navigation("Notifications");
 
                     b.Navigation("Posts");
 

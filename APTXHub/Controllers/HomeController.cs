@@ -2,6 +2,7 @@
 using APTXHub.Controllers.Base;
 using APTXHub.Data.Helpers;
 using APTXHub.Extentions;
+using APTXHub.Infrastructure.Hubs;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers.Enums;
 using APTXHub.Infrastructure.Models;
@@ -9,7 +10,9 @@ using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Home;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using APTXHub.Infrastructure.Helpers.Constants;
 
 namespace APTXHub.Controllers
 {
@@ -21,25 +24,31 @@ namespace APTXHub.Controllers
         private readonly IPostService _postService;
         private readonly IHashtagService _hashtagService;
         private readonly IFilesService _filesService;
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly INotificationService _notificationService;
 
         public HomeController(ILogger<HomeController> logger,
             AppDbContext context,
             IPostService postService,
             IHashtagService hashtagService,
-            IFilesService filesService)
+            IFilesService filesService,
+            IHubContext<NotificationHub> hubContext,
+            INotificationService notificationService)
         {
             _logger = logger;
             _context = context;
             _postService = postService;
             _hashtagService = hashtagService;
             _filesService = filesService;
+            _hubContext = hubContext;
+            _notificationService = notificationService;
         }
 
         // [GET]: Home Page - Show all Posts
-        public async Task<IActionResult> Index()    
+        public async Task<IActionResult> Index()
         {
             var loggedInUserId = GetUserId();
-            if(loggedInUserId == null)
+            if (loggedInUserId == null)
                 return RedirectToLogin();
 
             var allPosts = await _postService.GetAllPostsAsync(loggedInUserId.Value);
@@ -65,7 +74,7 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> CreatePost(PostVM post)
         {
             //Get the logged in user
-            var  loggedInUserId = GetUserId();
+            var loggedInUserId = GetUserId();
             if (loggedInUserId == null)
                 return RedirectToLogin();
 
@@ -93,12 +102,19 @@ namespace APTXHub.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> TogglePostLike(PostLikeVM postLikeVM)
         {
-            var loggedInUserId = GetUserId();
-            if (loggedInUserId == null) return RedirectToLogin();
+            var userId = GetUserId();
+            var userName = GetUserName();
+            if (userId == null) return RedirectToLogin();
 
-            await _postService.TogglePostLikeAsync(postLikeVM.PostId, loggedInUserId.Value);
-
+            var res = await _postService.TogglePostLikeAsync(postLikeVM.PostId, userId.Value);
             var post = await _postService.GetPostByIdAsync(postLikeVM.PostId);
+
+            // Notification
+            if (res.SendNotification)
+            {
+                await _notificationService
+                    .AddNewNotificationAsync(post.UserId, userId.Value, NotificationType.Like, userName!, postLikeVM.PostId);
+            }
 
             return PartialView("Home/_Post", post);
         }
@@ -108,11 +124,21 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> TogglePostFavorite(PostFavoriteVM postFavoriteVM)
         {
 
-            var loggedInUserId = GetUserId();
-            if (loggedInUserId == null) return RedirectToLogin();
+            var userId = GetUserId();
+            var userName = GetUserName();
+            if (userId == null) return RedirectToLogin();
 
-            await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, loggedInUserId.Value);
+            var res = await _postService.TogglePostFavoriteAsync(postFavoriteVM.PostId, userId.Value);
+
+
             var post = await _postService.GetPostByIdAsync(postFavoriteVM.PostId);
+
+            // Notification
+            if (res.SendNotification)
+            {
+                await _notificationService
+                    .AddNewNotificationAsync(post.UserId, userId.Value, NotificationType.Favorite, userName!, postFavoriteVM.PostId);
+            }
 
             return PartialView("Home/_Post", post);
 
@@ -136,6 +162,7 @@ namespace APTXHub.Controllers
         public async Task<IActionResult> AddPostComment(PostCommentVM postCommentVM)
         {
             var loggedInUserId = GetUserId();
+            var userName = GetUserName();
             if (loggedInUserId == null) return RedirectToLogin();
 
             //Creat a post object
@@ -144,12 +171,16 @@ namespace APTXHub.Controllers
                 UserId = loggedInUserId.Value,
                 PostId = postCommentVM.PostId,
                 Content = postCommentVM.Content,
-                DateCreated = DateTime.UtcNow,      
+                DateCreated = DateTime.UtcNow,
                 DateUpdated = DateTime.UtcNow
             };
 
             await _postService.AddPostCommentAsync(newComment);
             var post = await _postService.GetPostByIdAsync(postCommentVM.PostId);
+
+            // Notification
+            await _notificationService
+                .AddNewNotificationAsync(post.UserId, loggedInUserId.Value, NotificationType.Comment, userName!, postCommentVM.PostId);
 
             return PartialView("Home/_Post", post);
         }
@@ -165,7 +196,7 @@ namespace APTXHub.Controllers
             return PartialView("Home/_Post", post);
         }
 
-        
+
         // [POST]: Report Post
         [HttpPost]
         public async Task<IActionResult> AddPostReport(PostReportVM postReportVM)
@@ -186,7 +217,7 @@ namespace APTXHub.Controllers
 
             var post = await _postService.RemovePostSoftAsync(postRemoveVM.PostId, loggedInUserId.Value);
 
-            if(post != null)
+            if (post != null)
             {
                 await _hashtagService.ProcessHashtagsForRemovedPostAsync(post);
             }

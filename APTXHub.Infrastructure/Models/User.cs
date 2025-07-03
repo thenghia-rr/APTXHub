@@ -10,7 +10,6 @@ namespace APTXHub.Infrastructure.Models
 {
     public class User : IdentityUser<int>
     {
-        //public int Id { get; set; }
         public string FullName { get; set; } = string.Empty;
         public string? ProfilePictureUrl { get; set; }
         public string? CoverPictureUrl { get; set; }
@@ -24,5 +23,6 @@ namespace APTXHub.Infrastructure.Models
         public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
         public ICollection<Report> Reports { get; set; } = new List<Report>();
         public ICollection<Story> Stories { get; set; } = new List<Story>();
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     }
 }

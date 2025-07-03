@@ -1,3 +1,4 @@
+using APTXHub.Infrastructure.Hubs;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
 using APTXHub.Infrastructure.Models;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IStoriesService, StoriesSevice>();
 builder.Services.AddScoped<IFilesService, FilesSevice>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();    
 
 // Identity configuration
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
@@ -70,6 +72,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
     });
 
+
+builder.Services.AddSignalR();
 
 builder.Services.AddAuthorization();
 
@@ -120,4 +124,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapHub<NotificationHub>("/notificationHub");
+
 app.Run();
+

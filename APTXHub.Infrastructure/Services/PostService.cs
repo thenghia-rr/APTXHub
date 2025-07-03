@@ -15,10 +15,13 @@ namespace APTXHub.Infrastructure.Services
     public class PostService : IPostService
     {
         private readonly AppDbContext _context;
+        private readonly INotificationService _notificationService;
 
-        public PostService(AppDbContext context)
+        public PostService(AppDbContext context,
+            INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<List<Post>> GetAllPostsAsync(int loggedInUserId)
@@ -148,8 +151,14 @@ namespace APTXHub.Infrastructure.Services
         }
 
         // NOTICE
-        public async Task TogglePostLikeAsync(int postId, int userId)
+        public async Task<GetNotificationDto> TogglePostLikeAsync(int postId, int userId)
         {
+            var response = new GetNotificationDto()
+            {
+                Success = true,
+                SendNotification = false
+            };
+
             var like = await _context.Likes
                 .Where(l => l.PostId == postId && l.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -168,12 +177,22 @@ namespace APTXHub.Infrastructure.Services
                 };
                 await _context.Likes.AddAsync(newLike);
                 await _context.SaveChangesAsync();
+
+                
+                response.SendNotification = true;
             }
+            return response;
         }
 
         // NOTICE
-        public async Task TogglePostFavoriteAsync(int postId, int userId)
+        public async Task<GetNotificationDto> TogglePostFavoriteAsync(int postId, int userId)
         {
+            var response = new GetNotificationDto()
+            {
+                Success = true,
+                SendNotification = false
+            };
+
             var favorite = await _context.Favorites
                 .Where(l => l.PostId == postId && l.UserId == userId)
                 .FirstOrDefaultAsync();
@@ -192,7 +211,11 @@ namespace APTXHub.Infrastructure.Services
                 };
                 await _context.Favorites.AddAsync(newFavorite);
                 await _context.SaveChangesAsync();
+
+                response.SendNotification = true;
             }
+
+            return response;
         }
 
     }

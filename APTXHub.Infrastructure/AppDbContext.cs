@@ -22,6 +22,7 @@ namespace APTXHub.Infrastructure
         public DbSet<PostHashtag> PostHashtags { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<Friendship> Friendships { get; set; }
+        public DbSet<Notification> Notifications { get; set; }  
 
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
@@ -138,6 +139,20 @@ namespace APTXHub.Infrastructure
                 .WithMany()
                 .HasForeignKey(fr => fr.ReceiverId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Notification entity configuration
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.FromUser)
+                .WithMany() // không cần navigation ngược lại
+                .HasForeignKey(n => n.FromUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             base.OnModelCreating(modelBuilder);
 

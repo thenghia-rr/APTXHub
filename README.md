@@ -19,8 +19,8 @@ It simulates the core features of modern social platforms, offering a space wher
   - Hashtags by post
   - Create story (image/video)
   - Friends management
+  - Notification real-time
   - Search post smart
-  - Notification
   - Dark mode toggle
   - Responsive UI
 

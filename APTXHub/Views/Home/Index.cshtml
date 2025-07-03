@@ -87,7 +87,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Handle when like and favorite post
+        // HANDLE WHEN LIKE AND FAVORITE POST
         document.getElementById('posts-container').addEventListener('click', function (event) {
 
             const button = event.target.closest('.like-button, .favorite-button');
@@ -111,54 +111,54 @@
             }
         })
 
-        // Handle when add and remove comment
+        // HANDLE WHEN ADD AND REMOVE COMMENT
         document.getElementById('posts-container').addEventListener('submit', function (event) {
-        var form = event.target;
+            var form = event.target;
 
-        // Add comment
-        if (form.classList.contains('add-comment-form')) {
-            event.preventDefault();
+            // Add comment
+            if (form.classList.contains('add-comment-form')) {
+                event.preventDefault();
 
-            var postId = form.querySelector('input[name="postId"]').value;
-            var textarea = document.getElementById('commentContent-' + postId);
-            var content = textarea.value.trim();
-            if (!content) {
-                alert('Bạn chưa nhập nội dung bình luận!');
-                textarea.focus();
-                return;
+                var postId = form.querySelector('input[name="postId"]').value;
+                var textarea = document.getElementById('commentContent-' + postId);
+                var content = textarea.value.trim();
+                if (!content) {
+                    alert('Bạn chưa nhập nội dung bình luận!');
+                    textarea.focus();
+                    return;
+                }
+
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error: ', error));
             }
 
-            var postContainer = document.getElementById('post-' + postId);
+            // Remove comment
+            if (form.classList.contains('remove-comment-form')) {
+                event.preventDefault();
 
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-            })
-                .then(response => response.text())
-                .then(html => {
-                    postContainer.innerHTML = html;
+                var postId = form.querySelector('input[name="postId"]').value;
+                var postContainer = document.getElementById('post-' + postId);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
                 })
-                .catch(error => console.error('Error: ', error));
-        }
-
-        // Remove comment
-        if (form.classList.contains('remove-comment-form')) {
-            event.preventDefault();
-
-            var postId = form.querySelector('input[name="postId"]').value;
-            var postContainer = document.getElementById('post-' + postId);
-
-            fetch(form.action, {
-                method: 'POST',
-                body: new FormData(form),
-            })
-                .then(response => response.text())
-                .then(html => {
-                    postContainer.innerHTML = html;
-                })
-                .catch(error => console.error('Error: ', error));
-        }
-    });
+                    .then(response => response.text())
+                    .then(html => {
+                        postContainer.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error: ', error));
+            }
+        });
 
 
 
