@@ -1,11 +1,12 @@
-﻿using APTXHub.Infrastructure.Services;
+﻿using APTXHub.Infrastructure.Helpers.Constants;
+using APTXHub.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace APTXHub.Controllers
 {
-    [Authorize]
+    [Authorize()]
     public class FavoritesController : Controller
     {
         private readonly IPostService _postService;

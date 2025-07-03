@@ -4132,6 +4132,9 @@
 .max-w-60 {
     max-width: 60px;
 }
+.max-w-300 {
+    max-width: 300px;
+}
 
 .min-w-700 {
     min-width: 700px;

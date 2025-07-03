@@ -3,10 +3,12 @@ using APTXHub.Infrastructure.Helpers.Constants;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Friends;
 using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class FriendsController : BaseController
     {
         private readonly IFriendsService _friendsService;

@@ -1,9 +1,11 @@
 ﻿using APTXHub.Controllers.Base;
 using APTXHub.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class NotificationsController : BaseController
     {
         private readonly INotificationService _notificationService;

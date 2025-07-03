@@ -65,20 +65,20 @@
                     </button>
                     <hr />
                 }
+                else{
 
+                    @if (!isReported)
+                    {
+                        <button type="button"
+                                class="flex items-center gap-2 hover:!bg-red-50 icon-link w-full p-2"
+                                onclick="openReportModal(@Model.Id)">
+                            <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> Report
+                        </button>
 
-                @if (!isReported)
-                {
-                    <button type="button"
-                            class="flex items-center gap-2 hover:!bg-red-50 icon-link w-full p-2"
-                            onclick="openReportModal(@Model.Id)">
-                        <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> Report
-                    </button>
+                        <partial name="Home/_PostReportConfirm" model="Model" />
 
-                    <partial name="Home/_PostReportConfirm" model="Model" />
-
+                    }
                 }
-
             </div>
         </div>
     </div>

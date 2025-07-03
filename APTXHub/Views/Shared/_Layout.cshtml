@@ -16,11 +16,17 @@
 
         @if (User?.Identity?.IsAuthenticated == true)
         {
-            @* * Topbar *@
-            <partial name="Navigation/_TopBar" />
+            @if (User.IsInRole(AppRoles.User))
+            {
+                <partial name="Navigation/_TopBar" />
+                <partial name="Navigation/_SideBar" />
+            }
+            else if (User.IsInRole(AppRoles.Admin))
+            {
+                <partial name="Navigation/_TopBarAdmin" />
+                <partial name="Navigation/_SideBar" />
 
-            @* Side bar (left) *@
-            <partial name="Navigation/_SideBar" /> 
+            }
         
         }
 
