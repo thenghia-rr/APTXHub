@@ -10,13 +10,14 @@
 
                 @if (Model.Count == 0)
                 {
-                    <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-lg font-medium border1" >
-                        Currently, there are no favorited posts available.
+                    <div class="box-dark-border dark:text-white text-center bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-lg font-medium border1" >
+                        <p>Currently, there are no favorited posts available.</p>
+                        <ion-icon name="sad-outline" class="text-4xl"></ion-icon>
                     </div>
                 }
                 else
                 {
-                     <div class="bg-white text-center rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-xl font-medium border1" > 
+                     <div class="box-dark-border dark:text-white  bg-white text-center rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-xl font-medium border1" > 
                          Your favorite posts 
                      </div> 
                     
@@ -31,10 +32,10 @@
         </div>
         <div class="lg:w-[360px]  lg:block lg:overflow-visible ">
             <div class="mt-3 lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6">
-                <div class="box p-5 px-6">
+                <div class="box p-5 px-6 dark:bg-secondary box-dark-border">
                     @await Component.InvokeAsync("SuggestedFriends")
                 </div>
-                <div class="box p-5 px-6 border1">
+                <div class="box p-5 px-6 dark:bg-secondary box-dark-border">
                     @await Component.InvokeAsync("Hashtags")
                 </div>
             </div>

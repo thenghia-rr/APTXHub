@@ -21,7 +21,7 @@ It simulates the core features of modern social platforms, offering a space wher
   - Friends management
   - Notification real-time
   - Reported posts management for admin
-  - Search post smart
+  - Search post/user
   - Dark mode toggle
   - Responsive UI
 

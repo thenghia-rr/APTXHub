@@ -4194,8 +4194,15 @@
 .top-60-percent {
     top: 60%;
 }
+
 .text-black{
     color: black;
+}
+.bg-red-soft {
+    background-color: #df6684;
+}
+.text-white-soft {
+    color: #f5f5f5;
 }
 
 /*DARKMODE*/
@@ -4219,7 +4226,6 @@
     background-color: #252728;
 }
 
-/* Tạo viền sáng khi ở chế độ dark mode */
 .dark .box-dark-border {
     border: 1px solid rgba(255, 255, 255, 0.15); /* viền trắng mờ */
     background-color: #252728; /* bg-gray-800 tùy chỉnh nếu cần */

@@ -2,11 +2,11 @@
 
 <main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
-    <h2 class="text-xl font-semibold mb-4">Search results for: "@Model.Query"</h2>
+    <h2 class="text-xl font-semibold mb-4 dark:text-white">Search results for: "@Model.Query"</h2>
 
     @if (Model.Posts.Count == 0 && Model.Users.Count == 0)
     {
-        <p class="text-gray-500">No results found.</p>
+        <p class="text-gray-500 dark:text-white ">No results found.</p>
     }
     else
     {
@@ -16,7 +16,7 @@
                 @if (Model.Posts.Count > 0)
                 {
                     <section>
-                        <h3 class="font-semibold mb-2 text-lg">Posts</h3>
+                        <h3 class="font-semibold mb-2 text-lg dark:text-white">Posts</h3>
                         @foreach (var post in Model.Posts)
                         {
                             <partial name="Home/_Post" model="post"
@@ -35,18 +35,18 @@
                 @if (Model.Users.Count > 0)
                 {
                     <section>
-                        <h3 class="font-semibold mb-2 text-lg">Users</h3>
-                        <div class="grid grid-cols-2 sm:grid-cols-2 gap-4">
+                        <h3 class="font-semibold mb-2 text-lg dark:text-white">Users</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 ">
                             @foreach (var user in Model.Users)
                             {
-                                <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id" 
-                                class="block text-center card shadow p-2">
+                                <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.Id"
+                                   class="block text-center card shadow p-2 box-dark-border">
                                     <img src="@Url.Content(string.IsNullOrEmpty(user.ProfilePictureUrl)
                                         ? "/images/avatar/user.png"
                                         : user.ProfilePictureUrl)"
-                                         class="w-20 h-20 rounded-full object-cover mx-auto" />
-                                    <div class="mt-2 font-semibold text-15px">@user.FullName</div>
-                                    <div class="text-sm mt-1 text-gray-500">@user.UserName</div>
+                                         class="w-20 h-20 rounded-full object-cover mx-auto dark:bg-white" />
+                                    <div class="mt-2 font-semibold text-15px dark:text-white">@user.FullName</div>
+                                    <div class="text-sm mt-1 text-gray-500 dark:text-gray">@user.UserName</div>
                                 </a>
                             }
                         </div>
