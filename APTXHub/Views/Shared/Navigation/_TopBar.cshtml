@@ -17,7 +17,7 @@
             </button>
 
             <div id="logo" class="flex items-center ml-2">
-                <a class="flex items-center select-none" href="/">
+                <a class="flex items-center select-none" asp-controller="Home" asp-action="Index">
                     <img src="~/images/logo.png" class="w-12 md:block hidden" />
                     <span class="ml-2 font-bold text-2xl">APTX Hub</span>
                 </a>
@@ -28,6 +28,9 @@
     <div class="flex-1 relative">
         <div class="max-w-[1220px] mx-auto flex items-center">
             <form id="search--box"
+                  asp-controller="Home"
+                  asp-action="Search"
+                  method="get"
                   class="ml-2 xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 bg-secondery max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
 
                 <ion-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
@@ -110,7 +113,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         // Get all notification count number
-          fetch("Notifications/GetCount", {
+          fetch("/Notifications/GetCount", {
             method: 'GET',
             headers: {
                 'Content-Type':'application/json'
@@ -127,7 +130,7 @@
 
         // Show all notifications
         document.getElementById('notificationsBtn').addEventListener('click', () => {
-            fetch('Notifications/GetNotifications')
+            fetch('/Notifications/GetNotifications')
                 .then(resp => resp.text())
                 .then(html => {
                     document.getElementById('notification-dropdown').innerHTML = html;

@@ -33,6 +33,8 @@ namespace APTXHub.Controllers
             return View();  
         }
 
+        // [GET]: detail page user
+        [HttpGet]
         public async Task<IActionResult> Details(int userId)
         {
             var user = await _userManager.FindByIdAsync(userId.ToString());
@@ -63,11 +65,13 @@ namespace APTXHub.Controllers
             }
 
             var userPosts = await _userService.GetUserPosts(userId);
+            var userFriends = await _userService.GetUserFriends(userId);
 
             var userProfileVM = new GetUserProfileVM
             {
                 User = user,
                 Posts = userPosts,
+                Friends = userFriends,
                 FriendshipStatus = friendshipStatus
             };
 

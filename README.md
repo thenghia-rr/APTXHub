@@ -20,6 +20,7 @@ It simulates the core features of modern social platforms, offering a space wher
   - Create story (image/video)
   - Friends management
   - Notification real-time
+  - Reported posts management for admin
   - Search post smart
   - Dark mode toggle
   - Responsive UI

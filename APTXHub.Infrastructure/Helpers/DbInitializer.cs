@@ -27,7 +27,8 @@ namespace APTXHub.Infrastructure.Helpers
             }
 
             //Users with Roles
-            if (!userManager.Users.Any(n => !string.IsNullOrEmpty(n.Email)))
+            // n => !string.IsNullOrEmpty(n.Email)
+            if (!userManager.Users.Any())
             {
                 var userPassword = "Susu@123";
                 var newUser = new User()

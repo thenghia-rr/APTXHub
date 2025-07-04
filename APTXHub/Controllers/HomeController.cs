@@ -26,6 +26,7 @@ namespace APTXHub.Controllers
         private readonly IFilesService _filesService;
         private readonly IHubContext<NotificationHub> _hubContext;
         private readonly INotificationService _notificationService;
+        private readonly ISearchService _searchService;
 
         public HomeController(ILogger<HomeController> logger,
             AppDbContext context,
@@ -33,7 +34,8 @@ namespace APTXHub.Controllers
             IHashtagService hashtagService,
             IFilesService filesService,
             IHubContext<NotificationHub> hubContext,
-            INotificationService notificationService)
+            INotificationService notificationService,
+            ISearchService searchService)
         {
             _logger = logger;
             _context = context;
@@ -42,6 +44,7 @@ namespace APTXHub.Controllers
             _filesService = filesService;
             _hubContext = hubContext;
             _notificationService = notificationService;
+            _searchService = searchService;
         }
 
         // [GET]: Home Page - Show all Posts
@@ -227,5 +230,25 @@ namespace APTXHub.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        // [GET]: Search post and users
+        [HttpGet]
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return RedirectToAction("Index");
+
+            var result = await _searchService.SearchAsync(query, User);
+
+            var searchResultVM = new SearchResultVM
+            {
+                Query = result.Query,
+                Posts = result.Posts,
+                Users = result.Users
+            };
+
+            return View(searchResultVM); // view trả về danh sách kết quả
+        }
+
     }
 }

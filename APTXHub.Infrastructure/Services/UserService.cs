@@ -105,5 +105,22 @@ namespace APTXHub.Infrastructure.Services
 
             return allPosts;
         }
+
+        public async Task<List<User>> GetUserFriends(int userId)
+        {
+            var friendships = await _context.Friendships
+                .Where(f => f.SenderId == userId || f.ReceiverId == userId)
+                .Include(f => f.Sender)
+                .Include(f => f.Receiver)
+                .ToListAsync();
+
+            var friends = friendships
+                .Select(f => f.SenderId == userId ? f.Receiver : f.Sender)
+                .Distinct()
+                .ToList();
+
+            return friends;
+        }
+
     }
 }

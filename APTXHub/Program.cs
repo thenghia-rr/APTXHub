@@ -36,6 +36,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFriendsService, FriendsService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();    
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 // Identity configuration
 builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
