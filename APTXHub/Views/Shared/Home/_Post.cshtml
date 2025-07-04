@@ -16,7 +16,7 @@
 }
 
 
-<div id="post-@Model.Id" class="bg-white rounded-xl shadow-sm text-sm font-medium border1">
+<div id="post-@Model.Id" class="box-dark-border bg-white rounded-xl shadow-sm text-sm font-medium border1">
 
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
@@ -28,16 +28,16 @@
         </a>
         <div class="flex-1">
             <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
-                <h4 class="text-black text-15">@Model.User.FullName</h4>
+                <h4 class="text-black text-15 dark:text-white">@Model.User.FullName</h4>
                 <div class="text-13 font-normal text-gray-500/80 mt-1 flex items-center" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">
-                    <span class="mr-2">@Model.DateCreated.ToTimeAgo()</span>
+                    <span class="mr-2 dark:text-gray">@Model.DateCreated.ToTimeAgo()</span>
                     @if (isPrivate)
                     {
-                        <ion-icon name="lock-closed"></ion-icon>
+                        <ion-icon name="lock-closed" class="dark:text-gray"></ion-icon>
                     }
                     else
                     {
-                        <ion-icon name="earth-sharp"></ion-icon>
+                        <ion-icon name="earth-sharp" class="dark:text-gray"></ion-icon>
                     }
                 </div>
 
@@ -45,14 +45,14 @@
         </div>
 
         <div class="-mr-1">
-            <button type="button" class="button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
-            <div class="w-[245px] post-options-dropdown" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
+            <button type="button" class="dark:text-white button-icon w-8 h-8"> <ion-icon class="text-xl" name="ellipsis-horizontal"></ion-icon> </button>
+            <div class="box-dark-border w-[245px] post-options-dropdown" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click">
 
                 @if (Model.UserId == loggedInUserId)
                 {
                     <form asp-controller="Home" asp-action="TogglePostVisibility">
                         <input type="hidden" name="postId" value="@Model.Id" />
-                        <button type="submit" class="hover:!bg-red-50 icon-link">
+                        <button type="submit" class="hover:!bg-red-50 btn-danger-hover icon-link bg-bgbody dark:text-white">
                             <ion-icon name="@(isPrivate ? "lock-open-outline" : "lock-closed-outline")"></ion-icon>  Set as @(isPrivate ? "public" : "private")
                         </button>
                     </form>
@@ -60,7 +60,7 @@
 
                     <button type="button"
                             onclick="openPostDeleteConfirmation('@Model.Id', this)"
-                            class="text-red-400 hover:!bg-red-50 delete-post-btn">
+                            class="btn-danger-hover text-red-400 hover:!bg-red-50 delete-post-btn">
                         <ion-icon name="trash-bin-outline"></ion-icon> Delete Post
                     </button>
                     <hr />
@@ -70,7 +70,7 @@
                     @if (!isReported)
                     {
                         <button type="button"
-                                class="flex items-center gap-2 hover:!bg-red-50 icon-link w-full p-2"
+                                class="dark:text-white btn-danger-hover flex items-center gap-2 hover:!bg-red-50 icon-link w-full p-2"
                                 onclick="openReportModal(@Model.Id)">
                             <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> Report
                         </button>
@@ -86,7 +86,7 @@
     @* Post content *@
     <a href="/post/@Model.Id">
         <div class="sm:px-4 p-2.5 pt-0 w-full">
-            <p class="font-normal text-15 mb-1">
+            <p class="font-normal text-15 mb-1 dark:text-white">
                 @Html.Raw(ContentFormatter.FormatHashtags(string.IsNullOrEmpty(Model.Content) ? "" : Model.Content))
             </p>
         </div>
@@ -110,15 +110,15 @@
             <form asp-controller="Home" asp-action="TogglePostLike">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon like-button @(isLiked ? "text-red-500 bg-red-100" : "")">
+                <button type="submit" class="button-icon like-button @(isLiked ? "text-red-500 bg-red-100" : "dark:text-white")">
                     <ion-icon class="text-lg"
                               name="@(isLiked ? "heart" : "heart-outline")"></ion-icon>
                 </button>
             </form>
-            <span class="like-count text-13">@Model.Likes.Count</span>
+            <span class="like-count text-13 dark:text-white">@Model.Likes.Count</span>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 dark:text-white">
             <a class="button-icon">
                 <ion-icon class="text-lg" name="chatbubble-ellipses-outline"></ion-icon>
             </a>
@@ -132,13 +132,13 @@
 
             <form asp-controller="Home" asp-action="TogglePostFavorite">
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit" class="button-icon favorite-button ml-auto @(isFavorited ? "text-orange-500 bt-orange-100":"")">
+                <button type="submit" class="button-icon favorite-button ml-auto @(isFavorited ? "text-orange-500 bt-orange-100":"dark:text-white")">
                     <ion-icon class="text-lg" name="@(isFavorited ? "bookmark":"bookmark-outline")"></ion-icon>
                 </button>
             </form>
             @if (Model.Favorites.Count > 0)
             {
-                <a href="#">@Model.Favorites.Count</a>
+                <a class="text-13 dark:text-white" href="#">@Model.Favorites.Count</a>
             }
         </div>
     </div>
@@ -146,7 +146,7 @@
     @* Add comment section *@
    @if(showDetails){
         <div>
-            <div class="p-2.5 border-t border-gray-100 font-normal space-y-3 relative">
+            <div class="p-2.5 border-t d-border-gray-50 font-normal space-y-3 relative">
                 @foreach (var comment in showAllComments
                ? Model.Comments.OrderByDescending(n => n.DateCreated)
                : Model.Comments.OrderByDescending(n => n.DateCreated).Take(2))
@@ -162,22 +162,21 @@
                         <div class="flex-1">
                             <div class="flex justify-content-between">
                                 <a asp-controller="Users" asp-action="Details" asp-route-userId="@comment.UserId"
-                                   class="text-black font-medium inline-block flex-grow text-14">
+                                   class="text-black font-medium inline-block flex-grow text-14 dark:text-white">
                                     @comment.User.FullName
                                 </a>
-                                <small class="text-13" title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small>
+                                <small class="text-13  dark:text-gray" title="@comment.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">@comment.DateCreated.ToTimeAgo()</small>
                             </div>
-                            <div class="flex items-center justify-between">
-                                <p class="mt-0.5 text-14">
+                            <div class="flex items-center justify-between ">
+                                <p class="mt-0.5 text-14  dark:text-white">
                                     @comment.Content
                                 </p>
 
                                 @if(comment.User.Id == loggedInUserId) {
-                                    <form asp-controller="Home" asp-action="RemovePostComment" class="remove-comment-form"
-                                          onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                    <form asp-controller="Home" asp-action="RemovePostComment" class="remove-comment-form">
                                         <input type="hidden" name="commentId" value="@comment.Id" />
                                         <input type="hidden" name="postId" value="@comment.PostId" />
-                                        <button type="submit" class="text-red-500 text-xs ml-2" title="Remove comment">
+                                        <button type="submit" class="text-red-500 text-13 ml-2 mt-1" title="Remove comment">
                                             <ion-icon name="trash-outline"></ion-icon>
                                         </button>
                                     </form>
@@ -191,7 +190,8 @@
                 @if (Model.Comments.Count >= 3 && !showAllComments)
                 {
                     <div class="p-1.5">
-                        <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id">
+                        <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id" 
+                            class=" dark:text-gray">
                             Show all comments
                         </a>
                     </div>
@@ -199,18 +199,18 @@
             </div>
             <form asp-controller="Home" asp-action="AddPostComment" class="add-comment-form">
                 @Html.AntiForgeryToken()
-                <div class="sm:px-4 sm:py-3 p-2.5 border-t border-gray-100 flex items-center gap-1">
+                <div class="sm:px-4 sm:py-3 p-2.5 border-t d-border-gray-50 flex items-center gap-1">
                     <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
-                        <img src="@Url.Content(defaultUserPicture)" class="w-6 h-6 rounded-full" />
+                        <img src="@Url.Content(defaultUserPicture)" class="w-6 h-6 rounded-full  dark:bg-white" />
                     </a>
                     <input type="hidden" name="postId" value="@Model.Id" />
                     <div class="flex-1 relative overflow-hidden h-10">
                         <textarea id="commentContent-@Model.Id"
                                   name="content" placeholder="Add Comment...."
                                   rows="1"
-                                  class="w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
+                                  class=" dark:text-white w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
                     </div>
-                    <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Comment</button>
+                    <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery dark:text-white">Comment</button>
                 </div>
             </form>
 

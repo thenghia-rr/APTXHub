@@ -1,6 +1,6 @@
 ﻿@model List<Hashtag>
 
-<div class="flex justify-between text-black">
+<div class="flex justify-between text-black dark:text-white">
     <h3 class="font-bold text-xl">Trends for you</h3>
 </div>
 
@@ -11,8 +11,8 @@
         <a>
             <div class="flex items-center gap-3 p">
                 <div class="flex-1 mb-2">
-                    <h2 class="font-semibold text-black text-14">@hashtag.Name</h2>
-                    <div class="mt-1 mb-2 text-13">@hashtag.Count posts</div>
+                    <h2 class="font-semibold text-black text-14 dark:text-white">@hashtag.Name</h2>
+                    <div class="mt-1 mb-2 text-13 dark:text-gray">@hashtag.Count posts</div>
                 </div>
             </div>
 

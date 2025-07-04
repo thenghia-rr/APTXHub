@@ -9,11 +9,11 @@
 
 @if (!userNotifications.Any())
 {
-    <div class="text-lg text-center text-gray-500 py-4">
+    <div class="text-lg text-center text-gray-500 py-4 dark:text-white">
         @* Hiện tại bạn không có thông báo nào. *@
         There is no notice to display
         <div>
-            <ion-icon name="notifications-outline" class="mt-4 text-4xl"></ion-icon>
+            <ion-icon name="notifications-outline" class="mt-4 text-4xl dark:bg-white"></ion-icon>
         </div>
     </div>
 }
@@ -52,7 +52,7 @@ else
             </div>
 
             <!-- Nội dung thông báo -->
-            <div class="flex-1">
+            <div class="flex-1 mr-20px">
                 <p class="text-14 leading-snug">
                     <a href="@redirectUrl">
                         @if (notification.IsRead)

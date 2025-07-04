@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APTXHub.Infrastructure", "A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircleApp.Data", "..\CircleApp\CircleApp.Data\CircleApp.Data.csproj", "{F8BD5DE6-08AD-443E-B5AD-826E848C40B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyEcommerceAdmin", "C:\Workspace_VS\LT_Web\mvc-ecommerce\MyEcommerceAdmin\MyEcommerceAdmin.csproj", "{44314397-D4CD-41AF-97F5-74E923AB4776}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F8BD5DE6-08AD-443E-B5AD-826E848C40B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8BD5DE6-08AD-443E-B5AD-826E848C40B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8BD5DE6-08AD-443E-B5AD-826E848C40B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44314397-D4CD-41AF-97F5-74E923AB4776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44314397-D4CD-41AF-97F5-74E923AB4776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44314397-D4CD-41AF-97F5-74E923AB4776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44314397-D4CD-41AF-97F5-74E923AB4776}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

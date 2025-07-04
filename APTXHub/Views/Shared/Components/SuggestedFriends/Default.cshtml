@@ -1,23 +1,24 @@
 ﻿@model List<UserWithFriendsCountVM>
 
-<div class="flex items-baseline justify-between text-black">
+<div class="flex items-baseline justify-between text-black dark:text-white">
     <h3 class="font-bold text-xl"> People you may know </h3>
 </div>
 
 <div class="side-list">
     @foreach (var user in Model)
     {
-        <div class="side-list-item">
+        <div class="side-list-item ">
             <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.UserId">
-                <img src="@(string.IsNullOrEmpty(user.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : user.ProfilePictureUrl)" class="side-list-image rounded-full" />
+                <img src="@(string.IsNullOrEmpty(user.ProfilePictureUrl) ? Url.Content("~/images/avatar/user.png") : user.ProfilePictureUrl)"
+                class="side-list-image rounded-full dark:bg-white" />
             </a>
             <div class="flex-1">
                 <a asp-controller="Users" asp-action="Details" asp-route-userId="@user.UserId">
-                    <h4 class="side-list-title text-14">
+                    <h4 class="side-list-title text-14 dark:text-white">
                         @user.FullName
                     </h4>
                 </a>
-                <div class="side-list-info text-13">@user.FriendsCountDisplay</div>
+                <div class="side-list-info text-13 dark:text-gray">@user.FriendsCountDisplay</div>
             </div>
             <form asp-action="SendFriendRequest" asp-controller="Friends" method="post">
                 <input type="hidden" name="receiverId" value="@user.UserId" />

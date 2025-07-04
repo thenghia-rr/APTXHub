@@ -653,7 +653,7 @@ input[type='text'],
   line-height: 1.25rem;
   font-weight: 500;
   --tw-text-opacity: 1 !important;
-  color: rgb(75 85 99 / var(--tw-text-opacity)) !important;
+/*  color: rgb(75 85 99 / var(--tw-text-opacity)) !important;*/
 }
 
 input[type='text']::-moz-placeholder, input[type='password']::-moz-placeholder, input[type='email']::-moz-placeholder, input[type='number']::-moz-placeholder, input[type='url']::-moz-placeholder, input[type='date']::-moz-placeholder, select::-moz-placeholder, textarea::-moz-placeholder {
@@ -1243,7 +1243,7 @@ input:checked + .switch-button {
 
 h1, h2, h3, h4, h5, h6 {
   --tw-text-opacity: 1 !important;
-  color: rgb(0 0 0 / var(--tw-text-opacity)) !important;
+/*  color: rgb(0 0 0 / var(--tw-text-opacity)) !important;*/
 }
 
 /*@media (prefers-color-scheme: dark) {
@@ -2694,6 +2694,9 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 0.5rem;
 }
 
+.mr-20px {
+    margin-right: 20px;
+}
 .mr-2\.5 {
   margin-right: 0.625rem;
 }
