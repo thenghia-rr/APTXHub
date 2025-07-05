@@ -12,7 +12,7 @@ namespace APTXHub.Infrastructure.Services
         Task<User> GetUser(int loggedInUserId);
         Task UpdateUserProfilePicture(int loggedInUserId, string profilePictureUrl);
         Task UpdateUserCoverPicture(int loggedInUserId, string coverPictureUrl);
-        Task<List<Post>> GetUserPosts(int userId);
+        Task<List<Post>> GetUserPosts(int userId, int loggedInUserId);
 
         Task<List<User>> GetUserFriends(int userId);
     }

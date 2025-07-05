@@ -23,6 +23,7 @@ It simulates the core features of modern social platforms, offering a space wher
   - Reported posts management for admin
   - Search post/user
   - Dark mode toggle
+  - Multi-language (EN/VI)
   - Responsive UI
 
 ## Getting Started

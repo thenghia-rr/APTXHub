@@ -35,7 +35,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Shared\SideBar\" />
     <Folder Include="wwwroot\images\covers\" />
     <Folder Include="wwwroot\images\uploaded\" />
     <Folder Include="wwwroot\videos\stories\" />

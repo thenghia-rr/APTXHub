@@ -5,6 +5,10 @@
     var fullName = loggedInUser?.FullName;
     var profilePictureUrl = loggedInUser?.ProfilePictureUrl;
     var defaultProfilePicture = "/images/avatar/user.png";
+
+    var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    var targetCulture = currentCulture == "en" ? "vi" : "en";
+    var targetLabel = currentCulture == "en" ? Localizer["Vietnamese"] : Localizer["English"];
 }
 
 <header class="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b d-border-gray-50 dark:bg-secondary">
@@ -35,7 +39,7 @@
                   class="dark:text-white ml-2 xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 bg-secondery max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
 
                 <ion-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
-                <input type="text" name="query" placeholder="Search Posts, Friends..."
+                <input type="text" name="query" placeholder="@Localizer["searchPostFriend"]"
                        class="dark:text-white placeholder:!text-gray-600 dark:placeholder-gray-400 w-full !pl-10 !font-normal !bg-transparent h-12 !text-sm" />
             </form>
         </div>
@@ -64,12 +68,12 @@
                 <div class="dark:bg-secondary hidden bg-white pr-1.5 rounded-lg drop-shadow-xl md:w-[365px] w-screen border2" uk-drop="offset:6;pos: bottom-right; mode: click; animate-out: true;">
 
                     <div class="flex items-center justify-between gap-2 p-4 pb-2">
-                        <h3 class="font-bold text-xl dark:text-white">Notifications</h3>
+                        <h3 class="font-bold text-xl dark:text-white">@Localizer["Notifications"]</h3>
                     </div>
 
                     <div class="text-sm h-[400px] w-full overflow-y-auto pr-2">
                         <div class="pl-2 p-1 text-sm font-normal dark:text-white" id="notification-dropdown">
-                            No notifications...
+                            @Localizer["NoNotifications"]
                         </div>
                     </div>
 
@@ -97,20 +101,39 @@
                     <nav>
                         <a asp-controller="Users" asp-action="Details" asp-route-userId="@loggedInUser?.Id">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
-                                <ion-icon name="person-outline"></ion-icon> Profile
+                                <ion-icon name="person-outline"></ion-icon> @Localizer["Profile"]
                             </div>
                         </a>
                         <hr />
                         <a asp-controller="Settings" asp-action="Index">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
-                                <ion-icon name="settings-outline" class="text-lg"></ion-icon> My Account
+                                <ion-icon name="settings-outline" class="text-lg"></ion-icon> @Localizer["Account"]
                             </div>
                         </a>
                         <hr />
+                        @* <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="en" asp-route-returnUrl="@Context.Request.Path"> *@
+                        @*     <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md"> *@
+                        @*         <ion-icon name="language-outline" class="text-lg"></ion-icon> @Localizer["English"] *@
+                        @*     </div> *@
+                        @* </a> *@
 
+                        @* <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="vi" asp-route-returnUrl="@Context.Request.Path"> *@
+                        @*     <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md"> *@
+                        @*         <ion-icon name="language-outline" class="text-lg"></ion-icon> @Localizer["Vietnamese"] *@
+                        @*     </div> *@
+                        @* </a> *@
+
+                        <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="@targetCulture" asp-route-returnUrl="@Context.Request.Path">
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <ion-icon name="language-outline" class="text-lg"></ion-icon>
+                                @targetLabel
+                            </div>
+                        </a>
+
+                        <hr />
                         <a asp-action="Logout" asp-controller="Auth" onclick="return confirm('Are you sure you want to log out?');">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
-                                <ion-icon name="exit-outline" class="text-lg"></ion-icon> Log Out
+                                <ion-icon name="exit-outline" class="text-lg"></ion-icon> @Localizer["LogOut"]
                             </div>
                         </a>
                     </nav>

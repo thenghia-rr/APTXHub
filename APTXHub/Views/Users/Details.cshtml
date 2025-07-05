@@ -43,7 +43,7 @@
                         <div class="mt-4 text-sm text-gray-600 gap-2 max-w-[550px] dark:text-white">
 
                             <p class="font-semibold text-15 flex gap-2">
-                                <span>Bio</span>
+                                <span>@Localizer["Bio"]</span>
                                 <ion-icon name="document-text-outline" class="mt-0.5 text-base text-gray-400"></ion-icon>
                             </p>
                             <p class="text-14 mt-1 ">@Model.User.Bio</p>
@@ -61,31 +61,34 @@
                         {
                             <button type="button" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500 font-semibold text-white text-base cursor-default">
                                 <ion-icon name="checkmark-outline" class="text-lg"></ion-icon>
-                                Friends
+                                @Localizer["Friends"]
                             </button>
                         }
                         else if (Model.FriendshipStatus == "Pending")
                         {
                             <button type="button" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500 font-semibold text-white text-base cursor-default">
                                 <ion-icon name="hourglass-outline" class="text-lg"></ion-icon>
-                                Request Sent
+                                @Localizer["RequestSent"]
                             </button>
                         }
                         else
                         {
                             <button type="submit" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 font-semibold text-white text-base hover:bg-blue-700 transition">
                                 <ion-icon name="person-add-outline" class="text-lg"></ion-icon>
-                                Add Friend
+                               @Localizer["AddFriend"]
                             </button>
                         }
 
                         <!-- Message button -->
-                        @* <a onclick="alert('This feature are developing! Have a nice day.')" asp-controller="Messages" asp-action="StartChat" asp-route-userId="@Model.User.Id" *@
-                        <a onclick="return alert('This feature are developing! Have a nice day.')"
-                           class=" mt-2 md:mt-0 flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 font-semibold text-black text-base hover:bg-gray-300 transition">
-                            <ion-icon name="chatbubble-ellipses-outline" class="text-lg"></ion-icon>
-                            Message
-                        </a>
+                        @if (Model.FriendshipStatus == "Accepted") {
+                            @* <a onclick="alert('This feature are developing! Have a nice day.')" asp-controller="Messages" asp-action="StartChat" asp-route-userId="@Model.User.Id" *@
+                            <a onclick="return alert('This feature are developing! Have a nice day.')"
+                               class=" mt-2 md:mt-0 flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 font-semibold text-black text-base hover:bg-gray-300 transition">
+                                <ion-icon name="chatbubble-ellipses-outline" class="text-lg"></ion-icon>
+                                @Localizer["Message"]
+                            </a>
+                        }
+                       
                     </form>
                 }
             </div>
@@ -113,8 +116,8 @@
                         <div class="flex items-ce justify-between text-black">
 
                             <h3 class="font-bold text-lg dark:text-white">
-                                Friends
-                                <span class="block text-base text-gray-500 mt-0. font-normal dark:text-gray"> @Model.Friends.Count friend</span>
+                                @Localizer["Friends"]
+                                <span class="block text-base text-gray-500 mt-0. font-normal dark:text-gray"> @Model.Friends.Count @Localizer["Friends"]</span>
                             </h3>
 
                         </div>

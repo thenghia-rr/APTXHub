@@ -17,7 +17,6 @@
 
 
 <div id="post-@Model.Id" class="box-dark-border bg-white rounded-xl shadow-sm text-sm font-medium border1">
-
     @* Post heading *@
     <div class="flex gap-3 sm:p-4 p-2.5 text-sm font-medium">
         <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
@@ -53,7 +52,7 @@
                     <form asp-controller="Home" asp-action="TogglePostVisibility">
                         <input type="hidden" name="postId" value="@Model.Id" />
                         <button type="submit" class="hover:!bg-red-50 btn-danger-hover icon-link bg-bgbody dark:text-white">
-                            <ion-icon name="@(isPrivate ? "lock-open-outline" : "lock-closed-outline")"></ion-icon>  Set as @(isPrivate ? "public" : "private")
+                            <ion-icon name="@(isPrivate ? "lock-open-outline" : "lock-closed-outline")"></ion-icon> @Localizer["Setas"] @(isPrivate ? @Localizer["Public"] : @Localizer["Private"])
                         </button>
                     </form>
                     <hr>
@@ -61,7 +60,7 @@
                     <button type="button"
                             onclick="openPostDeleteConfirmation('@Model.Id', this)"
                             class="btn-danger-hover text-red-400 hover:!bg-red-50 delete-post-btn">
-                        <ion-icon name="trash-bin-outline"></ion-icon> Delete Post
+                        <ion-icon name="trash-bin-outline"></ion-icon> @Localizer["DeletePost"]
                     </button>
                     <hr />
                 }
@@ -72,7 +71,7 @@
                         <button type="button"
                                 class="dark:text-white btn-danger-hover flex items-center gap-2 hover:!bg-red-50 icon-link w-full p-2"
                                 onclick="openReportModal(@Model.Id)">
-                            <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> Report
+                            <ion-icon class="w-4 h-4 text-xl shrink-0" name="flag-outline"></ion-icon> @Localizer["Report"]
                         </button>
 
                         <partial name="Home/_PostReportConfirm" model="Model" />
@@ -192,7 +191,7 @@
                     <div class="p-1.5">
                         <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id" 
                             class=" dark:text-gray">
-                            Show all comments
+                            @Localizer["ShowAllComments"]
                         </a>
                     </div>
                 }
@@ -206,11 +205,11 @@
                     <input type="hidden" name="postId" value="@Model.Id" />
                     <div class="flex-1 relative overflow-hidden h-10">
                         <textarea id="commentContent-@Model.Id"
-                                  name="content" placeholder="Add Comment...."
+                                  name="content" placeholder="@Localizer["AddComment"]"
                                   rows="1"
                                   class=" dark:text-white w-full resize-none !bg-transparent px-4 py-2 focus:!border-transparent focus:!ring-transparent"></textarea>
                     </div>
-                    <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery dark:text-white">Comment</button>
+                    <button type="submit" class="text-sm rounded-full py-1.5 px-3.5 bg-secondery dark:text-white">@Localizer["Comment"]</button>
                 </div>
             </form>
 

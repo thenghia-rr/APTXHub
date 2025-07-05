@@ -9,8 +9,8 @@
         <div class="w-full lg:max-w-sm mx-auto space-y-10">
 
             <div>
-                <h2 class="text-3xl font-semibold mb-1.5">Sign up</h2>
-                <p class="text-base text-gray-700 font-normal">If you already have an account, <a asp-controller="Auth" asp-action="Login" class="text-blue-700">Login here!</a></p>
+                <h2 class="text-3xl font-semibold mb-1.5">@Localizer["Signup"]</h2>
+                <p class="text-base text-gray-700 font-normal">@Localizer["Ifyoualreadyhaveanaccount"] <a asp-controller="Auth" asp-action="Login" class="text-blue-700">@Localizer["Loginhere"]</a></p>
             </div>
 
             <form asp-controller="Auth" asp-action="Register" method="post" class="space-y-7 text-sm text-black font-medium">
@@ -19,21 +19,21 @@
                     <div class="col-span-2 text-red-500" asp-validation-summary="ModelOnly"></div>
 
                     <div>
-                        <label for="firstName">First name</label>
+                        <label for="firstName">@Localizer["Firstname"]</label>
                         <div class="mt-2.5">
                             <input asp-for="FirstName" type="text" placeholder="First name" required="" class="!w-full" />
                             <span asp-validation-for="FirstName" class="text-red-500 text-xs mt-1"></span>
                         </div>
                     </div>
                     <div>
-                        <label for="lastName">Last name</label>
+                        <label for="lastName">@Localizer["Lastname"]</label>
                         <div class="mt-2.5">
                             <input asp-for="LastName" type="text" placeholder="Last name" required="" class="!w-full" />
                             <span asp-validation-for="LastName" class="text-red-500 text-xs mt-1"></span>
                         </div>
                     </div>
                     <div class="col-span-2">
-                        <label for="email">Email address</label>
+                        <label for="email">@Localizer["Emailaddress"]</label>
                         <div class="mt-2.5">
                             <input asp-for="Email" type="email" placeholder="Email" required="" class="!w-full" />
                             <span asp-validation-for="Email" class="text-red-500 text-xs mt-1"></span>
@@ -43,7 +43,7 @@
                         <div class="mt-2.5">
                             @* <input asp-for="Password" type="password" placeholder="***" required="" class="!w-full" /> *@
                             <div>
-                                <label asp-for="Password">Password</label>
+                                <label asp-for="Password">@Localizer["Password"]</label>
                                 <div class="mt-2.5 relative">
                                     <input asp-for="Password" id="password" type="password" placeholder="***" required class="!w-full pr-10" />
                                     <button type="button" id="togglePassword" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
@@ -61,7 +61,7 @@
                         <div class="mt-2.5">
                             @* <input asp-for="ConfirmPassword" type="password" placeholder="***" required="" class="!w-full" /> *@
                             <div>
-                                <label asp-for="ConfirmPassword">Confirm password</label>
+                                <label asp-for="ConfirmPassword">@Localizer["Confirmpassword"]</label>
                                 <div class="mt-2.5 relative">
                                     <input asp-for="ConfirmPassword" id="confirmPassword" type="password" placeholder="***" required class="!w-full pr-10" />
                                     <button type="button" id="toggleConfirmPassword" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500">
@@ -76,14 +76,14 @@
                     </div>
 
                     <div class="col-span-2">
-                        <button type="submit" class="button bg-primary text-white w-full">Register</button>
+                        <button type="submit" class="button bg-primary text-white w-full">@Localizer["Register"]</button>
                     </div>
 
                 </div>
 
                 <div class="text-center flex items-center gap-6">
                     <hr class="flex-1 border-slate-200">
-                    Or continue with
+                    @Localizer["Orcontinuewith"]
                     <hr class="flex-1 border-slate-200">
                 </div>
 
@@ -91,12 +91,12 @@
                     <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google"
                        class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm">
                         <ion-icon name="logo-google" class="text-lg"></ion-icon>
-                        google
+                        Google
                     </a>
                     <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="GitHub"
                        class="button flex-1 flex items-center gap-2 bg-black text-white text-sm">
                         <ion-icon name="logo-github" class="text-lg"></ion-icon>
-                        github
+                        GitHub
                     </a>
                 </div>
             </form>
@@ -112,8 +112,8 @@
                     <img src="~/images/welcome/welcome-07.jpeg" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
                     <div class="absolute bottom-0 w-full uk-transition-slide-bottom-small z-10">
                         <div class="max-w-xl w-full mx-auto pb-32 px-5 z-30 relative">
-                            <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 600,0,0">Connect with Friends</h4>
-                            <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;">Bridge the gap between miles and moments—connect with friends and weave memories together, one click at a time.</p>
+                            <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 600,0,0">@Localizer["ConnectwithFriends"]</h4>
+                            <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;">@Localizer["descimg1"]</p>
                         </div>
                     </div>
                     <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>
@@ -122,8 +122,8 @@
                     <img src="~/images/welcome/welcome-05.png" alt="" class="w-full h-full object-cover uk-animation-kenburns uk-animation-reverse uk-transform-origin-center-left">
                     <div class="absolute bottom-0 w-full uk-tr ansition-slide-bottom-small z-10">
                         <div class="max-w-xl w-full mx-auto pb-32 px-5 z-30 relative">
-                            <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 800,0,0">  Connect With Friends </h4>
-                            <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;"> Rekindle old ties and spark new ones—your next 'Remember when...' moment is just a friend request away.</p>
+                            <h4 class="!text-white text-2xl font-semibold mt-7" uk-slideshow-parallax="y: 800,0,0">  @Localizer["ConnectwithFriends"] </h4>
+                            <p class="!text-white text-lg mt-7 leading-8" uk-slideshow-parallax="y: 800,0,0;"> @Localizer["descimg2"]</p>
                         </div>
                     </div>
                     <div class="w-full h-96 bg-gradient-to-t from-black absolute bottom-0 left-0"></div>

@@ -11,14 +11,14 @@
                 @if (Model.Count == 0)
                 {
                     <div class="box-dark-border dark:text-white text-center bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-lg font-medium border1" >
-                        <p>Currently, there are no favorited posts available.</p>
+                        <p>@Localizer["noFavPosts"]</p>
                         <ion-icon name="sad-outline" class="text-4xl"></ion-icon>
                     </div>
                 }
                 else
                 {
-                     <div class="box-dark-border dark:text-white  bg-white text-center rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-xl font-medium border1" > 
-                         Your favorite posts 
+                     <div class="box-dark-border dark:text-white  bg-white text-center rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-xl font-medium border1" >
+                        @Localizer["favPosts"]
                      </div> 
                     
                     @foreach (var post in Model)

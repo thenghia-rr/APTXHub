@@ -1,7 +1,7 @@
 ﻿@model List<UserWithFriendsCountVM>
 
 <div class="flex items-baseline justify-between text-black dark:text-white">
-    <h3 class="font-bold text-xl"> People you may know </h3>
+    <h3 class="font-bold text-xl">@Localizer["PeopleYouMayKnow"] </h3>
 </div>
 
 <div class="side-list">
@@ -22,7 +22,7 @@
             </div>
             <form asp-action="SendFriendRequest" asp-controller="Friends" method="post">
                 <input type="hidden" name="receiverId" value="@user.UserId" />
-                <button type="submit" class="button bg-primary-soft text-primary text-13">Follow</button>
+                <button type="submit" class="button bg-primary-soft text-primary text-13">@Localizer["Follow"] </button>
             </form>
         </div>
     }

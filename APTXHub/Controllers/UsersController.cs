@@ -64,7 +64,7 @@ namespace APTXHub.Controllers
                 friendshipStatus = request?.Status;
             }
 
-            var userPosts = await _userService.GetUserPosts(userId);
+            var userPosts = await _userService.GetUserPosts(userId, loggedInUserId);
             var userFriends = await _userService.GetUserFriends(userId);
 
             var userProfileVM = new GetUserProfileVM

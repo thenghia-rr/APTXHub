@@ -1,11 +1,11 @@
 ﻿@model List<Post>
 
 <main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] p-6 mt-[--m-top] min-h-screen bg-gray-50">
-    <h2 class="text-2xl font-bold mb-6 text-center">Reported Posts Management</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center dark:text-white">@Localizer["ReportedPostsManagement"]</h2>
     @if (Model == null || !Model.Any())
     {
         <div class="text-center card max-w-300 mx-auto">
-            <p class="text-red-600 font-semibold text-lg mt-4 ">There is no report to display</p>
+            <p class="text-red-600 font-semibold text-lg mt-4 ">@Localizer["NoReport"]</p>
             <ion-icon name="sad-outline" class="mt-4 text-5xl"></ion-icon>
         </div>
     }   
@@ -14,14 +14,14 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-[90%] mx-auto">
             @foreach (var post in Model)
             {
-                <div class="bg-white rounded-xl shadow border border-gray-200 flex flex-col overflow-hidden hover:shadow-md duration-300">
+                <div class="box-dark-border bg-white rounded-xl shadow border border-gray-200 flex flex-col overflow-hidden hover:shadow-md duration-300">
 
                     <!-- Lý do báo cáo -->
-                    <div class="bg-red-50 border-b border-red-200 px-4 py-3 flex gap-2">
-                        <h3 class="text-red-600 font-semibold text-sm mb-1 ">Reported Reasons:</h3>
+                    <div class="dark:bg-gray bg-red-50 border-b border-red-200 d-border-gray-50 px-4 py-3 flex gap-2">
+                        <h3 class="text-red-600 font-semibold text-sm mb-1 ">@Localizer["ReportedReasons"]:</h3>
                         @if (post.Reports != null && post.Reports.Any())
                         {
-                            <p class="list-disc list-inside text-red-500 text-sm space-y-1">
+                            <p class="list-disc list-inside text-red-500 text-sm space-y-1 ">
                                 @foreach (var report in post.Reports)
                                 {
                                     @report.Reason
@@ -30,7 +30,7 @@
                         }
                         else
                         {
-                            <p class="text-gray-400 italic text-sm">Không có lý do báo cáo</p>
+                            <p class="text-gray-400 italic text-sm">@Localizer["NoReasonReport"]</p>
                         }
                     </div>
 
@@ -38,16 +38,18 @@
                     <div class="p-4 flex-1 flex flex-col gap-3">
                         <!-- Header -->
                         <div class="flex items-center gap-3">
-                            <img src="@(!string.IsNullOrEmpty(post.User.ProfilePictureUrl) ? Url.Content(post.User.ProfilePictureUrl) : Url.Content("/images/avatar/user.png"))"
+                            <img src="@(!string.IsNullOrEmpty(post.User.ProfilePictureUrl) 
+                                ? Url.Content(post.User.ProfilePictureUrl) 
+                                : Url.Content("/images/avatar/user.png"))"
                                  class="w-11 h-11 rounded-full object-cover border" />
                             <div class="flex-1">
-                                <p class="text-sm font-semibold text-gray-900">@post.User.FullName</p>
-                                <p class="text-xs text-gray-500">@post.DateCreated.ToTimeAgo()</p>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white">@post.User.FullName</p>
+                                <p class="text-xs text-gray-500 dark:text-gray">@post.DateCreated.ToTimeAgo()</p>
                             </div>
                         </div>
 
                         <!-- Nội dung bài viết -->
-                        <div class="text-sm text-gray-800 leading-relaxed truncate max-w-300 overflow-hidden whitespace-nowrap ">
+                        <div class="dark:text-white text-sm text-gray-800 leading-relaxed truncate max-w-300 overflow-hidden whitespace-nowrap ">
                             @post.Content
                         </div>
 
@@ -62,18 +64,18 @@
                         }
 
                         <!-- Action buttons -->
-                        <div class="flex justify-end items-center gap-3 mt-auto pt-3 border-t border-gray-200">
+                        <div class="flex justify-end items-center gap-3 mt-auto pt-3 border-t border-gray-200 d-border-gray-50">
                             <form asp-controller="Admin" asp-action="RejectReport" class="inline">
                                 <input type="hidden" name="postId" value="@post.Id" />
                                 <button type="submit" class="flex items-center gap-1 text-red-600 hover:text-red-800 text-sm font-medium">
-                                    <ion-icon name="close-outline" class="text-lg"></ion-icon> Reject
+                                    <ion-icon name="close-outline" class="text-lg"></ion-icon> @Localizer["Reject"]
                                 </button>
                             </form>
 
                             <form asp-controller="Admin" asp-action="ApproveReport" class="inline">
                                 <input type="hidden" name="postId" value="@post.Id" />
                                 <button type="submit" class="flex items-center gap-1 text-green-600 hover:text-green-800 text-sm font-medium">
-                                    <ion-icon name="checkmark-outline" class="text-lg"></ion-icon> Approve
+                                    <ion-icon name="checkmark-outline" class="text-lg"></ion-icon> @Localizer["Approve"]
                                 </button>
                             </form>
                         </div>

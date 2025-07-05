@@ -91,10 +91,12 @@ namespace APTXHub.Infrastructure.Services
             }
         }
 
-        public async Task<List<Post>> GetUserPosts(int userId)
+        public async Task<List<Post>> GetUserPosts(int userId, int loggedInUserId)
         {
             var allPosts = await _context.Posts
-                .Where(n => n.UserId == userId && n.Reports.Count < 5 && !n.IsDeleted)
+                .Where(n => n.UserId == userId 
+                && n.Reports.Count < 5 && !n.IsDeleted
+                && (n.IsPrivate == false || loggedInUserId == userId))
                 .Include(n => n.User)
                 .Include(n => n.Likes)
                 .Include(n => n.Favorites)

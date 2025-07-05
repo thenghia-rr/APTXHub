@@ -1,4 +1,4 @@
-using APTXHub.Infrastructure.Hubs;
+﻿using APTXHub.Infrastructure.Hubs;
 using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Helpers;
 using APTXHub.Infrastructure.Models;
@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Localization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,7 +82,30 @@ builder.Services.AddSignalR();
 
 builder.Services.AddAuthorization();
 
+// Multiple language
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "vi" };
+    var localizationCultures = supportedCultures.Select(c => new System.Globalization.CultureInfo(c)).ToList();
+
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = localizationCultures;
+    options.SupportedUICultures = localizationCultures;
+
+    // Tùy chọn: đổi qua cookie
+    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+});
+
+
 var app = builder.Build();
+
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
 // Init data in database
 using (var scope = app.Services.CreateScope())

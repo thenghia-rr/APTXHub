@@ -35,19 +35,19 @@
     <div class="absolute inset-0 z-20 flex items-center justify-center px-4">
         <div class="bg-white shadow-xl p-8 w-full max-w-md rounded-lg space-y-6">
             <div>
-                <h2 class="text-3xl font-semibold mb-4 text-center">Sign in </h2>
-                <p class="text-base text-gray-700 font-normal">If you have not signed up yet. <a asp-controller="Auth" asp-action="Register" class="text-blue-700">Register here!</a></p>
+                <h2 class="text-3xl font-semibold mb-4 text-center">@Localizer["Signin"] </h2>
+                <p class="text-base text-gray-700 font-normal">@Localizer["Ifyouhavenotsignedup"] <a asp-controller="Auth" asp-action="Register" class="text-blue-700">@Localizer["Registerhere"]</a></p>
             </div>
 
             <form asp-action="Login" asp-controller="Auth" method="post" class="space-y-5 text-sm text-black font-medium">
                 <div class="col-span-2 text-red-500" asp-validation-summary="ModelOnly"></div>
                 <div>
-                    <label asp-for="Email">Email address</label>
+                    <label asp-for="Email">@Localizer["Emailaddress"]</label>
                     <input asp-for="Email" id="email" name="email" type="email" placeholder="Email" required class="mt-2.5 w-full" />
                     <span asp-validation-for="Email" class="text-red-500 text-xs mt-1"></span>
                 </div>
                 <div>
-                    <label asp-for="Password">Password</label>
+                    <label asp-for="Password">@Localizer["Password"]</label>
                     @* <input asp-for="Password" id="password" name="password" type="password" placeholder="***" required class="mt-2.5 w-full" /> *@
                     <div class="relative">
                         <input asp-for="Password" id="password" name="password" type="password" placeholder="***" required class="mt-2.5 w-full pr-10" />
@@ -62,16 +62,16 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5">
                         <input id="rememberme" name="rememberme" type="checkbox">
-                        <label for="rememberme" class="font-normal">Remember me</label>
+                        <label for="rememberme" class="font-normal">@Localizer["Rememberme"]</label>
                     </div>
-                    <a href="#" class="text-blue-700">Forget password</a>
+                    <a href="#" class="text-blue-700">@Localizer["Forgetpassword"] </a>
                 </div>
 
-                <button type="submit" class="button bg-primary text-white w-full">Sign in</button>
+                <button type="submit" class="button bg-primary text-white w-full">@Localizer["Signin"]</button>
 
                 <div class="text-center flex items-center gap-6">
                     <hr class="flex-1 border-slate-200">
-                    Or continue with
+                    @Localizer["Orcontinuewith"]
                     <hr class="flex-1 border-slate-200">
                 </div>
 
@@ -79,12 +79,12 @@
                     <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="Google"
                        class="button flex-1 flex items-center gap-2 bg-primary text-white text-sm">
                         <ion-icon name="logo-google" class="text-lg"></ion-icon>
-                        google
+                        Google
                     </a>
                     <a asp-controller="Auth" asp-action="ExternalLogin" asp-route-provider="GitHub"
                     class="button flex-1 flex items-center gap-2 bg-black text-white text-sm">
                         <ion-icon name="logo-github" class="text-lg"></ion-icon>
-                        github
+                        GitHub
                     </a>
                 </div>
             </form>

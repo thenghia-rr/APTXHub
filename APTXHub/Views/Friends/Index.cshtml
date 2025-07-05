@@ -13,8 +13,8 @@
         {
             <div class="sm:my-6 my-3 flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg text-base font-semibold text-black dark:text-white">My Friends</h2>
-                    <p class="font-normal text-sm text-gray-500 leading-6 dark:text-gray"> Your personal network of friends and acquaintances. Connect, share, and stay in touch with the people who matter to you.</p>
+                    <h2 class="text-lg text-base font-semibold text-black dark:text-white">@Localizer["MyFriends"]</h2>
+                    <p class="font-normal text-sm text-gray-500 leading-6 dark:text-gray"> @Localizer["MyFriendsDesc"]</p>
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                               onsubmit="return confirm('Are you sure you want to remove this friend?');">
                             <input type="hidden" name="friendshipId" value="@friendship.Id" />
                             <button type="submit" class="text-base button bg-red-soft text-white-soft text-red gap-1 max-md:hidden">
-                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1 "></ion-icon> Remove
+                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1 "></ion-icon> @Localizer["Remove"]
                             </button>
                         </form>
                     </div>
@@ -57,8 +57,8 @@
         {
             <div class="sm:my-6 my-3 flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg text-base font-semibold text-black dark:text-white">Received Requests</h2>
-                    <p class="font-normal text-sm text-gray-500 leading-6 dark:text-gray">See who wants to connect with you! Review and respond to incoming friend requests to expand your circle.</p>
+                    <h2 class="text-lg text-base font-semibold text-black dark:text-white">@Localizer["ReceivedRequests"]</h2>
+                    <p class="font-normal text-sm text-gray-500 leading-6 dark:text-gray">@Localizer["ReceivedRequestsDesc"]</p>
                 </div>
             </div>
 
@@ -86,7 +86,7 @@
                             <input type="hidden" name="requestId" value="@request.Id" />
                             <input type="hidden" name="status" value="@FriendshipStatus.Rejected" />
                             <button type="submit" class="button bg-red-soft text-white-soft gap-1 max-md:hidden text-base">
-                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> Reject
+                                <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon> @Localizer["Reject"]
                             </button>
                         </form>
 
@@ -94,7 +94,7 @@
                             <input type="hidden" name="requestId" value="@request.Id" />
                             <input type="hidden" name="status" value="@FriendshipStatus.Accepted" />
                             <button type="submit" class="button bg-blue-500 text-white-soft gap-1 max-md:hidden text-base">
-                                <ion-icon name="checkbox-outline" class="text-xl -ml-1"></ion-icon> Accept
+                                <ion-icon name="checkbox-outline" class="text-xl -ml-1"></ion-icon> @Localizer["Accept"]
                             </button>
                         </form>
                     </div>
@@ -107,8 +107,8 @@
         {
             <div class="my-3 flex items-center justify-between">
                 <div>
-                    <h2 class="text-lg  font-semibold text-black dark:text-white">Pending Invitations</h2>
-                    <p class="font-normal text-base text-gray-500 leading-6 dark:text-gray">Track the friend requests you’ve sent. See who hasn’t responded yet and manage your pending invitations</p>
+                    <h2 class="text-lg  font-semibold text-black dark:text-white">@Localizer["PendingInvitations"]</h2>
+                    <p class="font-normal text-base text-gray-500 leading-6 dark:text-gray">@Localizer["PendingInvitationsDesc"]</p>
                 </div>
             </div>
 
@@ -137,7 +137,7 @@
                             <input type="hidden" name="status" value="@FriendshipStatus.Canceled" />
                             <button type="submit" class="button text-primary bg-pink-100 gap-1 max-md:hidden text-base">
                                 <ion-icon name="remove-circle-outline" class="text-xl -ml-1"></ion-icon>
-                                Cancel
+                                @Localizer["Cancel"]
                             </button>
                         </form>
                     </div>

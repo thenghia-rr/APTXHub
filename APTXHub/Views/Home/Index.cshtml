@@ -14,7 +14,7 @@
                 <div class="box-dark-border bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1">
                     <div class="flex items-center md:gap-3 gap-1">
                         <div class="flex-1 bg-slate-100 hover:bg-opacity-80 transition-all rounded-lg cursor-pointer" uk-toggle="target: #create-status">
-                            <div class="py-2.5 text-center dark:bg-gray dark:text-white rounded">What's on your mind?</div>
+                            <div class="py-2.5 text-center dark:bg-gray dark:text-white rounded">@Localizer["WhatOnYourMind"]</div>
                         </div>
                         <div class="cursor-pointer hover:bg-opacity-80 p-1 px-1.5 rounded-xl transition-all bg-pink-100/60 hover:bg-pink-100" uk-toggle="target: #create-status">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 stroke-pink-600 fill-pink-200/70" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -33,7 +33,7 @@
                     @if (Model.Count == 0)
                     {
                         <div class="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1" style="width: 580px;">
-                            Currently, there are no posts available. Would you like to create the first one?
+                            @Localizer["NoPostCreated"]
                         </div>
                     }
                     else

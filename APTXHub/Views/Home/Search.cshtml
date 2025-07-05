@@ -2,11 +2,11 @@
 
 <main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-[--m-top]">
 
-    <h2 class="text-xl font-semibold mb-4 dark:text-white">Search results for: "@Model.Query"</h2>
+    <h2 class="text-xl font-semibold mb-4 dark:text-white">@Localizer["Searchresultsfor"]: "@Model.Query"</h2>
 
     @if (Model.Posts.Count == 0 && Model.Users.Count == 0)
     {
-        <p class="text-gray-500 dark:text-white ">No results found.</p>
+        <p class="text-gray-500 dark:text-white"> @Localizer["Noresultsfound"].</p>
     }
     else
     {
@@ -16,7 +16,7 @@
                 @if (Model.Posts.Count > 0)
                 {
                     <section>
-                        <h3 class="font-semibold mb-2 text-lg dark:text-white">Posts</h3>
+                        <h3 class="font-semibold mb-2 text-lg dark:text-white">@Localizer["Posts"]</h3>
                         @foreach (var post in Model.Posts)
                         {
                             <partial name="Home/_Post" model="post"
@@ -35,7 +35,7 @@
                 @if (Model.Users.Count > 0)
                 {
                     <section>
-                        <h3 class="font-semibold mb-2 text-lg dark:text-white">Users</h3>
+                        <h3 class="font-semibold mb-2 text-lg dark:text-white">@Localizer["Users"]</h3>
                         <div class="grid grid-cols-2 sm:grid-cols-2 gap-4 ">
                             @foreach (var user in Model.Users)
                             {
