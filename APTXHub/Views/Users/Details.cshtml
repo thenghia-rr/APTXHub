@@ -81,8 +81,7 @@
 
                         <!-- Message button -->
                         @if (Model.FriendshipStatus == "Accepted") {
-                            @* <a onclick="alert('This feature are developing! Have a nice day.')" asp-controller="Messages" asp-action="StartChat" asp-route-userId="@Model.User.Id" *@
-                            <a onclick="return alert('This feature are developing! Have a nice day.')"
+                            <a asp-controller="Messages" asp-action="Chat" asp-route-userId="@Model.User.Id"
                                class=" mt-2 md:mt-0 flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-200 font-semibold text-black text-base hover:bg-gray-300 transition">
                                 <ion-icon name="chatbubble-ellipses-outline" class="text-lg"></ion-icon>
                                 @Localizer["Message"]

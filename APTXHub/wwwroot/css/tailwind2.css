@@ -649,7 +649,7 @@ input[type='text'],
   padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  font-size: 0.875rem;
+/*  font-size: 0.875rem;*/
   line-height: 1.25rem;
   font-weight: 500;
   --tw-text-opacity: 1 !important;
@@ -2732,6 +2732,9 @@ h1, h2, h3, h4, h5, h6 {
 .mt-10 {
   margin-top: 2.5rem;
 }
+.mt-60px {
+  margin-top: 60px;
+}
 
 .mt-16 {
   margin-top: 4rem;
@@ -3414,9 +3417,12 @@ h1, h2, h3, h4, h5, h6 {
 .max-w-\[680px\] {
   max-width: 680px;
 }
+.max-w-70percent {
+    max-width: 70%;
+}
 
 .max-w-full {
-  max-width: 100%;
+    max-width: 100%;
 }
 
 .max-w-lg {

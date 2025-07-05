@@ -1,0 +1,124 @@
+﻿@model ChatVM
+@using System.Security.Claims
+
+@{
+    var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var receiverId = Model.TargetUser.Id.ToString();
+    var defaultAvatar = "/images/avatar/user.png";
+}
+
+<main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] p-2.5 h-[calc(100vh-var(--m-top))] mt-60px flex justify-center">
+    <div class="box-dark-border w-full max-w-[1065px] h-[80vh] bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col">
+        <!-- Header -->
+        <div class="p-4 border-b border-gray-200 d-border-gray-50">
+            <h2 class="text-xl font-semibold text-center text-gray-800 dark:text-white">
+                💬 Chat with @Model.TargetUser.FullName
+            </h2>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50 dark:bg-gray-800">
+            @foreach (var message in Model.Messages)
+            {
+                var isMe = message.SenderId.ToString() == senderId;
+                var user = isMe ? Model.CurrentUser : Model.TargetUser;
+                var avatar = string.IsNullOrEmpty(user.ProfilePictureUrl) ? defaultAvatar : user.ProfilePictureUrl;
+                var name = user.FullName;
+
+                <div class="flex @(isMe ? "justify-end" : "justify-start") items-start gap-2">
+                    @if (!isMe)
+                    {
+                        <img src="@avatar" class="w-12 h-12 rounded-full border dark:border-gray-700" alt="@name" />
+                    }
+                    <div class="max-w-70percent">
+                        <div class="dark:text-white text-14 text-gray-500 dark:text-gray-400 font-medium mb-1 @(isMe ? "text-right" : "text-left")">@name</div>
+                        <div class="text-14 px-3 py-2 rounded-lg text-sm leading-relaxed @(isMe ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 ")">
+                            @message.Content
+                        </div>
+                        <div class="dark:text-gray text-sm text-gray-400 mt-1 @(isMe ? "text-right" : "text-left")">@message.SentAt.ToTimeAgo()</div>
+                    </div>
+                    @if (isMe)
+                    {
+                        <img src="@avatar" class="w-12 w-12 rounded-full border dark:border-gray-700" alt="@name" />
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Input Form -->
+        <form id="chat-form" class="dark:bg-secondary p-4 border-t border-gray-200 d-border-gray-50 flex items-center gap-2 bg-white dark:bg-gray-900">
+            <input type="text" id="message-input" class="text-14 d-text-black flex-grow p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                   placeholder="Type your message..." autocomplete="off" required />
+            <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition">
+                Send
+            </button>
+        </form>
+    </div>
+</main>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const senderId = '@senderId';
+        const receiverId = '@receiverId';
+        const groupName = 'chat_' + [senderId, receiverId].sort().join('_');
+
+        const currentUser = {
+            id: senderId,
+            name: '@Model.CurrentUser.FullName',
+            avatar: '@(string.IsNullOrEmpty(Model.CurrentUser.ProfilePictureUrl) ? defaultAvatar : Model.CurrentUser.ProfilePictureUrl)'
+        };
+
+        const targetUser = {
+            id: receiverId,
+            name: '@Model.TargetUser.FullName',
+            avatar: '@(string.IsNullOrEmpty(Model.TargetUser.ProfilePictureUrl) ? defaultAvatar : Model.TargetUser.ProfilePictureUrl)'
+        };
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
+
+        connection.on("ReceiveMessage", function (fromUserId, message) {
+            const isMe = fromUserId === senderId;
+            const user = isMe ? currentUser : targetUser;
+
+            const html = `
+                <div class="flex ${isMe ? "justify-end" : "justify-start"} items-start gap-2 mb-2">
+                    ${!isMe ? `<img src="${user.avatar}" class="w-12 h-12 rounded-full border" alt="${user.name}" />` : ""}
+                    <div class="max-w-70percent">
+                        <div class="dark:text-white text-14 text-gray-500 font-medium mb-1 ${isMe ? "text-right" : "text-left"}">${user.name}</div>
+                        <div class="px-3 py-2 rounded-lg text-14 leading-relaxed ${isMe ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}">
+                            ${message}
+                        </div>
+                        <div class="dark:text-gray text-xs text-gray-400 mt-1 ${isMe ? "text-right" : "text-left"}">${new Date().toLocaleTimeString()}</div>
+                    </div>
+                    ${isMe ? `<img src="${user.avatar}" class="w-12 h-12 rounded-full border" alt="${user.name}" />` : ""}
+                </div>`;
+
+            const container = document.getElementById("chat-messages");
+            container.insertAdjacentHTML("beforeend", html);
+            container.scrollTop = container.scrollHeight;
+        });
+
+        connection.start().then(function () {
+            connection.invoke("JoinChatGroup", senderId, receiverId);
+
+            document.getElementById("chat-form").addEventListener("submit", function (e) {
+                e.preventDefault();
+                const input = document.getElementById("message-input");
+                const message = input.value.trim();
+                if (!message) return;
+
+                connection.invoke("SendMessage", senderId, receiverId, message);
+                input.value = "";
+            });
+        }).catch(err => console.error(err));
+
+        // Auto-scroll to bottom on page load
+        window.addEventListener("load", function () {
+            const container = document.getElementById("chat-messages");
+            container.scrollTop = container.scrollHeight;
+        });
+    </script>
+}

@@ -24,6 +24,7 @@ It simulates the core features of modern social platforms, offering a space wher
   - Search post/user
   - Dark mode toggle
   - Multi-language (EN/VI)
+  - Chat with friends
   - Responsive UI
 
 ## Getting Started

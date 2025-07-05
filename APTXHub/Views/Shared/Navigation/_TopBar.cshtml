@@ -15,7 +15,7 @@
     <div class="2xl:w-[--w-side] lg:w-[--w-side-sm]">
         <div class="flex items-center gap-1">
             <button uk-toggle="target: #site__sidebar ; cls :!-translate-x-0"
-                    class="flex items-center justify-center w-8 h-8 text-xl rounded-full hover:bg-gray-100 xl:hidden group">
+                    class="dark:text-white flex items-center justify-center w-8 h-8 text-xl rounded-full hover:bg-blue-50 xl:hidden group">
                 <ion-icon name="menu-outline" class="text-2xl group-aria-expanded:hidden"></ion-icon>
                 <ion-icon name="close-outline" class="hidden text-2xl group-aria-expanded:block"></ion-icon>
             </button>
@@ -54,6 +54,11 @@
                     <ion-icon id="darkModeIcon" class="w-6 h-6 text-xl" name="sunny-outline"></ion-icon>
                 </button>
 
+                @* Messages *@
+                <a asp-controller="Messages" asp-action="Index"
+                    style="height:35px" class="dark:bg-white sm:p-2 p-1 rounded-full relative sm:bg-secondery">
+                    <ion-icon class="w-6 h-6" name="chatbubbles-outline"></ion-icon>
+                </a>
 
 
                 @* notification icon *@
@@ -111,17 +116,6 @@
                             </div>
                         </a>
                         <hr />
-                        @* <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="en" asp-route-returnUrl="@Context.Request.Path"> *@
-                        @*     <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md"> *@
-                        @*         <ion-icon name="language-outline" class="text-lg"></ion-icon> @Localizer["English"] *@
-                        @*     </div> *@
-                        @* </a> *@
-
-                        @* <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="vi" asp-route-returnUrl="@Context.Request.Path"> *@
-                        @*     <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md"> *@
-                        @*         <ion-icon name="language-outline" class="text-lg"></ion-icon> @Localizer["Vietnamese"] *@
-                        @*     </div> *@
-                        @* </a> *@
 
                         <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="@targetCulture" asp-route-returnUrl="@Context.Request.Path">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
