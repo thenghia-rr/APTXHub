@@ -42,13 +42,13 @@ It replicates essential social features, allowing users to connect, post, and en
 
 ```
 #### Homepage
-![](APTXHub/wwwroot/images/docs/home.png)
+![](assets/home.png)
 
 #### Real-time Chat
-![](APTXHub/wwwroot/images/docs/chat.png)
+![](assets/chat.png)
 
 #### Reels Feature
-![](APTXHub/wwwroot/images/docs/reels.png)
+![](assets/reels.png)
 ```
 
 ## Getting Started
