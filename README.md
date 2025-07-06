@@ -40,16 +40,16 @@ It replicates essential social features, allowing users to connect, post, and en
 * Chat (real-time with friends)
 * Reels (short video feature)
 
-```
+
 #### Homepage
-![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811494/APTXHub/docs/home_rjqhfx.png)
+![](APTXHub/wwwroot/images/docs/home.png)
 
 #### Real-time Chat
-![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811497/APTXHub/docs/chat_usxxmc.png)
+![](APTXHub/wwwroot/images/docs/chat.png)
 
 #### Reels Feature
-![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811499/APTXHub/docs/reels_x6pdor.png)
-```
+![](APTXHub/wwwroot/images/docs/reels.png)
+
 
 ## Getting Started
 
