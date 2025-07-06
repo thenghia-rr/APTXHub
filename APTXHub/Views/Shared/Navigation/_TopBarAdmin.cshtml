@@ -42,6 +42,12 @@
                     <ion-icon id="darkModeIcon" class="w-6 h-6 text-xl" name="sunny-outline"></ion-icon>
                 </button>
 
+                <!-- Messages -->
+                <a asp-controller="Messages" asp-action="Index"
+                   class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-200 dark:bg-white hover:bg-gray-300 shadow">
+                    <ion-icon class="w-6 h-6" name="chatbubbles-outline"></ion-icon>
+                </a>
+
                 @* notification icon *@
                 <button type="button" id="notificationsBtn" class="dark:bg-white sm:p-2 p-1 rounded-full relative sm:bg-secondery">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">

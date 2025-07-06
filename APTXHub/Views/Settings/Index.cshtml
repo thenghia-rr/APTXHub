@@ -46,7 +46,7 @@
                         <label for="imageUpload" class="cursor-pointer">
                             <img id="imagePreview" src="@(string.IsNullOrEmpty(Model.ProfilePictureUrl) 
                                 ? defaultProfilePicture
-                                : Model.ProfilePictureUrl )" class="object-cover w-full h-full rounded-full" alt="Profile Picture Placeholder" />
+                                : Model.ProfilePictureUrl )" class="object-cover w-full h-full rounded-full dark:bg-white" alt="Profile Picture Placeholder" />
                             <input type="file" id="imageUpload" name="ProfilePictureImage" class="hidden" accept="image/png, image/jpeg" />
                         </label>
 

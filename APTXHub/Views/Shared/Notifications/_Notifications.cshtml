@@ -44,8 +44,10 @@ else
             <!-- Avatar + Icon -->
             <div class="relative min-w-[48px]">
                 <a href="/user/@notification.FromUser.Id">
-                    <img src="@notification.FromUser.ProfilePictureUrl"
-                         class="w-14 h-14 rounded-full object-cover" alt="avatar" />
+                    <img src="@(string.IsNullOrEmpty(notification.FromUser.ProfilePictureUrl) 
+                            ? "/images/avatar/user.png"
+                            : notification.FromUser.ProfilePictureUrl)"
+                         class="w-14 h-14 rounded-full dark:bg-white" alt="avatar" />
                     <ion-icon name="@iconName"
                               class="absolute bottom-0 right-0 text-white bg-teal-600 rounded-full p-1 text-[16px]"></ion-icon>
                 </a>

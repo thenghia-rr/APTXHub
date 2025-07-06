@@ -33,8 +33,8 @@ namespace APTXHub.Infrastructure.Helpers
                 var userPassword = "Susu@123";
                 var newUser = new User()
                 {
-                    UserName = "thenghia",
-                    Email = "nghiadang085@gmail.com",
+                    UserName = "nghiadang@gmail.com",
+                    Email = "nghiadang@gmail.com",
                     FullName = "Đặng Thế Nghĩa",
                     ProfilePictureUrl = "https://i.pinimg.com/736x/68/2f/6c/682f6c9e79d3d9b93759216780a86b63.jpg",
                     EmailConfirmed = true
@@ -47,7 +47,7 @@ namespace APTXHub.Infrastructure.Helpers
 
                 var newAdmin = new User()
                 {
-                    UserName = "admin123",
+                    UserName = "admin@gmail.com",
                     Email = "admin@gmail.com",
                     FullName = "Admin APTX",
                     ProfilePictureUrl = "https://i.pinimg.com/736x/2d/80/d9/2d80d94507435eaeb15171c441bcb7f4.jpg",

@@ -11,6 +11,9 @@ namespace APTXHub.Data.Helpers
     {
         public static List<string> GetHashtags(string postText)
         {
+            if (string.IsNullOrWhiteSpace(postText))
+                return new List<string>();
+
             var hashtagPattern = new Regex(@"#\w+");
             var matches = hashtagPattern.Matches(postText)
                 .Select(match => match.Value.TrimEnd('.', ',', '!', '?').ToLower())

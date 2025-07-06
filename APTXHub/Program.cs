@@ -12,6 +12,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Localization;
+using APTXHub.Infrastructure.Dtos;
+using CloudinaryDotNet;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -103,6 +105,15 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
 });
 
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+
+builder.Services.AddSingleton(s =>
+{
+    var config = builder.Configuration.GetSection("CloudinarySettings").Get<CloudinarySettings>();
+    var acc = new Account(config?.CloudName, config?.ApiKey, config?.ApiSecret);
+    return new Cloudinary(acc);
+});
 
 var app = builder.Build();
 

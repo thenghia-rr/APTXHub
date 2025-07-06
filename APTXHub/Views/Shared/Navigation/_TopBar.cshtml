@@ -87,7 +87,7 @@
                 <div class="rounded-full relative bg-secondery cursor-pointer shrink-0">
                     <img src="@(string.IsNullOrEmpty(profilePictureUrl)
                         ? defaultProfilePicture
-                        : profilePictureUrl)" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0" />
+                        : profilePictureUrl)" class="sm:w-9 sm:h-9 w-7 h-7 rounded-full shadow shrink-0 dark:bg-white" />
                 </div>
                 <div class="dark:bg-secondary dark:text-white hidden bg-white rounded-lg drop-shadow-xl w-64 box-dark-border" uk-drop="offset:6;pos: bottom-right;animate-out: true;">
 
@@ -95,7 +95,7 @@
                         <div class="p-4 py-5 flex items-center gap-4">
                             <img src="@(string.IsNullOrEmpty(profilePictureUrl)
                                 ? defaultProfilePicture
-                                : profilePictureUrl)" class="w-10 h-10 rounded-full shadow" />
+                                : profilePictureUrl)" class="dark:bg-white w-10 h-10 rounded-full shadow" />
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 text-base font-medium text-black dark:text-white">
                                     <span>@fullName</span>
