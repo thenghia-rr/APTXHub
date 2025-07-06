@@ -13,7 +13,8 @@ It simulates the core features of modern social platforms, offering a space wher
 - **Architecture**: Service-Oriented Architecture (SOA) 
 - **Features**: 
   - User registration & login & update password/profile
-  - Post creation and delete soft/hard, Reported
+  - External authentication with Google & GitHub
+  - Post creation and delete soft/hard, reported
   - Commenting system
   - Save(favorite) & like posts
   - Hashtags by post
@@ -25,6 +26,8 @@ It simulates the core features of modern social platforms, offering a space wher
   - Dark mode toggle
   - Multi-language (EN/VI)
   - Chat with friends
+  - Verified badge account
+  - Reels
   - Responsive UI
 
 ## Getting Started

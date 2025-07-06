@@ -69,19 +69,20 @@ namespace APTXHub.Controllers
             return RedirectToAction("ManageUsers");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ToggleDeleteUser(int userId)
-        {
-            var user = await _userManager.Users
-                .IgnoreQueryFilters()
-                .FirstOrDefaultAsync(u => u.Id == userId);
+        // [POST]: Beta 
+        //[HttpPost]
+        //public async Task<IActionResult> ToggleDeleteUser(int userId)
+        //{
+        //    var user = await _userManager.Users
+        //        .IgnoreQueryFilters()
+        //        .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null) return NotFound();
+        //    if (user == null) return NotFound();
 
-            user.IsDeleted = !user.IsDeleted;
-            await _userManager.UpdateAsync(user);
+        //    user.IsDeleted = !user.IsDeleted;
+        //    await _userManager.UpdateAsync(user);
 
-            return RedirectToAction("ManageUsers"); 
-        }
+        //    return RedirectToAction("ManageUsers"); 
+        //}
     }
 }

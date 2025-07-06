@@ -11,6 +11,7 @@ namespace APTXHub.Infrastructure.Helpers.Enums
         StoryMedia,       // image/video
         PostImage,
         ProfilePicture,
-        CoverImage
+        CoverImage,
+        ReelVideo,        // video for reels
     }
 }

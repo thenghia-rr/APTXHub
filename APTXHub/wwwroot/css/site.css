@@ -290,3 +290,74 @@ form > button.icon-link, button.delete-post-btn {
     }
     /* blue-300 */
 }
+
+/*CSS REELS ---- \APTXHub\Views\Reels\Index.cshtml */
+.reel-wrapper {
+    height: calc(100vh - var(--topbar-height));
+    scroll-snap-type: y mandatory;
+    overflow-y: auto;
+    position: relative;
+}
+
+.reel-item {
+    scroll-snap-align: start;
+    height: calc(100vh - var(--topbar-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: #252728;
+}
+
+.reel-video {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.caption-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    width: 90%;
+}
+
+.sound-toggle {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 9999px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.upload-btn {
+    position: fixed;
+    top: calc(var(--topbar-height) + 5px);
+    right: 25px;
+    z-index: 50;
+}
+
+.upload-form {
+    position: fixed;
+    top: calc(var(--topbar-height) + 60px);
+    right: 20px;
+    width: 350px;
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 50;
+}
+
+    .upload-form.dark {
+        background: #1f2937;
+        color: white;
+    }

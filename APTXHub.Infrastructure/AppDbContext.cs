@@ -24,13 +24,15 @@ namespace APTXHub.Infrastructure
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Reel> Reels { get; set; }
 
         // Define DbSets for your entities here
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Ẩn user đã xóa khỏi mọi truy vấn
-            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+            //modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
+
             // Configure entity properties and relationships here
             // User entity configuration (Post, Story)
             modelBuilder.Entity<User>()
@@ -168,6 +170,13 @@ namespace APTXHub.Infrastructure
                 .WithMany()
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict); // ❗Không xóa Message nếu User bị xóa
+
+            // Reel entity configuration
+            modelBuilder.Entity<Reel>()
+              .HasOne(r => r.User)
+              .WithMany()
+              .HasForeignKey(r => r.UserId)
+              .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
 

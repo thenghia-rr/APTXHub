@@ -1,0 +1,117 @@
+﻿@model List<Reel>
+
+
+
+<main class="relative 2xl:ml-[--w-side] xl:ml-[--w-side-sm] h-[calc(100vh-var(--m-top))] mt-[--m-top]">
+
+    <!-- Upload Button -->
+    <div class="upload-btn">
+        <button onclick="toggleUpload()"
+                class="bg-blue-600 hover:bg-blue-700 text-white w-14 h-14 rounded-full flex items-center justify-center shadow">
+            <ion-icon name="add-circle-sharp" class="w-8 h-8"></ion-icon>
+        </button>
+    </div>
+
+
+    <!-- Upload Form -->
+    <div id="uploadForm" class="box-dark-border upload-form hidden dark:bg-gray-800 dark:text-white">
+        <form asp-action="Upload" asp-controller="Reels" method="post" enctype="multipart/form-data" >
+            <label class="text-sm mb-1 block dark:text-white">Video</label>
+            <input type="file" name="videoFile" required accept="video/*" class="w-full mb-2 text-sm border p-1 rounded" />
+            <input type="text" name="caption" placeholder="Caption..." class="w-full mb-3 p-2 rounded border text-sm d-text-black" />
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Submit</button>
+        </form>
+    </div>
+
+    <!-- Reels Container -->
+    <div class="reel-wrapper">
+        @foreach (var reel in Model)
+        {
+            <div class="reel-item">
+                <!-- Video -->
+                <video id="video_@reel.Id" class="reel-video" controls autoplay muted loop playsinline>
+                    <source src="@Url.Content(reel.VideoUrl)" type="video/mp4" />
+                    Trình duyệt không hỗ trợ video.
+                </video>
+
+                <!-- Toggle Sound Button -->
+                <div class="sound-toggle" onclick="toggleSound('@reel.Id')" title="Bật/Tắt tiếng">
+                    <ion-icon name="volume-mute-outline" class="w-8 h-9" id="icon_@reel.Id"></ion-icon>
+                </div>
+
+                <!-- Caption -->
+                <div class="caption-overlay">
+                    <div class="flex items-center gap-2 mb-2">
+                        <img src="@Url.Content(reel.User.ProfilePictureUrl ?? "/images/avatar/user.png")"
+                             class="w-12 h-12 rounded-full object-cover border border-white" />
+                        <span class="font-semibold text-lg">@reel.User.FullName</span>
+                        @* Verified badge *@
+                        @if (reel.User.IsVerified)
+                        {
+                            <div class="w-4 h-4 flex items-center justify-center rounded-full bg-blue-500">
+                                <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        }
+                    </div>
+                    @if (!string.IsNullOrEmpty(reel.Caption))
+                    {
+                        <p class="text-base max-w-300">@reel.Caption</p>
+                    }
+                    <p class="text-sm mt-1 text-gray-300">
+                        @reel.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                    </p>
+                </div>
+            </div>
+        }
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        let globalMute = true;
+
+        function toggleUpload() {
+            document.getElementById("uploadForm").classList.toggle("hidden");
+        }
+
+        function toggleSound(reelId) {
+            const video = document.getElementById(`video_${reelId}`);
+            const icon = document.getElementById(`icon_${reelId}`);
+            video.muted = !video.muted;
+
+            // Nếu user đã bật tiếng → cập nhật globalMute
+            if (!video.muted) {
+                globalMute = false;
+            }
+
+            icon.name = video.muted ? "volume-mute-outline" : "volume-high-outline";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const videos = document.querySelectorAll("video");
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    const reelId = video.id.replace("video_", "");
+                    const icon = document.getElementById(`icon_${reelId}`);
+
+                    if (entry.isIntersecting) {
+                        video.play().catch(() => {});
+                        video.muted = globalMute;
+                        icon.name = video.muted ? "volume-mute-outline" : "volume-high-outline";
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, {
+                threshold: 0.5
+            });
+
+            videos.forEach(video => observer.observe(video));
+        });
+    </script>
+
+}

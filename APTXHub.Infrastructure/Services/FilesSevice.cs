@@ -36,6 +36,7 @@ namespace APTXHub.Infrastructure.Services
                 MediaFileType.PostImage => "images/posts",
                 MediaFileType.ProfilePicture => "images/profilePictures",
                 MediaFileType.CoverImage => "images/covers",
+                MediaFileType.ReelVideo => "videos/reels",
                 _ => throw new ArgumentOutOfRangeException(nameof(mediaType), "Invalid media type")
             };
 
