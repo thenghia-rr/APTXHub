@@ -42,13 +42,13 @@ It replicates essential social features, allowing users to connect, post, and en
 
 ```
 #### Homepage
-![](assets/home.png)
+![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811494/APTXHub/docs/home_rjqhfx.png)
 
 #### Real-time Chat
-![](assets/chat.png)
+![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811497/APTXHub/docs/chat_usxxmc.png)
 
 #### Reels Feature
-![](assets/reels.png)
+![](https://res.cloudinary.com/dh5zl1bel/image/upload/v1751811499/APTXHub/docs/reels_x6pdor.png)
 ```
 
 ## Getting Started
