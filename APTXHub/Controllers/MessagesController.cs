@@ -3,6 +3,7 @@ using APTXHub.Infrastructure;
 using APTXHub.Infrastructure.Models;
 using APTXHub.Infrastructure.Services;
 using APTXHub.ViewModels.Messages;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using System.Security.Claims;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class MessagesController : BaseController
     {
         private readonly AppDbContext _context;

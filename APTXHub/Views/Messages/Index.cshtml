@@ -9,7 +9,7 @@
                 var user = msg.SenderId == Model.CurrentUser.Id ? msg.Receiver : msg.Sender;
                 var avatar = string.IsNullOrEmpty(user.ProfilePictureUrl) ? "/images/avatar/user.png" : user.ProfilePictureUrl;
                 <a href="@Url.Action("Index", new { chatWithUserId = user.Id })" class="flex items-center gap-3 p-4 hover:bg-gray-100 btn-danger-hover transition-colors">
-                    <img src="@avatar" class="w-10 h-10 rounded-full border dark:border-gray-600" alt="@user.FullName" />
+                    <img src="@avatar" class="w-11 h-11 rounded-full border dark:border-gray-600" alt="@user.FullName" />
                     <div class="flex-1">
                         <div class="flex justify-between">
                             <div class="font-semibold text-gray-800 dark:text-white">@user.FullName</div>
@@ -27,8 +27,10 @@
             {
                 var targetAvatar = string.IsNullOrEmpty(Model.TargetUser.ProfilePictureUrl) ? "/images/avatar/user.png" : Model.TargetUser.ProfilePictureUrl;
                 <div class="dark:bg-secondary p-4 border-b border-gray-200  bg-white d-border-gray-50 flex items-center gap-3">
-                    <img src="@targetAvatar" class="w-12 h-12 rounded-full border dark:border-gray-600" alt="@Model.TargetUser.FullName" />
-                    <div class="font-semibold text-gray-800 dark:text-white">Đang trò chuyện với @Model.TargetUser.FullName</div>
+                    <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.TargetUser.Id">
+                        <img src="@targetAvatar" class="w-12 h-12 rounded-full border dark:border-gray-600" alt="@Model.TargetUser.FullName" />
+                    </a>
+                    <div class="font-semibold text-gray-800 dark:text-white">@Localizer["Chattingwith"] @Model.TargetUser.FullName</div>
                 </div>
                 <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 space-y-4">
                     @foreach (var m in Model.Messages)
@@ -57,15 +59,15 @@
                 </div>
                 <form id="chat-form" class="dark:bg-secondary p-4 border-t border-gray-200 dark:border-gray-700 flex items-center gap-2 bg-white dark:bg-gray-900">
                     <input type="text" id="message-input" class="text-14 d-text-black flex-grow p-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-white text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                           placeholder="Nhập tin nhắn..." autocomplete="off" required />
+                           placeholder="@(Localizer["Typingyourmessage"])..." autocomplete="off" required />
                     <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition">
-                        Gửi
+                        @Localizer["Send"]
                     </button>
                 </form>
             }
             else
             {
-                <div class="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">Chọn một người để bắt đầu trò chuyện</div>
+                <div class="flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400">@Localizer["Choosesomeonetostartchatting"]</div>
             }
         </div>
     </div>
@@ -98,15 +100,15 @@
                 const user = isMe ? currentUser : targetUser;
                 const html = `
                     <div class="flex ${isMe ? "justify-end" : "justify-start"} items-start gap-2 mb-2">
-                        ${!isMe ? `<img src="${user.avatar}" class="w-8 h-8 rounded-full border" alt="${user.name}" />` : ""}
-                        <div class="max-w-[70%]">
-                            <div class="text-xs text-gray-500 font-medium mb-1 ${isMe ? "text-right" : "text-left"}">${user.name}</div>
-                            <div class="px-3 py-2 rounded-lg text-sm leading-relaxed ${isMe ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}">
+                        ${!isMe ? `<img src="${user.avatar}" class="w-12 h-12 rounded-full border" alt="${user.name}" />` : ""}
+                        <div class="max-w-70percent">
+                            <div class="text-14 text-gray-500 font-medium mb-1 ${isMe ? "text-right" : "text-left"}">${user.name}</div>
+                            <div class="px-3 py-2 rounded-lg text-14 leading-relaxed ${isMe ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-800"}">
                                 ${message}
                             </div>
                             <div class="text-xs text-gray-400 mt-1 ${isMe ? "text-right" : "text-left"}">${new Date().toLocaleTimeString()}</div>
                         </div>
-                        ${isMe ? `<img src="${user.avatar}" class="w-8 h-8 rounded-full border" alt="${user.name}" />` : ""}
+                        ${isMe ? `<img src="${user.avatar}" class="w-12 h-12 rounded-full border" alt="${user.name}" />` : ""}
                     </div>`;
                 const container = document.getElementById("chat-messages");
                 container.insertAdjacentHTML("beforeend", html);

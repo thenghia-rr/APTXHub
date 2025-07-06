@@ -38,9 +38,9 @@
                   method="get"
                   class="dark:text-white ml-2 xl:w-[680px] sm:w-96 sm:relative rounded-xl overflow-hidden z-20 bg-secondery max-md:hidden w-screen left-0 max-sm:fixed max-sm:top-2">
 
-                <ion-icon name="search" class="absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
+                <ion-icon name="search" class="d-text-black absolute left-4 top-1/2 -translate-y-1/2"></ion-icon>
                 <input type="text" name="query" placeholder="@Localizer["searchPostFriend"]"
-                       class="dark:text-white placeholder:!text-gray-600 dark:placeholder-gray-400 w-full !pl-10 !font-normal !bg-transparent h-12 !text-sm" />
+                       class="d-text-black d-bg-color-input w-full !pl-10 font-semibold  h-12 text-14" />
             </form>
         </div>
 
@@ -97,7 +97,16 @@
                                 ? defaultProfilePicture
                                 : profilePictureUrl)" class="w-10 h-10 rounded-full shadow" />
                             <div class="flex-1">
-                                <h4 class="text-base font-medium text-black dark:text-white">@fullName</h4>
+                                <div class="flex items-center gap-2 text-base font-medium text-black dark:text-white">
+                                    <span>@fullName</span>
+                                    <div class="w-4 h-4 flex items-center justify-center rounded-full bg-blue-500">
+                                        <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                </div>
+
+
                                 <div class="text-sm mt-1 text-blue-600 font-light/70">@userName</div>
                             </div>
                         </div>

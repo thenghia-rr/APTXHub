@@ -1,0 +1,65 @@
+﻿@model List<User>
+
+<main id="site__main" class="2xl:ml-[--w-side] xl:ml-[--w-side-sm] p-6 mt-[--m-top] min-h-screen bg-gray-50">
+    <div class="p-6 mt-10 min-h-screen bg-gray-50 dark:bg-gray-900">
+        <h2 class="text-2xl font-bold mb-6 text-center dark:text-white">Quản lý người dùng</h2>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="text-center">
+                <p class="text-red-600 text-lg">@Localizer["NoUser"]</p>
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-[90%] mx-auto">
+                @foreach (var user in Model)
+                {
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 flex flex-col gap-3 border border-gray-200 dark:border-gray-700
+                        @(user.IsDeleted ? "opacity-50" : "")">
+
+                        <!-- Avatar + Info -->
+                        <div class="flex items-center gap-4">
+                            <img src="@(!string.IsNullOrEmpty(user.ProfilePictureUrl)
+                                ? Url.Content(user.ProfilePictureUrl)
+                                : Url.Content("/images/avatar/user.png"))"
+                                 class="w-12 h-12 rounded-full object-cover border" />
+
+                            <div>
+                                <p class="font-semibold dark:text-white">@user.FullName</p>
+                                <p class="text-sm text-gray-500">@user.Email</p>
+                            </div>
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="flex flex-col gap-1 text-sm">
+                            <p class="font-medium @(user.IsVerified ? "text-green-600" : "text-yellow-600")">
+                                @(user.IsVerified ? "Đã xác thực" : "Chưa xác thực")
+                            </p>
+                            <p class="font-medium @(user.IsDeleted ? "text-red-600" : "text-gray-500")">
+                                @(user.IsDeleted ? "Đã bị xóa" : "Đang hoạt động")
+                            </p>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="mt-auto flex flex-wrap gap-2 justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
+
+                            <!-- Toggle xác thực -->
+                            <form asp-controller="Admin" asp-action="ToggleVerifyUser" method="post">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit"
+                                        class="px-3 py-1 text-sm rounded font-medium
+                                               @(user.IsVerified
+                                                    ? "bg-red-600 hover:bg-red-700 text-white"
+                                                    : "bg-blue-600 hover:bg-blue-700 text-white")">
+                                    @(user.IsVerified ? "Thu hồi" : "Xác thực")
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</main>

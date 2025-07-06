@@ -1,5 +1,4 @@
-﻿
-@using static APTXHub.Data.Helpers.HashtagHelper
+﻿@using static APTXHub.Data.Helpers.HashtagHelper
 @model Post
 
 @{
@@ -27,7 +26,19 @@
         </a>
         <div class="flex-1">
             <a asp-controller="Users" asp-action="Details" asp-route-userId="@Model.UserId">
-                <h4 class="text-black text-15 dark:text-white">@Model.User.FullName</h4>
+                <div class="flex items-center gap-2 text-black text-15 dark:text-white">
+                    <span>@Model.User.FullName</span>
+
+                    @* Verified badge *@
+                    @if(Model.User.IsVerified){
+                        <div class="w-4 h-4 md:w-6 md:h-6 flex items-center justify-center rounded-full bg-blue-500">
+                            <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    }
+                </div>
+
                 <div class="text-13 font-normal text-gray-500/80 mt-1 flex items-center" title="@Model.DateCreated.AddHours(7).ToString("dd/MM/yyyy HH:mm")">
                     <span class="mr-2 dark:text-gray">@Model.DateCreated.ToTimeAgo()</span>
                     @if (isPrivate)
@@ -64,7 +75,8 @@
                     </button>
                     <hr />
                 }
-                else{
+                else
+                {
 
                     @if (!isReported)
                     {
@@ -143,7 +155,8 @@
     </div>
 
     @* Add comment section *@
-   @if(showDetails){
+    @if (showDetails)
+    {
         <div>
             <div class="p-2.5 border-t d-border-gray-50 font-normal space-y-3 relative">
                 @foreach (var comment in showAllComments
@@ -171,7 +184,8 @@
                                     @comment.Content
                                 </p>
 
-                                @if(comment.User.Id == loggedInUserId) {
+                                @if (comment.User.Id == loggedInUserId)
+                                {
                                     <form asp-controller="Home" asp-action="RemovePostComment" class="remove-comment-form">
                                         <input type="hidden" name="commentId" value="@comment.Id" />
                                         <input type="hidden" name="postId" value="@comment.PostId" />
@@ -180,7 +194,7 @@
                                         </button>
                                     </form>
                                 }
-                              
+
 
                             </div>
                         </div>
@@ -189,8 +203,8 @@
                 @if (Model.Comments.Count >= 3 && !showAllComments)
                 {
                     <div class="p-1.5">
-                        <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id" 
-                            class=" dark:text-gray">
+                        <a asp-controller="Home" asp-action="Details" asp-route-postId="@Model.Id"
+                           class=" dark:text-gray">
                             @Localizer["ShowAllComments"]
                         </a>
                     </div>
@@ -214,7 +228,7 @@
             </form>
 
         </div>
-   }
+    }
 
 
 </div>

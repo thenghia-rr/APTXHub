@@ -16,8 +16,8 @@
                 <img src="@Url.Content(string.IsNullOrEmpty(Model.User.CoverPictureUrl)
                     ? defaultCoverPicture
                     : Model.User.CoverPictureUrl)"
-                     class="object-cover w-full h-full"
-                     alt="Cover Picture" />
+                class="object-cover w-full h-full"
+                alt="Cover Picture" />
             </div>
 
 
@@ -29,13 +29,27 @@
                             <img src="@Url.Content(string.IsNullOrEmpty(Model.User.ProfilePictureUrl)
                                 ? defaultUserPicture
                                 : Model.User.ProfilePictureUrl)"
-                                 class="w-full h-full  dark:bg-white" />
+                            class="w-full h-full  dark:bg-white" />
                         </div>
                     </div>
                 </div>
                 <div class="ml-4">
-                    <h3 class="md:text-4xl text-base font-bold text-black dark:text-white">@Model.User.FullName</h3>
+                    <div class="gap-3 flex items-center md:text-4xl text-base font-bold text-black dark:text-white">
+                        <span> @Model.User.FullName</span>
+
+                        @* Verified badge *@
+                        @if (Model.User.IsVerified) {
+                            <div class="w-5 h-5 flex items-center justify-center rounded-full bg-blue-500">
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586l-3.293-3.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        }
+                 
+                        </div>
                     <p class="mt-2 text-gray-500 dark:text-gray">@Model.User.UserName</p>
+
+
 
                     @* ✨ Hiển thị bio tại đây *@
                     @if (!string.IsNullOrEmpty(Model.User.Bio))

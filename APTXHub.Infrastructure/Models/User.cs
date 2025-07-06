@@ -15,6 +15,8 @@ namespace APTXHub.Infrastructure.Models
         public string? CoverPictureUrl { get; set; }
         public string? Bio { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsVerified { get; set; }
+
 
         // Navigation properties
         public ICollection<Post> Posts { get; set; } = new List<Post>();

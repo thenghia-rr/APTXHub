@@ -29,6 +29,8 @@ namespace APTXHub.Infrastructure
         // public DbSet<YourEntity> YourEntities { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Ẩn user đã xóa khỏi mọi truy vấn
+            modelBuilder.Entity<User>().HasQueryFilter(u => !u.IsDeleted);
             // Configure entity properties and relationships here
             // User entity configuration (Post, Story)
             modelBuilder.Entity<User>()

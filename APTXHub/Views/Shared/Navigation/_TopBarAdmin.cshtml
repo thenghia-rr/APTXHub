@@ -84,6 +84,12 @@
                     </a>
                     <hr />
                     <nav>
+                        <a asp-controller="Users" asp-action="Details" asp-route-userId="@loggedInUser?.Id">
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <ion-icon name="person-outline"></ion-icon> @Localizer["Profile"]
+                            </div>
+                        </a>
+                        <hr />
                         <a asp-controller="Settings" asp-action="Index">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
                                 <ion-icon name="settings-outline" class="text-lg"></ion-icon>  @Localizer["Account"]
@@ -95,7 +101,12 @@
                                 <ion-icon name="person-outline" class="text-lg"></ion-icon>  @Localizer["Dashboard"]
                             </div>
                         </a>
-                        <hr/>
+                        <a asp-controller="Admin" asp-action="ManageUsers">
+                            <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
+                                <ion-icon name="people-outline" class="text-lg"></ion-icon>  @Localizer["ManageUsers"]
+                            </div>
+                        </a>
+                        <hr />
                         <a asp-controller="Language" asp-action="SetLanguage" asp-route-culture="@targetCulture" asp-route-returnUrl="@Context.Request.Path">
                             <div class="flex items-center gap-2.5 hover:bg-secondery p-2 px-2.5 rounded-md">
                                 <ion-icon name="language-outline" class="text-lg"></ion-icon>

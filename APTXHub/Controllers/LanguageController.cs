@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APTXHub.Controllers
 {
+    [Authorize]
     public class LanguageController : Controller
     {
         public IActionResult Index()
