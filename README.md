@@ -44,6 +44,9 @@ It replicates essential social features, allowing users to connect, post, and en
 #### Homepage
 ![](APTXHub/wwwroot/images/docs/home.png)
 
+#### Homepage
+![](APTXHub/wwwroot/images/docs/user_detail.png)
+
 #### Real-time Chat
 ![](APTXHub/wwwroot/images/docs/chat.png)
 
