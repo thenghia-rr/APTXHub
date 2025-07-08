@@ -50,7 +50,7 @@ namespace APTXHub.Infrastructure.Helpers
                     UserName = "admin@gmail.com",
                     Email = "admin@gmail.com",
                     FullName = "Admin APTX",
-                    ProfilePictureUrl = "https://i.pinimg.com/736x/2d/80/d9/2d80d94507435eaeb15171c441bcb7f4.jpg",
+                    ProfilePictureUrl = "https://motgame.vn/stores/news_dataimages/2024/082024/08/17/yua-mikami-gay-tranh-cai-vi-cong-viec-nhay-cam-moi-sau-khi-giai-nghe-20240808172347.jpg?rt=20240808172514",
                     EmailConfirmed = true
                 };
 

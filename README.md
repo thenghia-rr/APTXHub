@@ -22,6 +22,7 @@ It replicates essential social features, allowing users to connect, post, and en
 * Comments on posts
 * Like & Save posts
 * Hashtag support
+* Stories: video/image in 24hours
 * Reels: short video/image feed
 * Friend requests & management
 * Real-time notifications
@@ -37,6 +38,7 @@ It replicates essential social features, allowing users to connect, post, and en
 ## Screenshots
 
 * Homepage (overview feed + suggested friends + trending)
+* User detail page
 * Chat (real-time with friends)
 * Reels (short video feature)
 
